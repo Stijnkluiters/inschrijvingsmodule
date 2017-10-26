@@ -11,7 +11,8 @@ function db () {
 
 
     try {
-        $dbh = new PDO('mysql:host=localhost;dbname='.$db_name, $db_user, $db_pass,array(
+        $dbh = new PDO('mysql:host=localhost;dbname='.$db_name, $db_user, $db_pass,
+            array(
             PDO::ATTR_PERSISTENT => true
         ));
         return $dbh;
