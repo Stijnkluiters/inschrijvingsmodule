@@ -33,9 +33,18 @@ function redirect($url)
      */
     if( $url[ 0 ] === '/' )
     {
-        $url = mb_substr($url,1);
+        $url = mb_substr($url, 1);
     }
 
 
     return header(sprintf('Location: %s', baseUrl . $url));
+}
+
+function startsession()
+{
+
+    if( session_status() == PHP_SESSION_NONE )
+    {
+        session_start();
+    }
 }

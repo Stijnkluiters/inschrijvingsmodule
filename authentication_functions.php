@@ -65,10 +65,7 @@ function login($username, $password)
     {
         if( checkPassword($username, $password, intval($result[ 'id' ])) )
         {
-            if( session_status() == PHP_SESSION_NONE )
-            {
-                session_start();
-            }
+            startsession();
             $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
 
             return redirect('/login');
@@ -102,7 +99,7 @@ function register($username, $password, $naam, $studentnummer, $docentnummer)
         $stmt->bindParam('docentnummer', $docentnummer, PDO::PARAM_INT);
         $stmt->execute();
         $dbh->commit();
-        print $dbh->lastInsertId();
+        return $dbh->lastInsertId();
     } catch ( PDOException $e )
     {
         $dbh->rollback();
@@ -111,6 +108,12 @@ function register($username, $password, $naam, $studentnummer, $docentnummer)
 
 }
 
+function logout ()
+{
+    startsession();
+    unset($_SESSION[authenticationSessionName]);
+    return true;
+}
 
 
 
