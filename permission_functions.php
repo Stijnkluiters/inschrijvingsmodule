@@ -8,15 +8,12 @@
 
 function PermissionBaseQuery()
 {
-    $sql = 'SELECT p.name,u.id, FROM user u 
+    $sql = 'SELECT p.name,u.id FROM user u 
           JOIN user_role ur ON u.id = ur.user_id 
           JOIN role r ON r.id = ur.role_id
           JOIN role_permission rp ON rp.role_id = r.id
           JOIN permission p ON p.id = rp.permission_id 
           WHERE u.id = :user_id AND p.name = :name';
-
-
-
     return $sql;
 }
 
