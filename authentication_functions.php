@@ -56,14 +56,14 @@ function login($username, $password)
 
     $dbh = db();
     // TODO: correct query with correct details
-    $stmt = $dbh->prepare('SELECT id FROM user WHERE username = :username');
+    $stmt = $dbh->prepare('SELECT id, password FROM user WHERE username = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if( count($result) > 0 )
     {
-        if( checkPassword($username, $password, intval($result[ 'id' ])) )
+        if( checkPassword($result['password'], $password, intval($result[ 'id' ])) )
         {
             startsession();
             $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
