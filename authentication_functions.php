@@ -65,12 +65,16 @@ function login($username, $password)
     {
         if( checkPassword($username, $password, intval($result[ 'id' ])) )
         {
-            if (session_status() == PHP_SESSION_NONE) {
+            if( session_status() == PHP_SESSION_NONE )
+            {
                 session_start();
             }
-            $_SESSION[authenticationSessionName] = $result['id'];
-            redirect('/login');
-        } else {
+            $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
+
+            return redirect('/login');
+        }
+        else
+        {
             return 'INVALIDPASSWORD';
         }
     }
@@ -80,5 +84,34 @@ function login($username, $password)
     }
 
 }
+
+function register($username, $password, $naam, $studentnummer, $docentnummer)
+{
+    try
+    {
+
+        $dbh = db();
+
+        $dbh->beginTransaction();
+        // TODO: correct query with correct details
+        $stmt = $dbh->prepare('INSERT INTO user (username,password,naam,studentnummer,docentnummer,actief) VALUES (:username,:password,:naam,:studentnummer,:docentnummer,0)');
+        $stmt->bindParam('username', $username, PDO::PARAM_STR);
+        $stmt->bindParam('password', $password, PDO::PARAM_STR);
+        $stmt->bindParam('naam', $naam, PDO::PARAM_STR);
+        $stmt->bindParam('studentnummer', $studentnummer, PDO::PARAM_INT);
+        $stmt->bindParam('docentnummer', $docentnummer, PDO::PARAM_INT);
+        $stmt->execute();
+        $dbh->commit();
+        print $dbh->lastInsertId();
+    } catch ( PDOException $e )
+    {
+        $dbh->rollback();
+        print "Error!: " . $e->getMessage() . "</br>";
+    }
+
+}
+
+
+
 
 

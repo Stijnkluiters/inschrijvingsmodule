@@ -37,5 +37,5 @@ function redirect($url)
     }
 
 
-    header(sprintf('Location: %s', baseUrl . $url));
+    return header(sprintf('Location: %s', baseUrl . $url));
 }
