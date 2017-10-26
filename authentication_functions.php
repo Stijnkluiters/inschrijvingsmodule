@@ -5,26 +5,39 @@
  * Date: 26-10-2017
  * Time: 17:48
  */
+require_once 'config.php';
 
-function checkPassword($hashedOriginalPassword, $input)
-{
-    $options = ['cost' => 15];
+const passwordAlgo = PASSWORD_BCRYPT;
 
-    if(password_verify($input, $hashedOriginalPassword)){
-        if (password_needs_rehash($hashedOriginalPassword, PASSWORD_DEFAULT,  $options)) {
-            // If so, create a new hash, and replace the old one
-            // TODO: how to know if user had an strong or default password?
-            $newHash = generatePassword($input, false);
-            // TODO: save newHash to the user
-        }
-    };
-}
-function generatePassword($input, $highSecurity = false)
+const options = [ 'cost' => 15 ];
+
+function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
-    $options = ['cost' => 15];
-    if($highSecurity) {
-        return password_hash($input, PASSWORD_BCRYPT, $options);
-    } else {
-        return password_hash($input, PASSWORD_DEFAULT, $options);
+    if(!is_int($originalID)) {
+        throw new \Exception('Original ID is not an integer which can`t be queried, this is an value off the user which is being checked.');
     }
+
+    if( password_verify($input, $hashedOriginalPassword) )
+    {
+        if( password_needs_rehash($hashedOriginalPassword, passwordAlgo, options) )
+        {
+            $newHash = generatePassword($input);
+
+            $dbh = db();
+            // TODO: correct query with correct details
+            $stmt = $dbh->prepare('UPDATE user SET password = :password WHERE id = :ID');
+            $stmt->bindParam('password',$newHash,PDO::PARAM_STR);
+            $stmt->bindParam('id',$originalID,PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return true;
+    }
+    return false;
+
 }
+
+function generatePassword($input)
+{
+    return password_hash($input, passwordAlgo, options);
+}
+

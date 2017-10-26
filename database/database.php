@@ -2,13 +2,21 @@
 
 require __DIR__ . '\..\config.php';
 
-try {
-    $dbh = new PDO('mysql:host=localhost;dbname='.$db_name, $db_user, $db_pass,array(
-        PDO::ATTR_PERSISTENT => true
-    ));
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
 
-return $dbh;
+
+function db () {
+    $db_name = '';
+    $db_user = '';
+    $db_pass = '';
+
+
+    try {
+        $dbh = new PDO('mysql:host=localhost;dbname='.$db_name, $db_user, $db_pass,array(
+            PDO::ATTR_PERSISTENT => true
+        ));
+        return $dbh;
+    } catch (PDOException $e) {
+        print "Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+}
