@@ -6,7 +6,7 @@
  * Time: 17:48
  */
 
-function check_password($hashedOriginalPassword, $input)
+function checkPassword($hashedOriginalPassword, $input)
 {
     $options = ['cost' => 15];
 
