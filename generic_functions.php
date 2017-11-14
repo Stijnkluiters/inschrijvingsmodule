@@ -24,6 +24,15 @@ function redirect($url)
     {
         throw new Exception('Dit is een test functie, gebruik het dus niet op publieke websites');
     }
+
+    $url = filter_url($url);
+
+    return header(sprintf('Location: %s', baseUrl . $url));
+}
+
+function filter_url($url)
+{
+
     /*
      * How does it work?
      *
@@ -31,13 +40,17 @@ function redirect($url)
      *  $url[0] is the first character of a string (if $url is a string).
      *
      */
-    if( $url[ 0 ] === '/' )
+    if( $url[ 0 ] !== '/' )
     {
-        $url = mb_substr($url, 1);
+        $url .= '/';
     }
 
+    return $url;
+}
 
-    return header(sprintf('Location: %s', baseUrl . $url));
+function route($url)
+{
+    return Projectroot.$url;
 }
 
 function startsession()
