@@ -6,6 +6,22 @@
  * Time: 13:29
  */
 include 'config.php';
+
+if(isset($_POST['submit'])) {
+    $username = $_POST['gebruikersnaam'];
+    $password = $_POST['wachtwoord'];
+
+
+    $db = db();
+    $stmt = $db->prepare('SELECT * FROM gebruiker WHERE gebruiker.gebruikersnaam = :gebruikersnaam');
+    $stmt->bindParam(':gebruikersnaam', $username);
+    $stmt->execute();
+    $gebruikers = $stmt->fetchAll(PDO::FETCH_BOTH);
+
+    var_dump($gebruikers);
+    exit;
+}
+
 ?>
 <html>
     <head>
@@ -29,10 +45,10 @@ include 'config.php';
                 <div class="wrap">
                     <p class="form-title">
                         Sign In</p>
-                    <form class="login">
-                        <input type="text" placeholder="Username" />
-                        <input type="password" placeholder="Password" />
-                        <input type="submit" value="Sign In" class="btn btn-success btn-sm" />
+                    <form method="post" action="<?= route('/login.php'); ?>" class="login">
+                        <input type="text" placeholder="Username" name="gebruikersnaam" />
+                        <input type="password" placeholder="Password" name="wachtwoord" />
+                        <input type="submit" value="Sign In" name="submit" class="btn btn-success btn-sm" />
                         <div class="remember-forgot">
                             <div class="row">
                                 <div class="col-md-6">

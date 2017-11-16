@@ -38,7 +38,7 @@ function filter_url($url)
 
     return $url;
 }
-
+// return correct url for <ahref tags or stylesheet links
 function route($url)
 {
     return Projectroot.$url;
