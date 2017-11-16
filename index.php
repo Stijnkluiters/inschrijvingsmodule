@@ -1,13 +1,26 @@
 <?php
-
-
 /**
  * Created by PhpStorm.
  * User: stijn
  * Date: 26-10-2017
  * Time: 17:38
+ *
+ *
+ *
+ *
  */
+// check if user is logged in.
+
+
+
+
+
 include_once 'config.php';
+startsession();
+if(!isset($_SESSION['user'])) {
+    redirect('login.php');
+}
+
 
 ?>
 <!--

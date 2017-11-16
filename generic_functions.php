@@ -8,26 +8,17 @@
  * @param $url
  */
 
-const baseUrl = 'localhost/';
-
 
 function redirect($url)
 {
-
     if( !is_string($url) )
     {
         throw new Exception($url . ' is not an String you silly');
     }
 
-
-    if( !strpos('localhost', $url) )
-    {
-        throw new Exception('Dit is een test functie, gebruik het dus niet op publieke websites');
-    }
-
     $url = filter_url($url);
 
-    return header(sprintf('Location: %s', baseUrl . $url));
+    return header(sprintf('Location: %s',  $url));
 }
 
 function filter_url($url)
