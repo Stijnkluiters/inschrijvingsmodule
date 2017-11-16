@@ -218,12 +218,12 @@ include_once 'config.php';
                 {
                     if( $_GET[ 'gebruiker' ] === 'alles' )
                     {
-                        require 'gebruikers/all.php';
+                        require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     }
                     elseif( $_GET[ 'gebruiker' ] === 'invoerendocent' )
                     {
-                        require 'gebruikers/insertdocent.php';
+                        require 'beheerder/gebruikers/insertdocent.php';
                     }
                     else
                     {
