@@ -6,3 +6,4 @@
  * Time: 11:11
  */
 
+print("Hello");
