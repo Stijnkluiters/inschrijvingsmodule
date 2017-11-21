@@ -164,6 +164,12 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         Aanpassen leerling
                         <span class="badge badge-primary">NEW</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=insertDocent'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Aanpassen Docent
+                        <span class="badge badge-primary">NEW</span></a>
+                </li>
                 <li class="divider"></li>
                 <li class="nav-title">
                     Extras
@@ -236,6 +242,9 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     }
                     elseif($_GET['gebruiker'] === 'insertLeerling'){
                         require 'beheerder/gebruikers/edit_leerling.php';
+                    }
+                    elseif($_GET['gebruiker'] === 'insertDocent'){
+                        require 'beheerder/gebruikers/edit_docent.php';
                     }
                     else
                     {

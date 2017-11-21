@@ -8,5 +8,6 @@
 
 /**Select * from gebruiker where afkorting is not null*/
 
+$db = db();
 
 
