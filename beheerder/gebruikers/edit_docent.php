@@ -6,7 +6,11 @@
  * Time: 12:22
  */
 
-/**Select * from gebruiker where afkorting is not null*/
+/**
+ *
+ * autorizatie op de tabel rol, zodat een rol niet gebasseerd is op een column die misschien ergens anders voor gebruikt kan worden ( de column: "afkorting" );
+ *
+ */
 
 $db = db();
 $docentenQuery = $db->prepare('SELECT 
