@@ -17,7 +17,8 @@
 
 include_once 'config.php';
 startsession();
-if(!isset($_SESSION['user'])) {
+
+if(!isset($_SESSION[authenticationSessionName])) {
     redirect('login.php');
 }
 
@@ -92,10 +93,10 @@ if(!isset($_SESSION['user'])) {
 
     <ul class="nav navbar-nav d-md-down-none">
         <li class="nav-item px-3">
-            <a class="nav-link" href="#">Dashboard</a>
+            <a class="nav-link" href="<?= route('/index.php'); ?>">Dashboard</a>
         </li>
         <li class="nav-item px-3">
-            <a class="nav-link" href="<?php echo route('/index.php?gebruiker=alles'); ?>">Users</a>
+            <a class="nav-link" href="<?= route('/index.php?gebruiker=alles'); ?>">Users</a>
         </li>
         <li class="nav-item px-3">
             <a class="nav-link" href="#">Settings</a>
@@ -139,7 +140,7 @@ if(!isset($_SESSION['user'])) {
                 <a class="dropdown-item" href="#"><i class="fa fa-file"></i> Projects<span class="badge badge-primary">42</span></a>
                 <div class="divider"></div>
                 <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock Account</a>
-                <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
+                <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
             </div>
         </li>
     </ul>
@@ -153,14 +154,14 @@ if(!isset($_SESSION['user'])) {
         <nav class="sidebar-nav">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php route('/index.php') ?>"><i class="icon-speedometer"></i>
+                    <a class="nav-link" href="<?= route('/index.php') ?>"><i class="icon-speedometer"></i>
                         Dashboard </a>
                 </li>
                 <li class="nav-title">
                     Interacties
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo route('/index.php?gebruiker=alles'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=alles'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
                         Gebruikers
                         <span class="badge badge-primary">NEW</span></a>

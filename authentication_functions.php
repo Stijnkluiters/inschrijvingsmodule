@@ -30,7 +30,7 @@ function checkPassword($hashedOriginalPassword, $input, $originalID)
 
             $dbh = db();
             // TODO: correct query with correct details
-            $stmt = $dbh->prepare('UPDATE user SET password = :password WHERE id = :ID');
+            $stmt = $dbh->prepare('UPDATE gebruiker SET password = :password WHERE id = :ID');
             $stmt->bindParam('password', $newHash, PDO::PARAM_STR);
             $stmt->bindParam('id', $originalID, PDO::PARAM_INT);
 
@@ -56,19 +56,19 @@ function login($username, $password)
 
     $dbh = db();
     // TODO: correct query with correct details
-    $stmt = $dbh->prepare('SELECT id, password FROM user WHERE username = :username');
+    $stmt = $dbh->prepare('SELECT id, wachtwoord FROM gebruiker WHERE gebruikersnaam = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if( count($result) > 0 )
     {
-        if( checkPassword($result['password'], $password, intval($result[ 'id' ])) )
+        if( checkPassword($result['wachtwoord'], $password, intval($result[ 'id' ])) )
         {
             startsession();
             $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
 
-            return redirect('/login');
+            return $_SESSION[ authenticationSessionName ];
         }
         else
         {
@@ -81,33 +81,6 @@ function login($username, $password)
     }
 
 }
-
-function register($username, $password, $naam, $studentnummer, $docentnummer)
-{
-    try
-    {
-
-        $dbh = db();
-
-        $dbh->beginTransaction();
-        // TODO: correct query with correct details
-        $stmt = $dbh->prepare('INSERT INTO user (username,password,naam,studentnummer,docentnummer,actief) VALUES (:username,:password,:naam,:studentnummer,:docentnummer,0)');
-        $stmt->bindParam('username', $username, PDO::PARAM_STR);
-        $stmt->bindParam('password', $password, PDO::PARAM_STR);
-        $stmt->bindParam('naam', $naam, PDO::PARAM_STR);
-        $stmt->bindParam('studentnummer', $studentnummer, PDO::PARAM_INT);
-        $stmt->bindParam('docentnummer', $docentnummer, PDO::PARAM_INT);
-        $stmt->execute();
-        $dbh->commit();
-        return $dbh->lastInsertId();
-    } catch ( PDOException $e )
-    {
-        $dbh->rollback();
-        print "Error!: " . $e->getMessage() . "</br>";
-    }
-
-}
-
 function logout ()
 {
     startsession();
