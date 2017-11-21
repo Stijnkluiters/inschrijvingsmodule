@@ -12,19 +12,19 @@ if(isset($_POST['submit'])) {
     $password = $_POST['wachtwoord'];
 
 
-    $db = db();
-    $stmt = $db->prepare('SELECT * FROM gebruiker WHERE gebruiker.gebruikersnaam = :gebruikersnaam');
-    $stmt->bindParam(':gebruikersnaam', $username);
-    $stmt->execute();
-    $gebruikers = $stmt->fetchAll(PDO::FETCH_BOTH);
+    $output = login($username,$password);
 
-    var_dump($gebruikers);
-    exit;
+
+    redirect('index.php');
+
+
 }
-
 ?>
 <html>
     <head>
+
+        <link rel="shortcut icon" href="<?= route('/public/img/favicon.ico') ?>" type="image/vnd.microsoft.icon" />
+
         <link href="<?= route('/public/css/login.css') ?>" rel="stylesheet"/>
         <link href="<?= route('/public/css/style.css') ?>" rel="stylesheet"/>
     </head>
@@ -32,7 +32,9 @@ if(isset($_POST['submit'])) {
 
 
     <div class="container">
+
         <div class="row">
+
             <div class="col-md-12">
                 <div class="pr-wrap">
                     <div class="pass-reset">
@@ -44,7 +46,7 @@ if(isset($_POST['submit'])) {
                 </div>
                 <div class="wrap">
                     <p class="form-title">
-                        Sign In</p>
+                        Inloggen</p>
                     <form method="post" action="<?= route('/login.php'); ?>" class="login">
                         <input type="text" placeholder="Username" name="gebruikersnaam" />
                         <input type="password" placeholder="Password" name="wachtwoord" />
@@ -68,7 +70,6 @@ if(isset($_POST['submit'])) {
                 </div>
             </div>
         </div>
-        <div class="posted-by">Posted By: <a href="http://www.jquery2dotnet.com">Name Not Found</a></div>
     </div>
 
 

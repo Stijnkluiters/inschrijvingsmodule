@@ -11,14 +11,11 @@
 
 function redirect($url)
 {
-    if( !is_string($url) )
-    {
+    if (!is_string($url)) {
         throw new Exception($url . ' is not an String you silly');
     }
 
-    $url = filter_url($url);
-
-    return header(sprintf('Location: %s',  $url));
+    return header(sprintf('Location: %s', $url));
 }
 
 function filter_url($url)
@@ -31,24 +28,42 @@ function filter_url($url)
      *  $url[0] is the first character of a string (if $url is a string).
      *
      */
-    if( $url[ 0 ] !== '/' )
-    {
+    if ($url[0] !== '/') {
         $url .= '/';
     }
 
     return $url;
 }
+
 // return correct url for <ahref tags or stylesheet links
 function route($url)
 {
-    return Projectroot.$url;
+    return Projectroot . $url;
 }
 
 function startsession()
 {
 
-    if( session_status() == PHP_SESSION_NONE )
-    {
-        session_start();
+    if(!isset($_SESSION)) {
+       session_start();
     }
+}
+
+function dump($variable)
+{
+    echo "<pre>";
+    var_dump($variable);
+    echo "</pre>";
+}
+function success($msg) {
+    return print(
+        '<div class="alert alert-success" role="alert">
+          <strong>Success!</strong> '.$msg.'
+        </div>'
+    );
+}
+function error($msg) {
+    return print('<div class="alert alert-danger" role="alert">
+  <strong>Error!</strong> '.$msg.'
+</div>');
 }

@@ -1,6 +1,6 @@
 body
 {
-    background: url('http://farm3.staticflickr.com/2832/12303719364_c25cecdc28_b.jpg') fixed;
+    background: url('../img/achtergrond.jpg') fixed;
     background-size: cover;
     padding: 0;
     margin: 0;
@@ -23,7 +23,7 @@ p.form-title
     font-size: 20px;
     font-weight: 600;
     text-align: center;
-    color: #FFFFFF;
+    color: black;
     margin-top: 5%;
     text-transform: uppercase;
     letter-spacing: 4px;
@@ -35,21 +35,21 @@ form
     margin: 0 auto;
 }
 
-form.login input[type="text"], form.login input[type="password"]
+form.login input[type="text"], form.login input[type="password"], form.login input[type="email"], form.login input[type="date"]
 {
     width: 100%;
     margin: 0;
     padding: 5px 10px;
     background: 0;
     border: 0;
-    border-bottom: 1px solid #FFFFFF;
+    border-bottom: 1px solid black;
     outline: 0;
     font-style: italic;
     font-size: 12px;
     font-weight: 400;
     letter-spacing: 1px;
     margin-bottom: 5px;
-    color: #FFFFFF;
+    color: #000000;
     outline: 0;
 }
 
@@ -86,7 +86,7 @@ form.login label, form.login a
 {
     font-size: 12px;
     font-weight: 400;
-    color: #FFFFFF;
+    color: #000000;
 }
 
 form.login a
@@ -123,7 +123,7 @@ form.login a:hover
     position: relative;
     margin-top: 22%;
     z-index: 999;
-    background: #FFFFFF;
+    background: #000000;
     padding: 20px 15px;
 }
 
