@@ -11,23 +11,10 @@ $docentenQuery->execute();
 $docenten = $docentenQuery->fetchAll();
 
 ?>
-<table class="table table-bordered">
-    <thead class="thead-dark">
-    <tr>
-        <th>Nummer</th>
-        <th>Geslacht</th>
-        <th>Roepnaam</th>
-        <th>Voorvoegsel</th>
-        <th>Achternaam</th>
-        <th>Opleiding</th>
-        <th>Geboortedatum</th>
-        <th>Postcode en Plaats</th>
-        <th>Begindatum</th>
-        <th>Eindedatum</th>
-        <th>Actie</th>
-    </tr>
-    </thead>
+<table>
+
     <tr><?php
+        echo "<tr><th>Student</th><th>Geslacht</th><th>Roepnaam</th><th>Voorvoegsel</th><th>Achternaam</th><th>Geboortedatum</th><th>Postcode</th><th>Plaats</th><th>Opleiding Begin</th><th>Opleiding Eind</th></tr>";
         class TableRows extends RecursiveIteratorIterator {
         function __construct($it) {
         parent::__construct($it, self::LEAVES_ONLY);
@@ -54,7 +41,7 @@ $docenten = $docentenQuery->fetchAll();
     try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT id, roepnaam, achternaam FROM gebruiker");
+    $stmt = $conn->prepare("SELECT g.studentcode, g.geslacht, g.roepnaam, g.voorvoegsel, g.achternaam, g.geboortedatum, a.postcode, a.plaatsnaam, g.opleiding_start, g.opleiding_eind FROM gebruiker g JOIN adres a ON g.adres_id=a.id WHERE g.studentcode IS NOT NULL");
     $stmt->execute();
 
     // set the resulting array to associative
