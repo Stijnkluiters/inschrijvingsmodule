@@ -6,7 +6,7 @@
  * Time: 11:11
  */
 ?>
-<table>
+<table style="width:100%">
     <tr>
         <td>Nummer</td>
         <td>Geslacht</td>
