@@ -27,7 +27,7 @@ $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
 ?>
-<table>
+<table class="table">
     <thead>
     <tr>
         <th>Student</th>
