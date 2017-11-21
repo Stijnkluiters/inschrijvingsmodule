@@ -30,9 +30,11 @@
             gebruiker.email as email,
             gebruiker.docent_id as docentcode,
             FROM gebruiker
-            WHERE id =2;);
+            WHERE id =2');
             $docentenQuery->execute();
             $docenten = $docentenQuery->fetchAll();
+            dump($docenten);
+            exit;
             ?>
         </td>
     </tr>
