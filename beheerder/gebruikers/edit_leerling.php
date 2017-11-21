@@ -6,7 +6,8 @@
  * Time: 11:11
  */
 ?>
-<table border="1"; style="100%">
+<table class="table">
+    <thead class="thead-dark">
     <tr>
         <th>Nummer</th>
         <th>Geslacht</th>
@@ -20,7 +21,10 @@
         <th>Eindedatum</th>
         <th>Actie</th>
     </tr>
+    </thead>
     <tr>
+        <td>
 
+        </td>
     </tr>
 </table>
