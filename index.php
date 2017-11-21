@@ -91,17 +91,6 @@ if(!isset($_SESSION[authenticationSessionName])) {
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item px-3">
-            <a class="nav-link" href="<?= route('/index.php'); ?>">Dashboard</a>
-        </li>
-        <li class="nav-item px-3">
-            <a class="nav-link" href="<?= route('/index.php?gebruiker=alles'); ?>">Users</a>
-        </li>
-        <li class="nav-item px-3">
-            <a class="nav-link" href="#">Settings</a>
-        </li>
-    </ul>
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item d-md-down-none">
             <a class="nav-link" href="#"><i class="icon-bell"></i><span
@@ -167,7 +156,7 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         <span class="badge badge-primary">NEW</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="charts.html"><i class="icon-pie-chart"></i> Charts</a>
+                    <a class="nav-link" href="<?= route('/index.php?evenementen=alles') ?>"><i class="icon-pie-chart"></i> Evenementen</a>
                 </li>
                 <li class="divider"></li>
                 <li class="nav-title">
@@ -247,12 +236,11 @@ if(!isset($_SESSION[authenticationSessionName])) {
                 }
 
                 // evenementen
-                if( isset($_GET[ 'evenement' ]) )
+                if( isset($_GET[ 'evenementen' ]) )
                 {
-                    if( $_GET[ 'evenement' ] === 'alles' )
+                    if( $_GET[ 'evenementen' ] === 'alles' )
                     {
-
-                        // alle evenementen
+                        include 'evenement/bekijken.php';
                     }
                     else
                     {
