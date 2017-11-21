@@ -127,9 +127,9 @@ if( isset($_POST[ 'invoeren' ]) )
                     ));
                     $medewerker_id = $db->lastInsertId();
 
-                    check_if_role_exists('leerling');
+                    check_if_role_exists('docent');
 
-                    connect_user_to_role('leerling', $medewerker_id);
+                    connect_user_to_role('docent', $medewerker_id);
 
                 }
                 //
