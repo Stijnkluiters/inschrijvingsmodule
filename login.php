@@ -68,7 +68,7 @@ if(isset($_POST['submit'])) {
                 </div>
             </div>
         </div>
-        <div class="posted-by">Posted By: <a href="http://www.jquery2dotnet.com">Bhaumik Patel</a></div>
+        <div class="posted-by">Posted By: <a href="http://www.jquery2dotnet.com">Name Not Found</a></div>
     </div>
 
 
