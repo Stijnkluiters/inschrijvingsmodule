@@ -170,7 +170,7 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     <a class="nav-link" href="charts.html"><i class="icon-pie-chart"></i> Charts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/beheerder/gebruikers/edit_leerling.php'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=insertLeerling'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
                         Aanpassen leerling
                         <span class="badge badge-primary">NEW</span></a>
@@ -244,6 +244,9 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     elseif( $_GET[ 'gebruiker' ] === 'invoerendocent' )
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
+                    }
+                    elseif($_GET['gebruiker'] === 'insertLeerling'){
+                        require 'beheerder/gebruikers/edit_leerling.php';
                     }
                     else
                     {
