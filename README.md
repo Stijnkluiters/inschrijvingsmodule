@@ -11,3 +11,4 @@
 # guidelines to adjust database table
 
    - adjust the .sql file to alter tables or add extra data for importing the database.
+

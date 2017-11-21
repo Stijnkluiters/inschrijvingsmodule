@@ -24,7 +24,18 @@
     </thead>
     <tr>
         <td>
-
+            <?php
+            $dbh = db();
+            $docentenQuery = $db->prepare('SELECT gebruiker.roepnaam as naam,
+            gebruiker.email as email,
+            gebruiker.docent_id as docentcode,
+            FROM gebruiker
+            WHERE id =2');
+            $docentenQuery->execute();
+            $docenten = $docentenQuery->fetchAll();
+            dump($docenten);
+            exit;
+            ?>
         </td>
     </tr>
 </table>
