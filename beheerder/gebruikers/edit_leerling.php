@@ -6,7 +6,7 @@
  * Time: 11:11
  */
 ?>
-<table class="table">
+<table class="table table-bordered">
     <thead class="thead-dark">
     <tr>
         <th>Nummer</th>
