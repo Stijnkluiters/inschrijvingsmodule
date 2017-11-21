@@ -20,7 +20,9 @@ $leerlingQuery = $db->prepare('SELECT
           g.opleiding_eind 
 FROM gebruiker g 
 JOIN adres a ON g.adres_id = a.id 
-WHERE g.studentcode IS NOT NULL');
+JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
+JOIN rol r ON r.id = gr.rol_id
+WHERE r.naam = "leerling"');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
