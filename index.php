@@ -253,7 +253,7 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         require 'beheerder/gebruikers/edit_leerling.php';
                     }
                     elseif($_GET['gebruiker'] == 'overzichtdocent'){
-                        require 'beheerder/gebruikers/edit_docent.php';
+                        require 'beheerder/gebruikers/bekijken_docent.php';
                     }
                     else
                     {

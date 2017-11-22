@@ -13,6 +13,8 @@
  */
 
 $db = db();
+
+/** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
 $docentenQuery = $db->prepare('SELECT 
 g.afkorting as afkorting, 
 g.roepnaam  as roepnaam, 
@@ -24,8 +26,9 @@ FROM gebruiker g
 JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
 JOIN rol r ON r.id = gr.rol_id
 WHERE r.naam = "docent" ');
-
+/** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
 $docentenQuery->execute();
+/** pas hier word de query opgehaald, een "push" */
 $docenten = $docentenQuery->fetchAll();
 
 ?>
@@ -54,7 +57,9 @@ $docenten = $docentenQuery->fetchAll();
         <th>Opleiding Eind</th>
     </tr>
     </tfoot>
+
     <?php
+    /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
     foreach ($docenten as $docent)
     {
     ?>

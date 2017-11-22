@@ -40,6 +40,8 @@ $leerlingen = $leerlingQuery->fetchAll();
         <th>Plaats</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tfoot>
@@ -54,6 +56,8 @@ $leerlingen = $leerlingQuery->fetchAll();
         <th>Plaats</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </tfoot>
     <tbody>
@@ -69,6 +73,8 @@ $leerlingen = $leerlingQuery->fetchAll();
             <td><?= $leerling[ 'plaatsnaam' ] ?></td>
             <td><?= $leerling[ 'opleiding_start' ] ?></td>
             <td><?= $leerling[ 'opleiding_eind' ] ?></td>
+            <td><a href="beheerder/gebruikers/editting_leerling.php"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+            <td><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
     <?php } ?>
     </tbody>
