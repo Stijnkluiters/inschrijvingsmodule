@@ -14,7 +14,7 @@
 
 $db = db();
 
-/** hier wordt de query voorbereid in $docentenQuery word een array gemaakt van de query */
+/** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
 $docentenQuery = $db->prepare('SELECT 
 g.afkorting as afkorting, 
 g.roepnaam  as roepnaam, 
@@ -57,6 +57,7 @@ $docenten = $docentenQuery->fetchAll();
         <th>Opleiding Eind</th>
     </tr>
     </tfoot>
+
     <?php
     /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
     foreach ($docenten as $docent)
