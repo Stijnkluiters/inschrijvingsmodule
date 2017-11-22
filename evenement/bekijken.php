@@ -10,7 +10,6 @@ $stmt->execute();
 ?>
 <div class="allEvents">
     <?php
-
     while ($row = $stmt->fetch()) {
         $id = $row["id"];
         $adres = "n.v.t.";
@@ -24,12 +23,11 @@ $stmt->execute();
         if($row["locatie_id"] != ""){
             $locatie = $row["locatie_id"];
         }
-    print("<div class='event'><h3>$titel</h3>\n
+    print("<div class='event'><a href='index.php?evenementen=wijzigen&evenement_id='$id'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a><h4>$titel</h4>
 <table>
     <tr>
         <td>Onderwerp: </td>
         <td>$onderwerp</td>
-        <td><a href='index.php?evenementen=wijzigen&evenement_id='$id'=$id'></a></td>
     </tr>
     <tr>
         <td>Datum: </td>
