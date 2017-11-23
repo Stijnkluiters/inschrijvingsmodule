@@ -244,10 +244,14 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         require 'beheerder/gebruikers/insertdocent.php';
                     }
                     elseif($_GET['gebruiker'] == 'overzichtleerling'){
-                        require 'beheerder/gebruikers/edit_leerling.php';
+                        require 'beheerder/gebruikers/overzicht_leerling.php';
                     }
                     elseif($_GET['gebruiker'] == 'overzichtdocent'){
                         require 'beheerder/gebruikers/bekijken_docent.php';
+                    } elseif($_GET['gebruiker'] == 'editleerling') {
+
+                        require 'beheerder/gebruikers/edit_leerling.php';
+
                     }
                     else
                     {
