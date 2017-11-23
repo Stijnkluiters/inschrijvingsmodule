@@ -53,6 +53,12 @@ if(!isset($_SESSION[authenticationSessionName])) {
 
     <!-- Main styles for this application -->
     <link href="public/css/style.css" rel="stylesheet">
+    <?php
+
+    if(isset($_GET['evenementen'])) {
+        echo '<link href="'.route('/public/css/evenementen.css').'" rel="stylesheet"/>';
+    }
+    ?>
     <!-- Styles required by this views -->
 </head>
 
