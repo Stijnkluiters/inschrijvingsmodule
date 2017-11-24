@@ -1,7 +1,8 @@
 <?php
 $db = db();
 
-$stmt = $db->prepare("SELECT e.id, e.titel, es.onderwerp, e.datum, e.adres_id, e.locatie_id 
+$stmt = $db->prepare("
+SELECT e.id, e.titel, es.onderwerp, e.datum, e.adres_id, e.locatie_id 
 FROM evenement e JOIN evenement_soort es 
 ON evenement_soort_id = es.id 
 LEFT JOIN locatie l ON l.id = e.locatie_id 
@@ -23,7 +24,10 @@ $stmt->execute();
         if($row["locatie_id"] != ""){
             $locatie = $row["locatie_id"];
         }
-    print("<div class='event'><a href='index.php?evenementen=wijzigen&evenement_id='$id'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a><h4>$titel</h4>
+    print("
+<div class='event'>
+<a href='index.php?evenementen=wijzigen&evenement_id='$id'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a>
+<h4>$titel</h4>
 <table>
     <tr>
         <td>Onderwerp: </td>
