@@ -21,7 +21,7 @@ include_once 'config.php';
 startsession();
 
 if(!isset($_SESSION[authenticationSessionName])) {
-    redirect('login');
+    redirect('login.php');
 }
 //if(!check_if_user_has_role('beheerder',$_SESSION[authenticationSessionName])) {
 //    redirect('login.php');
