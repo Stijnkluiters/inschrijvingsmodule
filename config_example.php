@@ -27,6 +27,6 @@ include_once 'database/database.php';
 include_once 'generic_functions.php';
 include_once 'authentication_functions.php';
 include_once 'permission_functions.php';
-
+include_once 'file_functions.php';
 startsession();
 

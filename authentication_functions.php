@@ -88,6 +88,58 @@ function logout ()
     return true;
 }
 
+function check_if_role_exists($rolnaam)
+{
+    $db = db();
+    $stmt = $db->prepare('SELECT id FROM rol WHERE naam = ?');
+    $stmt->execute(array($rolnaam));
+    $rowcount = $stmt->rowCount();
+    if(!$rowcount) {
+        $stmt = $db->prepare('INSERT INTO rol (naam, created_at, updated_at) VALUES (?,?,null)');
+        return $stmt->execute(array($rolnaam,date('Y-m-d')));
+    }
+    return $rowcount;
+}
+
+function connect_user_to_role($rolename,$user_id)
+{
+
+    check_if_role_exists($rolename);
+
+    $db = db();
+
+    $stmt = $db->prepare('select id from rol where naam = :naam');
+    $stmt->bindParam('naam', $rolename);
+    $stmt->execute();
+    $rol_id = $stmt->fetch();
+    dump($rol_id['id']);
+    dump($user_id);
+    if($rol_id) {
+        $stmt = $db->prepare('INSERT INTO gebruiker_heeft_rol (rol_id, gebruiker_id) VALUES (:role_id,:user_id)');
+        $stmt->bindParam('role_id',$rol_id['id'],PDO::PARAM_STR);
+        $stmt->bindParam('user_id',$user_id,PDO::PARAM_STR);
+        $stmt->execute();
+
+    }
+    return $rol_id;
+
+}
+function check_if_user_has_role($rolename,$user_id)
+{
+    $db = db();
+
+    $stmt = $db->prepare('select id from rol where naam = :naam');
+    $stmt->bindParam(':naam', $rolename);
+    $stmt->execute();
+    $rol_id = $stmt->fetch()['id'];
+
+    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
+    $stmt->bindParam(':rol_id',$rol_id,PDO::PARAM_INT);
+    $stmt->bindParam(':gebruiker_id',$user_id,PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+
+}
 
 
 

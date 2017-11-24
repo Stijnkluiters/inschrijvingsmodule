@@ -12,15 +12,20 @@
 // check if user is logged in.
 
 
-
+//
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
 
 
 include_once 'config.php';
 startsession();
 
 if(!isset($_SESSION[authenticationSessionName])) {
-    redirect('login.php');
+    redirect('login');
 }
+//if(!check_if_user_has_role('beheerder',$_SESSION[authenticationSessionName])) {
+//    redirect('login.php');
+//}
 
 
 ?>
@@ -50,6 +55,12 @@ if(!isset($_SESSION[authenticationSessionName])) {
 
     <!-- Main styles for this application -->
     <link href="public/css/style.css" rel="stylesheet">
+    <?php
+
+    if(isset($_GET['evenementen'])) {
+        echo '<link href="'.route('/public/css/evenementen.css').'" rel="stylesheet"/>';
+    }
+    ?>
     <!-- Styles required by this views -->
 </head>
 
@@ -159,9 +170,15 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     <a class="nav-link" href="<?= route('/index.php?evenementen=alles') ?>"><i class="icon-pie-chart"></i> Evenementen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=insertLeerling'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtleerling'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
-                        Aanpassen leerling
+                        Overzicht leerling
+                        <span class="badge badge-primary">NEW</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtdocent'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Overzicht Docent
                         <span class="badge badge-primary">NEW</span></a>
                 </li>
                 <li class="divider"></li>
@@ -230,12 +247,15 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     }
-                    elseif( $_GET[ 'gebruiker' ] === 'invoerendocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerendocent' )
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
                     }
-                    elseif($_GET['gebruiker'] === 'insertLeerling'){
+                    elseif($_GET['gebruiker'] == 'overzichtleerling'){
                         require 'beheerder/gebruikers/edit_leerling.php';
+                    }
+                    elseif($_GET['gebruiker'] == 'overzichtdocent'){
+                        require 'beheerder/gebruikers/bekijken_docent.php';
                     }
                     else
                     {

@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`gebruiker` (
   `achternaam` VARCHAR(255) NULL,
   `email` VARCHAR(45) NULL,
   `gebruikersnaam` VARCHAR(255) NULL,
+  `telefoonnummer` VARCHAR(255) NULL,
   `wachtwoord` VARCHAR(255) NULL,
   `geboortedatum` DATE NULL,
   `afkorting` VARCHAR(45) NULL,
