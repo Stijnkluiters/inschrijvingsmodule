@@ -15,7 +15,7 @@ if(isset($_POST['submit'])) {
     $output = login($username,$password);
 
 
-    redirect('index.php');
+    redirect('index');
 
 
 }
@@ -47,7 +47,7 @@ if(isset($_POST['submit'])) {
                 <div class="wrap">
                     <p class="form-title">
                         Inloggen</p>
-                    <form method="post" action="<?= route('/login.php'); ?>" class="login">
+                    <form method="post" action="<?= route('/login'); ?>" class="login">
                         <input type="text" placeholder="Username" name="gebruikersnaam" />
                         <input type="password" placeholder="Password" name="wachtwoord" />
                         <input type="submit" value="Sign In" name="submit" class="btn btn-success btn-sm" />

@@ -12,14 +12,16 @@
 // check if user is logged in.
 
 
-
+//
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
 
 
 include_once 'config.php';
 startsession();
 
 if(!isset($_SESSION[authenticationSessionName])) {
-    redirect('login.php');
+    redirect('login');
 }
 //if(!check_if_user_has_role('beheerder',$_SESSION[authenticationSessionName])) {
 //    redirect('login.php');
