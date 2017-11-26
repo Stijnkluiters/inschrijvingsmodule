@@ -51,14 +51,82 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ROC-midden Nederland evenementenmodule">
+    <meta name="author" content="Stijn Kluiters, ...">
+    <meta name="keyword"
+          content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
+    <title>Inschrijfmodule</title>
 
-    <link rel="shortcut icon" href="<?= route('/public/img/favicon.ico') ?>" type="image/vnd.microsoft.icon"/>
+    <!-- Icons -->
+    <link href="public/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
 
-    <link href="<?= route('/public/css/login.css') ?>" rel="stylesheet"/>
-    <link href="<?= route('/public/css/style.css') ?>" rel="stylesheet"/>
+    <!-- Main styles for this application -->
+    <link href="public/css/style.css" rel="stylesheet">
+    <link href="<?= route('/public/css/login.css'); ?>" rel="stylesheet"/>
 </head>
 <body style="background: none;">
 
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" action="<?= route('/register.php'); ?>" >
+                <div class="card-group">
+                    <h1>Registreren</h1>
+                    <p class="text-muted">Registreer jou beheerder</p>
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input type="text" class="form-control" placeholder="Gebruikersnaam">
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon">@</span>
+                        <input type="text" class="form-control" placeholder="E-mailadres" name="email" />
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                        <input type="password" class="form-control" placeholder="Wachtwoord" />
+                    </div>
+
+                    <div class="input-group mb-4">
+                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                        <input type="password" class="form-control" placeholder="Herhaal password" />
+                    </div>
+
+                    <button type="button" class="btn btn-block btn-success">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="container">
 

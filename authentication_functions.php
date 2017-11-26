@@ -112,8 +112,6 @@ function connect_user_to_role($rolename,$user_id)
     $stmt->bindParam('naam', $rolename);
     $stmt->execute();
     $rol_id = $stmt->fetch();
-    dump($rol_id['id']);
-    dump($user_id);
     if($rol_id) {
         $stmt = $db->prepare('INSERT INTO gebruiker_heeft_rol (rol_id, gebruiker_id) VALUES (:role_id,:user_id)');
         $stmt->bindParam('role_id',$rol_id['id'],PDO::PARAM_STR);
