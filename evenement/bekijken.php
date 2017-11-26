@@ -10,6 +10,14 @@ LEFT JOIN adres a ON a.id = e.adres_id");
 $stmt->execute();
 ?>
 <div class="allEvents">
+    <table>
+        <tr>
+            <th id="titel" class="tablehead">naam</th>
+            <th class="tablehead">onderwerp</th>
+            <th class="tablehead">datum</th>
+            <th class="tablehead">plaats</th>
+            <th class="tablehead">locatie</th>
+        </tr>
     <?php
     while ($row = $stmt->fetch()) {
         $id = $row["id"];
@@ -25,32 +33,18 @@ $stmt->execute();
             $locatie = $row["locatie_id"];
         }
 
+
         //todo: what if there are no rows? let the user know;
         //todo: escape xss attack with htmlentities();
-
-
     print("
-<div class='event'>
-<a href='" . route('/index.php?evenementen=wijzigen&evenement_id="'.$id.'"') . "'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a>
-<h4>$titel</h4>
-<table>
-    <tr>
-        <td>Onderwerp: </td>
-        <td>$onderwerp</td>
-    </tr>
-    <tr>
-        <td>Datum: </td>
-        <td>$datum</td>
-    </tr>
-    <tr>
-        <td>Adres: </td>
-        <td>$adres</td>
-    </tr>
-    <tr>
-        <td>Locatie: </td>
-        <td>$locatie</td>
-    </tr>
-</table>
-</div>");}
+        <tr>
+            <td><a href='" . route('/index.php?evenementen=wijzigen&evenement_id="'.$id.'"') . "'>$titel</a></td>
+            <td>$onderwerp</td>
+            <td>$datum</td>
+            <td>$adres</td>
+            <td>$locatie</td>
+        </tr>
+");}
     ?>
+    </table>
 </div>
