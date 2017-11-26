@@ -181,29 +181,6 @@ if(!isset($_SESSION[authenticationSessionName])) {
                         Overzicht Docent
                         <span class="badge badge-primary">NEW</span></a>
                 </li>
-                <li class="divider"></li>
-                <li class="nav-title">
-                    Extras
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-star"></i> Pages</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-login.html" target="_top"><i class="icon-star"></i>
-                                Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-register.html" target="_top"><i class="icon-star"></i>
-                                Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-404.html" target="_top"><i class="icon-star"></i> Error 404</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-500.html" target="_top"><i class="icon-star"></i> Error 500</a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -211,22 +188,6 @@ if(!isset($_SESSION[authenticationSessionName])) {
 
     <!-- Main content -->
     <main class="main">
-
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">Home</li>
-            <li class="breadcrumb-item"><a href="#">Admin</a></li>
-            <li class="breadcrumb-item active">Dashboard</li>
-
-            <!-- Breadcrumb Menu-->
-            <li class="breadcrumb-menu d-md-down-none">
-                <div class="btn-group" role="group" aria-label="Button group">
-                    <a class="btn" href="#"><i class="icon-speech"></i></a>
-                    <a class="btn" href="./"><i class="icon-graph"></i> &nbsp;Dashboard</a>
-                    <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
-                </div>
-            </li>
-        </ol>
         <!-- start content -->
         <div class="container-fluid">
             <?php
@@ -282,10 +243,6 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     elseif( $_GET[ 'evenementen' ] === 'wijzigen' )
                     {
                         include 'evenement/wijzigen.php';
-                    }
-                    else
-                    {
-                        // specifiek evenement
                     }
                 }
 
