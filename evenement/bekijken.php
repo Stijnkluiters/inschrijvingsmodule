@@ -24,9 +24,14 @@ $stmt->execute();
         if($row["locatie_id"] != ""){
             $locatie = $row["locatie_id"];
         }
+
+        //todo: what if there are no rows? let the user know;
+        //todo: escape xss attack with htmlentities();
+
+
     print("
 <div class='event'>
-<a href='index.php?evenementen=wijzigen&evenement_id='$id'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a>
+<a href='" . route('/index.php?evenementen=wijzigen&evenement_id="'.$id.'"') . "'><i class=\"fa fa-pencil fa-2x\" aria-hidden=\"true\"></i></a>
 <h4>$titel</h4>
 <table>
     <tr>
