@@ -15,11 +15,20 @@ if(isset($_POST['submit'])) {
     $output = login($username,$password);
 
 
-    redirect('index');
+    redirect('index.php');
 
 
 }
+
+$ar = array(
+    'naam'  => 'stijn',
+    'achternaam' => 'kluiters'
+);
+
+
+var_dump($ar);
 ?>
+
 <html>
     <head>
 
@@ -29,12 +38,8 @@ if(isset($_POST['submit'])) {
         <link href="<?= route('/public/css/style.css') ?>" rel="stylesheet"/>
     </head>
     <body>
-
-
     <div class="container">
-
         <div class="row">
-
             <div class="col-md-12">
                 <div class="pr-wrap">
                     <div class="pass-reset">
@@ -47,7 +52,7 @@ if(isset($_POST['submit'])) {
                 <div class="wrap">
                     <p class="form-title">
                         Inloggen</p>
-                    <form method="post" action="<?= route('/login'); ?>" class="login">
+                    <form method="post" action="<?= route('/login.php'); ?>" class="login">
                         <input type="text" placeholder="Username" name="gebruikersnaam" />
                         <input type="password" placeholder="Password" name="wachtwoord" />
                         <input type="submit" value="Sign In" name="submit" class="btn btn-success btn-sm" />
