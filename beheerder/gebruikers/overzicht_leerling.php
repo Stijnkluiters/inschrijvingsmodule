@@ -74,7 +74,7 @@ $leerlingen = $leerlingQuery->fetchAll();
             <td><?= $leerling[ 'plaatsnaam' ] ?></td>
             <td><?= $leerling[ 'opleiding_start' ] ?></td>
             <td><?= $leerling[ 'opleiding_eind' ] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editleerling?gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+            <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             <td><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
     <?php } ?>
