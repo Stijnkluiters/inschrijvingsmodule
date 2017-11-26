@@ -17,7 +17,6 @@ function PermissionBaseQuery()
     return $sql;
 }
 
-
 function has_permission($permissionString)
 {
     $dbh = db();
