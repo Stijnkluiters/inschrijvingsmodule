@@ -140,6 +140,24 @@ function check_if_user_has_role($rolename,$user_id)
     return $stmt->rowCount() > 0;
 
 }
-
+function AuthUserDetails() {
+    startsession();
+    $db = db();
+    $stmt = $db->prepare('select * from gebruiker g left join adres a on a.id = g.adres_id where g.id = :id');
+    $stmt->bindParam('id',$_SESSION[authenticationSessionName]);
+    $stmt->execute();
+    return $stmt->fetch();
+}
+function formatusername($user = null) {
+    if($user === null) {
+        $user = AuthUserDetails();
+    }
+    $gebruikernaam = ucfirst($user['roepnaam']) . ' ';
+    if(!empty($user['voorvoegsel'])) {
+        $gebruikernaam .= $user['voorvoegsel']  . ' ';
+    }
+    $gebruikernaam .= ucfirst($user['achternaam']);
+    return $gebruikernaam;
+}
 
 

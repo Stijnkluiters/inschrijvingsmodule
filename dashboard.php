@@ -1,4 +1,9 @@
+<?php
+    $db = db();
 
+
+
+?>
 <div class="container-fluid">
 
     <div class="animated fadeIn">

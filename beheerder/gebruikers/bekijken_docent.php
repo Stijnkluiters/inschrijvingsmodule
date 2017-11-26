@@ -32,7 +32,7 @@ $docentenQuery->execute();
 $docenten = $docentenQuery->fetchAll();
 
 ?>
-<table class="table table-bordered">
+<table class="table">
     <thead class="thead-dark">
         <tr>
             <th>afkorting</th>
