@@ -271,6 +271,14 @@ if(!isset($_SESSION[authenticationSessionName])) {
                     {
                         include 'evenement/bekijken.php';
                     }
+                    elseif( $_GET[ 'evenementen' ] === 'specifiek' )
+                    {
+                        include 'evenement/specifiek.php';
+                    }
+                    elseif( $_GET[ 'evenementen' ] === 'wijzigen' )
+                    {
+                        include 'evenement/wijzigen.php';
+                    }
                     else
                     {
                         // specifiek evenement
