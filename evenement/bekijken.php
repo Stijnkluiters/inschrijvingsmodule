@@ -33,10 +33,12 @@ $stmt->execute();
             $locatie = $row["locatie_id"];
         }
 
-    //<a href='index.php?evenementen=specifiek&evenement_id=" . $id . "'><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a>
+
+        //todo: what if there are no rows? let the user know;
+        //todo: escape xss attack with htmlentities();
     print("
         <tr>
-            <td><a href='index.php?evenementen=specifiek&evenement_id=" . $id . "'>$titel</a></td>
+            <td><a href='" . route('/index.php?evenementen=wijzigen&evenement_id="'.$id.'"') . "'>$titel</a></td>
             <td>$onderwerp</td>
             <td>$datum</td>
             <td>$adres</td>
