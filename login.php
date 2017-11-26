@@ -20,13 +20,6 @@ if(isset($_POST['submit'])) {
 
 }
 
-$ar = array(
-    'naam'  => 'stijn',
-    'achternaam' => 'kluiters'
-);
-
-
-var_dump($ar);
 ?>
 
 <html>
