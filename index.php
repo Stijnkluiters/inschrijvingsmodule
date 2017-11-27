@@ -130,7 +130,7 @@ else
 
             if( count($_GET) === 0 )
             {
-                include 'dashboard.php';
+                //include 'dashboard.php';
             }
             else
             {

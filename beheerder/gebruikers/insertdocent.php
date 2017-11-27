@@ -148,7 +148,7 @@ if( isset($_POST[ 'invoeren' ]) )
           class="form-horizontal">
 
         <div class="card-header">
-            <strong>Medewekers invoeren</strong>
+            <strong>Docenten Importeren</strong>
         </div>
         <?php
 
