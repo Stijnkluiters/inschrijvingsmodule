@@ -195,6 +195,13 @@ if(isset($_POST)){
             <input type="date" value="<?= $leerling[ 'opleiding_eind' ] ?>" id="text-input" name="opleiding_einde" class="form-control" placeholder="<?= $leerling[ 'opleiding_eind' ] ?>">
         </div>
     </div>
+    <?php if(isset($error)) { ?>
+    <ul>
+    <?php foreach($error as $key => $error) { ?>
+        <li><?= $key . ' : ' . $error; ?></li>
+    <?php } ?>
+    </ul>
+    <?php } ?>
 
 </form>
 <a href="<?= route('/index.php?gebruiker=overzichtleerling'); ?>" name="action" value="submit">submit</a>
