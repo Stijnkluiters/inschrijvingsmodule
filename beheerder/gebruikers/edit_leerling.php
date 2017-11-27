@@ -82,7 +82,7 @@ if(isset($_POST['submit'])){
             $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
         }
 
-    if(count($error ) > 0){
+    if(count($error ) === 0){
 
 
     /**
