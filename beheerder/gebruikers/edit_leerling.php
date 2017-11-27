@@ -5,81 +5,7 @@
  * Date: 22-11-2017
  * Time: 13:08
  */
-if( isset($_POST[ 'submit' ]) ) {
-    /**
-     * Filter input from user, which is required in order to continue the request->post.
-     */
-    /** gebruikersnaam */
-    $error = array();
-    $db = db();
-    $stmt = $db->prepare('select * from gebruiker where gebruikersnaam = :gebruikernaam');
-    $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
-    $stmt->execute();
 
-    /** Roepnaam */
-    if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
-        $error['roepnaam'] = ' Roepnaam is verplicht';
-    }
-    $roepnaam = filter_input(INPUT_POST, 'roepnaam', FILTER_SANITIZE_STRING);
-    if (empty($roepnaam)) {
-        $error['roepnaam'] = ' Het filteren van roepnaam ging verkeerd';
-    }
-    $roepnaam = strtolower($roepnaam);
-    /** Voorvoegsel */
-    $voorvoegsel = filter_input(INPUT_POST, 'voorvoegsel', FILTER_SANITIZE_STRING);
-    if ($voorvoegsel === false) {
-        $error['voorvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
-    }
-    $voorvoegsel = strtolower($voorvoegsel);
-    /** Achternaam */
-    if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
-        $error['achternaam'] = ' Achternaam is verplicht';
-    }
-    $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_STRING);
-    if (empty($achternaam)) {
-        $error['achternaam'] = ' het filteren van achternaam ging verkeerd';
-    }
-    $achternaam = strtolower($achternaam);
-
-
-    /** Email */
-    if (!isset($_POST['email']) || empty($_POST['email'])) {
-        $error['email'] = ' E-mailadres is verplicht';
-    }
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-    if (empty($email)) {
-        $email = ' het filteren van voorvoegsel ging verkeerd';
-    }
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        $error['email'] = ' E-mailadres is geen email';
-    }
-    $email = strtolower($email);
-    /** geboortedatum */
-    if (!isset($_POST['geboortedatum']) || empty($_POST['geboortedatum'])) {
-        $error['geboortedatum'] = ' Geboortedatum is verplicht';
-    }
-// check if given date can be converted to strtotime, if not. its false which means incorrect date.
-    if (!strtotime($_POST['geboortedatum'])) {
-        $error['geboortedatum'] = ' Geboortedatum moet een datum zijn.';
-    }
-    $geboortedatum = filter_input(INPUT_POST, 'geboortedatum', FILTER_SANITIZE_STRING);
-    if (empty($geboortedatum)) {
-        $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
-    }
-    /** geslacht */
-    if (!isset($_POST['geslacht']) || empty($_POST['geslacht'])) {
-        $error['geslacht'] = ' Geslacht is verplicht.';
-    }
-    $geslacht = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
-    if (empty($geslacht)) {
-        $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
-    }
-
-}
-/**
- * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
- */
 $db = db();
 $leerlingQuery = $db->prepare('SELECT 
           g.id,
@@ -101,15 +27,75 @@ WHERE r.naam = "leerling"');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
-if(isset($_POST)){
+if(isset($_POST['submit'])){
+
+        /**
+         * Filter input from user, which is required in order to continue the request->post.
+         */
+        /** gebruikersnaam */
+        $error = array();
+        $db = db();
+        $stmt = $db->prepare('select * from gebruiker where gebruikersnaam = :gebruikernaam');
+        $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
+        $stmt->execute();
+
+        /** Roepnaam */
+        if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
+            $error['roepnaam'] = ' Roepnaam is verplicht';
+        }
+        $roepnaam = filter_input(INPUT_POST, 'roepnaam', FILTER_SANITIZE_STRING);
+        if (empty($roepnaam)) {
+            $error['roepnaam'] = ' Het filteren van roepnaam ging verkeerd';
+        }
+        $roepnaam = strtolower($roepnaam);
+        /** Voorvoegsel */
+        $voorvoegsel = filter_input(INPUT_POST, 'voorvoegsel', FILTER_SANITIZE_STRING);
+        if ($voorvoegsel === false) {
+            $error['voorvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
+        }
+        $voorvoegsel = strtolower($voorvoegsel);
+        /** Achternaam */
+        if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
+            $error['achternaam'] = ' Achternaam is verplicht';
+        }
+        $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_STRING);
+        if (empty($achternaam)) {
+            $error['achternaam'] = ' het filteren van achternaam ging verkeerd';
+        }
+        $achternaam = strtolower($achternaam);
+
+        /** geboortedatum */
+        if (!isset($_POST['geboortedatum']) || empty($_POST['geboortedatum'])) {
+            $error['geboortedatum'] = ' Geboortedatum is verplicht';
+        }
+// check if given date can be converted to strtotime, if not. its false which means incorrect date.
+        if (!strtotime($_POST['geboortedatum'])) {
+            $error['geboortedatum'] = ' Geboortedatum moet een datum zijn.';
+        }
+        $geboortedatum = filter_input(INPUT_POST, 'geboortedatum', FILTER_SANITIZE_STRING);
+        if (empty($geboortedatum)) {
+            $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
+        }
+        /** geslacht */
+        if (!isset($_POST['geslacht']) || empty($_POST['geslacht'])) {
+            $error['geslacht'] = ' Geslacht is verplicht.';
+        }
+        $geslacht = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
+        if (empty($geslacht)) {
+            $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
+        }
+
+    if(count($error ) > 0){
+
+
+    /**
+     * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
+     */
     $stmt = $db->prepare('
             UPDATE gebruiker SET
             roepnaam = :roepnaam, 
             voorvoegsel = :voorvoegsel, 
             achternaam = :achternaam, 
-            email = :email, 
-            gebruikersnaam = :gebruikersnaam, 
-            wachtwoord = :wachtwoord, 
             geboortedatum = :geboortedatum, 
             geslacht = :geslacht
             WHERE id = :gebruiker_id');
@@ -117,14 +103,11 @@ if(isset($_POST)){
     $stmt->bindParam('roepnaam', $_POST['roepnaam'], PDO::PARAM_STR);
     $stmt->bindParam('voorvoegsel', $_POST['voorvoegsel'], PDO::PARAM_STR);
     $stmt->bindParam('achternaam', $_POST['achternaam'], PDO::PARAM_STR);
-    $stmt->bindParam('email', $_POST['email']);
-    $stmt->bindParam('gebruikersnaam', $_POST['gebruikersnaam']);
-    $stmt->bindParam('wachtwoord', $_POST['wachtwoord']);
     $stmt->bindParam('geboortedatum', $_POST['geboortedatum']);
     $stmt->bindParam('geslacht', $_POST['geslacht']);
     $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
     $stmt->execute();
-
+    }
 }
 
 
@@ -134,7 +117,7 @@ if(isset($_POST)){
 <?php } ?>
 
 
-<form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editleerling&gebruiker_id=' . $_GET['gebruiker_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">Studentcode</label>
         <div class="col-md-9">
@@ -202,8 +185,8 @@ if(isset($_POST)){
     <?php } ?>
     </ul>
     <?php } ?>
-
+    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
+        aanmaken
+    </button>
 </form>
-<a href="<?= route('/index.php?gebruiker=overzichtleerling'); ?>" name="action" value="submit">submit</a>
-
 </html>
