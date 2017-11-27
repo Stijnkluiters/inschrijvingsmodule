@@ -12,18 +12,24 @@ if( isset($_POST[ 'submit' ]) )
 {
 
 
-
     $username = $_POST[ 'gebruikersnaam' ];
     $password = $_POST[ 'wachtwoord' ];
 
-    if( strlen($username) === 0 )
+    if( empty($username) )
     {
         $error = 'gebruikersnaam is verplicht.';
     }
+    if( strlen($username) < 5 )
+    {
+        $error = 'gebruikersnaam moet minimaal 5 karakters zijn';
+    }
+    $username = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
+
     if( strlen($password) < 8 )
     {
         $error = 'wachtwoord moet langer dan 7 karakters zijn';
     }
+    $password = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
 
     if( !isset($error) )
     {
@@ -77,13 +83,18 @@ if( isset($_POST[ 'submit' ]) )
                             <p class="text-muted">login met jou gebruikersnaam en wachtwoord</p>
                             <div class="input-group mb-3">
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
-                                <input type="text" class="form-control" placeholder="Gebruikersnaam"
-                                       name="gebruikersnaam" required="required"/>
+                                <input type="text" class="form-control"
+                                       placeholder="Gebruikersnaam"
+                                       value="<?= (isset($password)) ? $password : ''; ?>"
+                                       name="gebruikersnaam"
+                                       required="required"/>
                             </div>
                             <div class="input-group mb-4">
                                 <span class="input-group-addon"><i class="icon-lock"></i></span>
                                 <input type="password" class="form-control" placeholder="Wachtwoord" name="wachtwoord"
-                                       autocomplete="off" required="required"/>
+
+                                       autocomplete="off"
+                                       required="required"/>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -95,11 +106,12 @@ if( isset($_POST[ 'submit' ]) )
 
                             </div>
                             <?php if( isset($error) ) { ?>
-                            <hr/>
+                                <hr/>
                                 <div class="card-footer bg-danger">
                                     <small class="text-center"><?= ucfirst($error); ?></small>
                                 </div>
                                 <?php
+
                             }
                             ?>
                         </div>
