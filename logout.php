@@ -7,4 +7,4 @@
  */
 include 'config.php';
 logout();
-redirect('index.php');
+redirect('/index.php');

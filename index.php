@@ -23,7 +23,7 @@ startsession();
 
 if( !isset($_SESSION[ authenticationSessionName ]) )
 {
-    redirect('login.php');
+    redirect('/login.php');
 }
 else
 {
@@ -31,9 +31,7 @@ else
     $user = AuthUserDetails();
 
 }
-//if(!check_if_user_has_role('beheerder',$_SESSION[authenticationSessionName])) {
-//    redirect('login.php');
-//}
+
 
 
 ?>

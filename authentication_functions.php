@@ -55,7 +55,6 @@ function login($username, $password)
 {
 
     $dbh = db();
-    // TODO: correct query with correct details
     $stmt = $dbh->prepare('SELECT id, wachtwoord FROM gebruiker WHERE gebruikersnaam = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
