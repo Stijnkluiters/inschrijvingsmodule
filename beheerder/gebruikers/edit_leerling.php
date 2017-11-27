@@ -5,53 +5,6 @@
  * Date: 22-11-2017
  * Time: 13:08
  */
-
-$db = db();
-$leerlingQuery = $db->prepare('SELECT 
-          g.id,
-          g.studentcode,
-          g.geslacht,
-          g.roepnaam,
-          g.voorvoegsel,
-          g.achternaam,
-          g.geboortedatum,
-          a.postcode,
-          a.plaatsnaam,
-          g.opleiding_start,
-          g.opleiding_eind 
-FROM gebruiker g 
-JOIN adres a ON g.adres_id = a.id 
-JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
-JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "leerling"');
-$leerlingQuery->execute();
-$leerlingen = $leerlingQuery->fetchAll();
-
-if(isset($_POST)){
-    $stmt = $db->prepare('
-            UPDATE gebruiker SET
-            roepnaam = :roepnaam, 
-            voorvoegsel = :voorvoegsel, 
-            achternaam = :achternaam, 
-            email = :email, 
-            gebruikersnaam = :gebruikersnaam, 
-            wachtwoord = :wachtwoord, 
-            geboortedatum = :geboortedatum, 
-            geslacht = :geslacht
-            WHERE id = :gebruiker_id');
-            
-    $stmt->bindParam('roepnaam', $_POST['roepnaam'], PDO::PARAM_STR);
-    $stmt->bindParam('voorvoegsel', $_POST['voorvoegsel'], PDO::PARAM_STR);
-    $stmt->bindParam('achternaam', $_POST['achternaam'], PDO::PARAM_STR);
-    $stmt->bindParam('email', $_POST['email']);
-    $stmt->bindParam('gebruikersnaam', $_POST['gebruikersnaam']);
-    $stmt->bindParam('wachtwoord', $_POST['wachtwoord']);
-    $stmt->bindParam('geboortedatum', $_POST['geboortedatum']);
-    $stmt->bindParam('geslacht', $_POST['geslacht']);
-    $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
-    $stmt->execute();
-
-}
 if( isset($_POST[ 'submit' ]) ) {
     /**
      * Filter input from user, which is required in order to continue the request->post.
@@ -127,6 +80,53 @@ if( isset($_POST[ 'submit' ]) ) {
 /**
  * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
  */
+$db = db();
+$leerlingQuery = $db->prepare('SELECT 
+          g.id,
+          g.studentcode,
+          g.geslacht,
+          g.roepnaam,
+          g.voorvoegsel,
+          g.achternaam,
+          g.geboortedatum,
+          a.postcode,
+          a.plaatsnaam,
+          g.opleiding_start,
+          g.opleiding_eind 
+FROM gebruiker g 
+JOIN adres a ON g.adres_id = a.id 
+JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
+JOIN rol r ON r.id = gr.rol_id
+WHERE r.naam = "leerling"');
+$leerlingQuery->execute();
+$leerlingen = $leerlingQuery->fetchAll();
+
+if(isset($_POST)){
+    $stmt = $db->prepare('
+            UPDATE gebruiker SET
+            roepnaam = :roepnaam, 
+            voorvoegsel = :voorvoegsel, 
+            achternaam = :achternaam, 
+            email = :email, 
+            gebruikersnaam = :gebruikersnaam, 
+            wachtwoord = :wachtwoord, 
+            geboortedatum = :geboortedatum, 
+            geslacht = :geslacht
+            WHERE id = :gebruiker_id');
+            
+    $stmt->bindParam('roepnaam', $_POST['roepnaam'], PDO::PARAM_STR);
+    $stmt->bindParam('voorvoegsel', $_POST['voorvoegsel'], PDO::PARAM_STR);
+    $stmt->bindParam('achternaam', $_POST['achternaam'], PDO::PARAM_STR);
+    $stmt->bindParam('email', $_POST['email']);
+    $stmt->bindParam('gebruikersnaam', $_POST['gebruikersnaam']);
+    $stmt->bindParam('wachtwoord', $_POST['wachtwoord']);
+    $stmt->bindParam('geboortedatum', $_POST['geboortedatum']);
+    $stmt->bindParam('geslacht', $_POST['geslacht']);
+    $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
+    $stmt->execute();
+
+}
+
 
 
 ?>
