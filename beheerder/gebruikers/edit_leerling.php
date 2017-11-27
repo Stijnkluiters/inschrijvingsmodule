@@ -34,10 +34,7 @@ if(isset($_POST['submit'])){
          */
         /** gebruikersnaam */
         $error = array();
-        $db = db();
-        $stmt = $db->prepare('select * from gebruiker where gebruikersnaam = :gebruikernaam');
-        $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
-        $stmt->execute();
+
 
         /** Roepnaam */
         if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
@@ -100,11 +97,11 @@ if(isset($_POST['submit'])){
             geslacht = :geslacht
             WHERE id = :gebruiker_id');
             
-    $stmt->bindParam('roepnaam', $_POST['roepnaam'], PDO::PARAM_STR);
-    $stmt->bindParam('voorvoegsel', $_POST['voorvoegsel'], PDO::PARAM_STR);
-    $stmt->bindParam('achternaam', $_POST['achternaam'], PDO::PARAM_STR);
-    $stmt->bindParam('geboortedatum', $_POST['geboortedatum']);
-    $stmt->bindParam('geslacht', $_POST['geslacht']);
+    $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
+    $stmt->bindParam('voorvoegsel', $voorvoegsel, PDO::PARAM_STR);
+    $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
+    $stmt->bindParam('geboortedatum', $geboortedatum);
+    $stmt->bindParam('geslacht', $geslacht);
     $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
     $stmt->execute();
     }
@@ -186,7 +183,7 @@ if(isset($_POST['submit'])){
     </ul>
     <?php } ?>
     <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
-        aanmaken
+        wijzigen
     </button>
 </form>
 </html>
