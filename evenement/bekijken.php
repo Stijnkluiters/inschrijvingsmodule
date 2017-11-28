@@ -14,9 +14,9 @@ $stmt->execute();
 //get results from query
 $rows = $stmt->fetchAll();
 
-//check for content in results (12 field per row, so divide by 12)
+//check for content in results
 $countrow = count($rows);
-if(count($countrow) > 0) {
+if (count($countrow) > 0) {
 
     //set up base for table
     print('
@@ -32,8 +32,8 @@ if(count($countrow) > 0) {
         ');
     //create a loop to get the needed info per part
 
-    foreach ($rows as $row){
-
+    foreach ($rows as $row) {
+        //put all data in variables
         htmlentities($row["id"]);
         $adres = "n.v.t.";
         $locatie = "n.v.t.";
@@ -47,20 +47,22 @@ if(count($countrow) > 0) {
             $locatie = htmlentities($row["locatie_id"]);
         }
 
-        //todo: what if there are no rows? let the user know;
-        //todo: escape xss attack with htmlentities();
-        print("
+        //print all VISIBLE variable in the table
+        print('
                 <tr>
-                    <td><a href='" . route('index.php?evenementen=specifiek&evenement_id=' . $row['id']) . "'>" . $row['titel'] . "</a></td>
-                    <td>" . $row["onderwerp"] . "</td>
-                    <td>" . $row["datum"] . "</td>
-                    <td>$adres</td>
-                    <td>$locatie</td>
+                    <td>
+                       <a href="' . route('index.php?evenementen=specifiek&evenement_id=' . $row['id']) . '">' . $row['titel'] . '</a>
+                    </td>
+                    <td>' . $row["onderwerp"] . '</td>
+                    <td>' . $row["datum"] . '</td>
+                    <td>' . $adres . '</td>
+                    <td>' . $locatie . '</td>
             </tr>
-            ");
+            ');
     }
     print("</table></div>");
-}else{
+} else {
+    //if there is no content, print following
     print("Er zijn geen evenementen op dit moment");
 }
 
