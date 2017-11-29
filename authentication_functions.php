@@ -130,7 +130,8 @@ function check_if_user_has_role($rolename,$user_id)
     $stmt->execute();
     $rol_id = $stmt->fetch()['id'];
 
-    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
+    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE 
+      gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
     $stmt->bindParam(':rol_id',$rol_id,PDO::PARAM_INT);
     $stmt->bindParam(':gebruiker_id',$user_id,PDO::PARAM_INT);
     $stmt->execute();
