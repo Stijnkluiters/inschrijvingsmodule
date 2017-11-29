@@ -11,8 +11,7 @@
     width: 15%;
 }
 
-
-i{
-    color: black;
-    float: right;
+#exception{
+    margin_top: 30px;
+    text-align: center;
 }
