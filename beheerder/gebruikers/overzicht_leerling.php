@@ -45,7 +45,7 @@ $leerlingen = $leerlingQuery->fetchAll();
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
         <th>Edit</th>
-        <th>Delete</th>
+        <th>Deleted</th>
     </tr>
     </thead>
 
