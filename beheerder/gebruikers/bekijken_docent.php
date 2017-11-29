@@ -41,20 +41,20 @@ $docenten = $docentenQuery->fetchAll();
             <th>Achternaam</th>
             <th>Geslacht</th>
             <th>Geboortedatum</th>
+            <th>wijzigen</th>
+            <th>verwijderen</th>
         </tr>
     </thead>
     <tfoot>
     <tr>
-        <th>Student</th>
-        <th>Geslacht</th>
+        <th>afkorting</th>
         <th>Roepnaam</th>
         <th>Voorvoegsel</th>
         <th>Achternaam</th>
+        <th>Geslacht</th>
         <th>Geboortedatum</th>
-        <th>Postcode</th>
-        <th>Plaats</th>
-        <th>Opleiding Begin</th>
-        <th>Opleiding Eind</th>
+        <th>wijzigen</th>
+        <th>verwijderen</th>
     </tr>
     </tfoot>
 
