@@ -157,9 +157,11 @@ else
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editleerling' )
                     {
-
                         require 'beheerder/gebruikers/edit_leerling.php';
-
+                    }
+                    elseif( $_GET[ 'gebruiker' ] == 'deleteLeerling' )
+                    {
+                        require 'beheerder/gebruikers/delete_leerling.php';
                     }
                     else
                     {

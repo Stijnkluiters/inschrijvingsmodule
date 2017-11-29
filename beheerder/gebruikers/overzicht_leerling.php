@@ -23,9 +23,12 @@ FROM gebruiker g
 JOIN adres a ON g.adres_id = a.id 
 JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
 JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "leerling"');
+WHERE r.naam = "leerling" AND deleted = FALSE');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
+
+
+
 
 ?>
 <table class="table">
@@ -60,7 +63,7 @@ $leerlingen = $leerlingQuery->fetchAll();
             <td><?= $leerling[ 'opleiding_start' ] ?></td>
             <td><?= $leerling[ 'opleiding_eind' ] ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
     <?php } ?>
     </tbody>
