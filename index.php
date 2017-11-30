@@ -28,7 +28,7 @@ if( !isset($_SESSION[ authenticationSessionName ]) )
 else
 {
 
-    $user = AuthUserDetails();
+    $user = get_user_info();
 
 }
 

@@ -108,7 +108,7 @@ function get_account_his_role($account_id)
     $db = db();
 
     $stmt = $db->prepare('
-        select * from rolnaam WHERE rol_id = (select rol_id from account where account_id = :account_id)
+        select * from rolnaam WHERE rolid = (select rol_id from account where account_id = :account_id)
     ');
     $stmt->bindParam(':account_id', $account_id);
     $stmt->execute();
@@ -140,11 +140,10 @@ function get_user_info($account = null) {
                 $sql = 'SELECT * FROM account a JOIN contactpersoon c ON a.account_id = c.account_id';
             break;
             default :
-                $sql = 'SELECT * FROM account';
+                $sql = 'SELECT * FROM account a';
                 // alleen account, omdat er geen resultaten gevonden extra zijn.
             break;
         }
-
 
         $sql .= ' WHERE a.account_id = :account_id';
         $stmt = $db->prepare($sql);
