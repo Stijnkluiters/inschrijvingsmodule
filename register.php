@@ -224,12 +224,9 @@ if (isset($_POST['submit'])) {
             $stmt->execute();
 
 
-            $stmt->debugDumpParams();
-
-
             login($gebruikersnaam,$wachtwoord);
 
-
+            redirect('/index.php');
 
     }
 }
