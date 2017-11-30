@@ -115,12 +115,17 @@ function get_account_his_role($account_id)
     return $stmt->fetch();
 }
 // haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
-function get_user_info($account) {
-
-    $rolnaam = get_account_his_role($account['account_id']);
+function get_user_info($account = null) {
+    startsession();
+    $db = db();
+    if($account === null) {
+        $account_id = $_SESSION[authenticationSessionName];
+    } else {
+        $account_id = $account['account_id'];
+    }
+    $rolnaam = get_account_his_role($account_id);
     if($rolnaam !== null) {
 
-        $db = db();
 
         $rolnaam = $rolnaam['rolnaam'];
         switch ($rolnaam) {
@@ -155,7 +160,7 @@ function get_user_info($account) {
 
 function formatusername($user = null) {
     if($user === null) {
-        $user = AuthUserDetails();
+        $user = get_user_info();
     }
     $gebruikernaam = ucfirst($user['roepnaam']) . ' ';
     if(!empty($user['voorvoegsel'])) {
