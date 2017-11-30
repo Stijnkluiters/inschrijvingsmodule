@@ -227,7 +227,6 @@ if (isset($_POST['submit'])) {
             login($gebruikersnaam,$wachtwoord);
 
             redirect('/index.php');
-
     }
 }
 
