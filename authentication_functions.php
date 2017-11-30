@@ -55,7 +55,6 @@ function login($username, $password)
 {
 
     $dbh = db();
-    // TODO: correct query with correct details
     $stmt = $dbh->prepare('SELECT id, wachtwoord FROM gebruiker WHERE gebruikersnaam = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
@@ -112,8 +111,6 @@ function connect_user_to_role($rolename,$user_id)
     $stmt->bindParam('naam', $rolename);
     $stmt->execute();
     $rol_id = $stmt->fetch();
-    dump($rol_id['id']);
-    dump($user_id);
     if($rol_id) {
         $stmt = $db->prepare('INSERT INTO gebruiker_heeft_rol (rol_id, gebruiker_id) VALUES (:role_id,:user_id)');
         $stmt->bindParam('role_id',$rol_id['id'],PDO::PARAM_STR);
@@ -133,13 +130,32 @@ function check_if_user_has_role($rolename,$user_id)
     $stmt->execute();
     $rol_id = $stmt->fetch()['id'];
 
-    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
+    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE 
+      gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
     $stmt->bindParam(':rol_id',$rol_id,PDO::PARAM_INT);
     $stmt->bindParam(':gebruiker_id',$user_id,PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->rowCount() > 0;
 
 }
-
+function AuthUserDetails() {
+    startsession();
+    $db = db();
+    $stmt = $db->prepare('select * from gebruiker g left join adres a on a.id = g.adres_id where g.id = :id');
+    $stmt->bindParam('id',$_SESSION[authenticationSessionName]);
+    $stmt->execute();
+    return $stmt->fetch();
+}
+function formatusername($user = null) {
+    if($user === null) {
+        $user = AuthUserDetails();
+    }
+    $gebruikernaam = ucfirst($user['roepnaam']) . ' ';
+    if(!empty($user['voorvoegsel'])) {
+        $gebruikernaam .= $user['voorvoegsel']  . ' ';
+    }
+    $gebruikernaam .= ucfirst($user['achternaam']);
+    return $gebruikernaam;
+}
 
 

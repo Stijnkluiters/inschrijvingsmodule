@@ -32,7 +32,18 @@ $docentenQuery->execute();
 $docenten = $docentenQuery->fetchAll();
 
 ?>
-<table class="table table-bordered">
+<div class="card" >
+    <div class="card-header">
+        <strong>Docenten importeren</strong>
+    </div>
+    <div class="card-body">
+        <p>
+            Hier kan je docenten importeren d.m.v. csv bestand
+        </p>
+        <a href="<?= route('/index.php?gebruiker=invoerendocent'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Docenten importeren</a>
+    </div>
+</div>
+<table class="table">
     <thead class="thead-dark">
         <tr>
             <th>afkorting</th>
@@ -41,20 +52,16 @@ $docenten = $docentenQuery->fetchAll();
             <th>Achternaam</th>
             <th>Geslacht</th>
             <th>Geboortedatum</th>
-            <th>wijzigen</th>
-            <th>verwijderen</th>
         </tr>
     </thead>
     <tfoot>
     <tr>
-        <th>afkorting</th>
+        <th>Student</th>
+        <th>Geslacht</th>
         <th>Roepnaam</th>
         <th>Voorvoegsel</th>
         <th>Achternaam</th>
-        <th>Geslacht</th>
         <th>Geboortedatum</th>
-        <th>wijzigen</th>
-        <th>verwijderen</th>
     </tr>
     </tfoot>
 

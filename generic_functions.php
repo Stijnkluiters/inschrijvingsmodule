@@ -15,7 +15,7 @@ function redirect($url)
         throw new Exception($url . ' is not an String you silly');
     }
 
-    return header(sprintf('Location: %s', $url));
+    return header(sprintf('Location: %s', Projectroot . $url));
 }
 
 function filter_url($url)
@@ -38,7 +38,7 @@ function filter_url($url)
 // return correct url for <ahref tags or stylesheet links
 function route($url)
 {
-    return Projectroot . $url;
+    return htmlspecialchars(Projectroot . $url);
 }
 
 function startsession()
