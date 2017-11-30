@@ -28,7 +28,7 @@ if( !isset($_SESSION[ authenticationSessionName ]) )
 else
 {
 
-    $user = AuthUserDetails();
+    $user = get_user_info();
 
 }
 
@@ -76,8 +76,8 @@ else
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
-                <img src="public/img/user.png" class="img-fluid img-avatar" alt="<?= $user['email']; ?>">
-                <span class="d-md-down-none"><?= $user['email']; ?></span>
+                <img src="public/img/user.png" class="img-fluid img-avatar" alt="<?= (!empty($user['email']) ? $user['email'] : formatusername($user)); ?>">
+                <span class="d-md-down-none"><?= (!empty($user['email']) ? $user['email'] : formatusername($user)); ?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-header">

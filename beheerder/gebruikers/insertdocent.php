@@ -129,7 +129,6 @@ if( isset($_POST[ 'invoeren' ]) )
 
                     check_if_role_exists('docent');
 
-                    connect_user_to_role('docent', $medewerker_id);
 
                 }
                 //

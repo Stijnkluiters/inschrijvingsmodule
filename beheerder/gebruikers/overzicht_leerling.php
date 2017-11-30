@@ -7,31 +7,21 @@
  * Time: 11:11
  */
 $db = db();
-$leerlingQuery = $db->prepare('SELECT 
-          g.id,
-          g.studentcode,
-          g.geslacht,
-          g.roepnaam,
-          g.voorvoegsel,
-          g.achternaam,
-          g.geboortedatum,
-          a.postcode,
-          a.plaatsnaam,
-          g.opleiding_start,
-          g.opleiding_eind 
-FROM gebruiker g 
-JOIN adres a ON g.adres_id = a.id 
-JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
-JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "leerling" AND deleted = FALSE');
+$leerlingQuery = $db->prepare('SELECT *
+  FROM leerling l
+  where account_id IN 
+  (select account_id from account where rol_id = (
+    select rolid from rolnaam where rolnaam = "leerling"
+  ))
+  ');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
 
-
-
 ?>
-<table class="table">
+<?php
+if (count($leerlingen)) { ?>
+    <table class="table">
     <thead>
     <tr>
         <th>Student</th>
@@ -42,6 +32,7 @@ $leerlingen = $leerlingQuery->fetchAll();
         <th>Geboortedatum</th>
         <th>Postcode</th>
         <th>Plaats</th>
+        <th>Opleiding</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
         <th>Edit</th>
@@ -50,22 +41,33 @@ $leerlingen = $leerlingQuery->fetchAll();
     </thead>
 
     <tbody>
-    <?php foreach ($leerlingen as $leerling) { ?>
+
+
+    <?php
+    foreach ($leerlingen as $leerling) { ?>
         <tr>
-            <td><?= $leerling[ 'studentcode' ] ?></td>
-            <td><?= $leerling[ 'geslacht' ] ?></td>
-            <td><?= $leerling[ 'roepnaam' ] ?></td>
-            <td><?= $leerling[ 'voorvoegsel' ] ?></td>
-            <td><?= $leerling[ 'achternaam' ] ?></td>
-            <td><?= $leerling[ 'geboortedatum' ] ?></td>
-            <td><?= $leerling[ 'postcode' ] ?></td>
-            <td><?= $leerling[ 'plaatsnaam' ] ?></td>
-            <td><?= $leerling[ 'opleiding_start' ] ?></td>
-            <td><?= $leerling[ 'opleiding_eind' ] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td><?= $leerling['leerlingnummer'] ?></td>
+            <td><?= $leerling['geslacht'] ?></td>
+            <td><?= $leerling['roepnaam'] ?></td>
+            <td><?= $leerling['tussenvoegsel'] ?></td>
+            <td><?= $leerling['achternaam'] ?></td>
+            <td><?= $leerling['geboortedatum'] ?></td>
+            <td><?= $leerling['postcode'] ?></td>
+            <td><?= $leerling['plaats'] ?></td>
+            <td><?= $leerling['opleiding'] ?></td>
+            <td><?= $leerling['begindatum'] ?></td>
+            <td><?= $leerling['einddatum'] ?></td>
+            <td><a href="<?= route('/index.php?gebruiker=editleerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
+                            class="fa fa-pencil" aria-hidden="true"></i></a></td>
+            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
+                            class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
-    <?php } ?>
+        <?php } ?>
     </tbody>
 
-</table>
+    </table>
+<?php } else { ?>
+
+    <h2> Er zijn geen leerlingen gevonden. </h2>
+
+<?php } ?>
