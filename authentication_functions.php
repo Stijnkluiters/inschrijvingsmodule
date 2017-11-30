@@ -55,17 +55,17 @@ function login($username, $password)
 {
 
     $dbh = db();
-    $stmt = $dbh->prepare('SELECT id, wachtwoord FROM gebruiker WHERE gebruikersnaam = :username');
+    $stmt = $dbh->prepare('SELECT account_id, wachtwoord FROM account WHERE gebruikersnaam = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if( count($result) > 0 )
     {
-        if( checkPassword($result['wachtwoord'], $password, intval($result[ 'id' ])) )
+        if( checkPassword($result['wachtwoord'], $password, intval($result[ 'account_id' ])) )
         {
             startsession();
-            $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
+            $_SESSION[ authenticationSessionName ] = $result[ 'account_id' ];
 
             return $_SESSION[ authenticationSessionName ];
         }
@@ -90,18 +90,15 @@ function logout ()
 function check_if_role_exists($rolnaam)
 {
     $db = db();
-    $stmt = $db->prepare('SELECT id FROM rol WHERE naam = ?');
+    $stmt = $db->prepare('SELECT rolid as id FROM rolnaam WHERE rolnaam = ?');
     $stmt->execute(array($rolnaam));
     $id = $stmt->fetch();
-    if($id !== false) {
-
-        $rol_id = $id['id'];
-
-
-        $stmt = $db->prepare('INSERT INTO rol (naam, created_at, updated_at) VALUES (?,?,null)');
-        $stmt->execute(array($rolnaam,date('Y-m-d')));
+    if($id === false || empty($id)) {
+        $stmt = $db->prepare('INSERT INTO rolnaam (rolnaam) VALUES (?)');
+        $stmt->execute(array($rolnaam));
         return $db->lastInsertId();
     }
+    $id = $id['id'];
     return $id;
 }
 

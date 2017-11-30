@@ -168,8 +168,6 @@ if (isset($_POST['submit'])) {
 
         $rol_id = check_if_role_exists($rolnaam);
 
-        try {
-
             $stmt = $db->prepare('
                 insert into account 
                (gebruikersnaam,wachtwoord,rol_id)
@@ -179,16 +177,18 @@ if (isset($_POST['submit'])) {
             $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
             $stmt->bindParam('wachtwoord', $generatedPassword);
             $stmt->bindParam('rol_id', $rol_id);
+            $stmt->execute();
 
-
-            $stmt = $db->prepare('select id from account where gebruikersnaam = :gebruikersnaam');
+            $stmt = $db->prepare('select account_id from account where gebruikersnaam = :gebruikersnaam');
             $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
             $stmt->execute();
-            $account_id = $stmt->fetch()['id'];
+            $account_id = $stmt->fetchAll()[0]['account_id'];
 
             $stmt = $db->prepare('
                 insert into medewerker 
-               (afkorting,
+               (
+                afkorting,
+                account_id,
                 roepnaam,
                 tussenvoegsel,
                 achternaam,
@@ -200,6 +200,7 @@ if (isset($_POST['submit'])) {
                 VALUES 
                 (
                   :afkorting,
+                  :account_id,
                   :roepnaam,
                   :tussenvoegsel,
                   :achternaam,
@@ -210,9 +211,10 @@ if (isset($_POST['submit'])) {
                   :telefoon
                 )
             ');
-            $stmt->bindParam('afkorting',$afkorting,PDO::PARAM_STR);
-            $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
-            $stmt->bindParam('voorvoegsel', $voorvoegsel, PDO::PARAM_STR);
+            $stmt->bindParam('account_id',$account_id);
+            $stmt->bindParam('afkorting',$afkorting);
+            $stmt->bindParam('roepnaam', $roepnaam);
+            $stmt->bindParam('tussenvoegsel', $voorvoegsel, PDO::PARAM_STR);
             $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
             $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
             $stmt->bindParam('geslacht', $geslacht, PDO::PARAM_STR);
@@ -222,16 +224,11 @@ if (isset($_POST['submit'])) {
             $stmt->execute();
 
 
+            $stmt->debugDumpParams();
+
 
             login($gebruikersnaam,$wachtwoord);
 
-            redirect('/index.php');
-
-
-        } catch (\PDOException $e) {
-            $db->rollBack();
-            die($e->getMessage());
-        }
 
 
     }
