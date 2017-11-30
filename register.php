@@ -8,172 +8,231 @@
  */
 include 'config.php';
 
-if( isset($_POST[ 'submit' ]) )
-{
+if (isset($_POST['submit'])) {
     /**
      * Filter input from user, which is required in order to continue the request->post.
      */
     /** gebruikersnaam */
     $error = array();
-    if( !isset($_POST[ 'gebruikersnaam' ]) || empty($_POST[ 'wachtwoord' ]) )
-    {
-        $error[ 'gebruikersnaam' ] = ' Gebruikersnaam is verplicht';
+    if (!isset($_POST['gebruikersnaam']) || empty($_POST['gebruikersnaam'])) {
+        $error['gebruikersnaam'] = ' Gebruikersnaam is verplicht';
     }
-    if( strlen($_POST[ 'gebruikersnaam' ]) < 4 )
-    {
-        $error[ 'gebruikersnaam' ] = ' gebruikersnaam moet langer dan 5 karakters zijn';
+    if (strlen($_POST['gebruikersnaam']) < 4) {
+        $error['gebruikersnaam'] = ' gebruikersnaam moet langer dan 5 karakters zijn';
     }
     $gebruikersnaam = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
     $gebruikersnaam = strtolower($gebruikersnaam);
     // controleren of de gebruikersnaam al bestaat.
     $db = db();
-    $stmt = $db->prepare('select * from gebruiker where gebruikersnaam = :gebruikernaam');
+    $stmt = $db->prepare('select * from account where gebruikersnaam = :gebruikernaam');
     $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
     $stmt->execute();
-    if( $stmt->rowCount() > 0 )
-    {
-        $error[ 'gebruikersnaam' ] = ' er bestaat al een gebruiker met de naam: ' . $gebruikersnaam;
+    if ($stmt->rowCount() > 0) {
+        $error['gebruikersnaam'] = ' er bestaat al een gebruiker met de naam: ' . $gebruikersnaam;
     }
     /** Wachtwoord */
-    if( $gebruikersnaam === false )
-    {
-        $error[ 'gebruikersnaam' ] = ' het filteren van gebruikersnaam ging verkeerd';
+    if ($gebruikersnaam === false) {
+        $error['gebruikersnaam'] = ' het filteren van gebruikersnaam ging verkeerd';
     }
-    if( !isset($_POST[ 'wachtwoord' ]) || empty($_POST[ 'wachtwoord' ]) )
-    {
-        $error[ 'wachtwoord' ] = ' Wachtwoord is verplicht';
+    if (!isset($_POST['wachtwoord']) || empty($_POST['wachtwoord'])) {
+        $error['wachtwoord'] = ' Wachtwoord is verplicht';
     }
     // wachtwoord moet minimaal 8 karakters hebben
-    if( strlen($_POST[ 'wachtwoord' ]) < 8 )
-    {
-        $error[ 'wachtwoord' ] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
+    if (strlen($_POST['wachtwoord']) < 8) {
+        $error['wachtwoord'] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
     }
     // wachtwoord moet minimaal 1 hoofdletter hebben
-    if( $_POST[ 'wachtwoord' ] === strtolower($_POST[ 'wachtwoord' ]) )
-    {
-        $error[ 'wachtwoord' ] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
+    if ($_POST['wachtwoord'] === strtolower($_POST['wachtwoord'])) {
+        $error['wachtwoord'] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
     }
     $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
-    if( $wachtwoord === false )
-    {
-        $error[ 'wachtwoord' ] = ' Het filteren van wachtwoord ging verkeerd';
+    if ($wachtwoord === false) {
+        $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
     }
 
 
     /** Herhaaling Wachtwoord */
-    if( !isset($_POST[ 'herhaal_wachtwoord' ]) || empty($_POST[ 'herhaal_wachtwoord' ]) )
-    {
-        $error[ 'herhaal_wachtwoord' ] = ' Herhalend wachtwoord is verplicht';
+    if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
+        $error['herhaal_wachtwoord'] = ' Herhalend wachtwoord is verplicht';
     }
-    if( $_POST[ 'wachtwoord' ] !== $_POST[ 'herhaal_wachtwoord' ] )
-    {
-        $error[ 'herhaal_wachtwoord' ] = ' 2 velden zijn niet het zelfde';
+    if ($_POST['wachtwoord'] !== $_POST['herhaal_wachtwoord']) {
+        $error['herhaal_wachtwoord'] = ' 2 velden zijn niet het zelfde';
     }
     /** Roepnaam */
-    if( !isset($_POST[ 'roepnaam' ]) || empty($_POST[ 'roepnaam' ]) )
-    {
-        $error[ 'roepnaam' ] = ' Roepnaam is verplicht';
+    if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
+        $error['roepnaam'] = ' Roepnaam is verplicht';
     }
     $roepnaam = filter_input(INPUT_POST, 'roepnaam', FILTER_SANITIZE_STRING);
-    if( empty($roepnaam) )
-    {
-        $error[ 'roepnaam' ] = ' Het filteren van roepnaam ging verkeerd';
+    if (empty($roepnaam)) {
+        $error['roepnaam'] = ' Het filteren van roepnaam ging verkeerd';
     }
     $roepnaam = strtolower($roepnaam);
+
+
     /** Voorvoegsel */
     $voorvoegsel = filter_input(INPUT_POST, 'voorvoegsel', FILTER_SANITIZE_STRING);
-    if( $voorvoegsel === false )
-    {
-        $error[ 'voorvoegsel' ] = ' het filteren van voorvoegsel ging verkeerd';
+    if ($voorvoegsel === false) {
+        $error['voorvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
     }
     $voorvoegsel = strtolower($voorvoegsel);
+
     /** Achternaam */
-    if( !isset($_POST[ 'achternaam' ]) || empty($_POST[ 'achternaam' ]) )
-    {
-        $error[ 'achternaam' ] = ' Achternaam is verplicht';
+    if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
+        $error['achternaam'] = ' Achternaam is verplicht';
     }
     $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_STRING);
-    if( empty($achternaam) )
-    {
-        $error[ 'achternaam' ] = ' het filteren van achternaam ging verkeerd';
+    if (empty($achternaam)) {
+        $error['achternaam'] = ' het filteren van achternaam ging verkeerd';
     }
     $achternaam = strtolower($achternaam);
 
 
-    /** Email */
-    if( !isset($_POST[ 'email' ]) || empty($_POST[ 'email' ]) )
-    {
-        $error[ 'email' ] = ' E-mailadres is verplicht';
+    /** Telefoonnummer */
+    if (!isset($_POST['telefoonnummer']) || empty($_POST['telefoonnummer'])) {
+        $error['telefoonnummer'] = ' Telefoonnummer is verplicht.';
     }
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-    if( empty($email) )
-    {
-        $email = ' het filteren van voorvoegsel ging verkeerd';
+
+    $telefoonummer = filter_input(INPUT_POST, 'telefoonnummer', FILTER_SANITIZE_STRING);
+    if (empty($telefoonummer)) {
+        $error['telefoonnummer'] = ' het filteren van telefoonnummer ging verkeerd';
     }
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    if( filter_var($email, FILTER_VALIDATE_EMAIL) === false )
-    {
-        $error[ 'email' ] = ' E-mailadres is geen email';
-    }
-    $email = strtolower($email);
+    $telefoonummer = strtolower($telefoonummer);
+    /**
+     * TODO: check if actual phonenumber; strip - signs.
+     */
+
     /** geboortedatum */
-    if( !isset($_POST[ 'geboortedatum' ]) || empty($_POST[ 'geboortedatum' ]) )
-    {
-        $error[ 'geboortedatum' ] = ' Geboortedatum is verplicht';
+    if (!isset($_POST['geboortedatum']) || empty($_POST['geboortedatum'])) {
+        $error['geboortedatum'] = ' Geboortedatum is verplicht';
     }
     // check if given date can be converted to strtotime, if not. its false which means incorrect date.
-    if( !strtotime($_POST[ 'geboortedatum' ]) )
-    {
-        $error[ 'geboortedatum' ] = ' Geboortedatum moet een datum zijn.';
+    if (!strtotime($_POST['geboortedatum'])) {
+        $error['geboortedatum'] = ' Ge  boortedatum moet een datum zijn.';
     }
     $geboortedatum = filter_input(INPUT_POST, 'geboortedatum', FILTER_SANITIZE_STRING);
-    if( empty($geboortedatum) )
-    {
-        $error[ 'geboortedatum' ] = ' het filteren van geboortedatum ging verkeerd';
+    if (empty($geboortedatum)) {
+        $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
     }
+
     /** geslacht */
-    if( !isset($_POST[ 'geslacht' ]) || empty($_POST[ 'geslacht' ]) )
-    {
-        $error[ 'geslacht' ] = ' Geslacht is verplicht.';
+    if (!isset($_POST['geslacht']) || empty($_POST['geslacht'])) {
+        $error['geslacht'] = ' Geslacht is verplicht.';
     }
     $geslacht = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
-    if( empty($geslacht) )
-    {
-        $error[ 'geslacht' ] = ' het filteren van geslacht ging verkeerd';
+    if (empty($geslacht)) {
+        $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
     }
+
+    /** Afkorting */
+    if (!isset($_POST['afkorting']) || empty($_POST['afkorting'])) {
+        $error['afkorting'] = ' Afkorting is verplicht';
+    }
+    $afkorting = filter_input(INPUT_POST, 'afkorting', FILTER_SANITIZE_STRING);
+    if (empty($afkorting)) {
+        $error['afkorting'] = ' het filteren van afkorting ging verkeerd';
+    }
+    $afkorting = strtolower($afkorting);
+
+    /** Functie */
+    if (!isset($_POST['functie']) || empty($_POST['functie'])) {
+        $error['functie'] = ' Functie is verplicht';
+    }
+    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
+    if (empty($functie)) {
+        $error['functie'] = ' het filteren van functie ging verkeerd';
+    }
+    $functie = strtolower($functie);
+
+    /** Locatie */
+    if (!isset($_POST['locatie']) || empty($_POST['locatie'])) {
+        $error['locatie'] = ' locatie is verplicht';
+    } else {
+        $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
+        if (empty($locatie)) {
+            $error['locatie'] = ' het filteren van locatie ging verkeerd';
+        }
+        $locatie = strtolower($locatie);
+    }
+
 
 
     /**
      * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
      */
-    if( count($error) === 0 )
-    {
-        $wachtwoord = generatePassword($wachtwoord);
-        $stmt = $db->prepare('
-            insert into gebruiker 
-            (roepnaam,voorvoegsel,achternaam,email,gebruikersnaam,wachtwoord,geboortedatum,geslacht)
-            VALUES 
-            (:roepnaam,:voorvoegsel,:achternaam,:email,:gebruikersnaam,:wachtwoord,:geboortedatum,:geslacht)
-        ');
-        $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
-        $stmt->bindParam('voorvoegsel', $voorvoegsel, PDO::PARAM_STR);
-        $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
-        $stmt->bindParam('email', $email);
-        $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
-        $stmt->bindParam('wachtwoord', $wachtwoord);
-        $stmt->bindParam('geboortedatum', $geboortedatum);
-        $stmt->bindParam('geslacht', $geslacht);
-        $stmt->execute();
-        $gebruiker_id = $db->lastInsertId();
+    if (count($error) === 0) {
+        $generatedPassword = generatePassword($wachtwoord);
+        // gather rol_id
 
-        if( connect_user_to_role('beheerder', $gebruiker_id) )
-        {
-            // all checks have been done, redirect user to the index page and log them in.
-            startsession();
-            $_SESSION[ authenticationSessionName ] = $gebruiker_id;
+
+        $rolnaam = 'beheerder';
+
+        $rol_id = check_if_role_exists($rolnaam);
+
+        try {
+
+            $stmt = $db->prepare('
+                insert into account 
+               (gebruikersnaam,wachtwoord,rol_id)
+                VALUES 
+                (:gebruikersnaam,:wachtwoord,:rol_id)
+            ');
+            $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
+            $stmt->bindParam('wachtwoord', $generatedPassword);
+            $stmt->bindParam('rol_id', $rol_id);
+
+
+            $stmt = $db->prepare('select id from account where gebruikersnaam = :gebruikersnaam');
+            $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
+            $stmt->execute();
+            $account_id = $stmt->fetch()['id'];
+
+            $stmt = $db->prepare('
+                insert into medewerker 
+               (afkorting,
+                roepnaam,
+                tussenvoegsel,
+                achternaam,
+                functie,
+                geslacht,
+                geboortedatum,
+                locatie,
+                telefoon)
+                VALUES 
+                (
+                  :afkorting,
+                  :roepnaam,
+                  :tussenvoegsel,
+                  :achternaam,
+                  :functie,
+                  :geslacht,
+                  :geboortedatum,
+                  :locatie,
+                  :telefoon
+                )
+            ');
+            $stmt->bindParam('afkorting',$afkorting,PDO::PARAM_STR);
+            $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
+            $stmt->bindParam('voorvoegsel', $voorvoegsel, PDO::PARAM_STR);
+            $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
+            $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
+            $stmt->bindParam('geslacht', $geslacht, PDO::PARAM_STR);
+            $stmt->bindParam('geboortedatum', $geboortedatum, PDO::PARAM_STR);
+            $stmt->bindParam('locatie', $locatie, PDO::PARAM_STR);
+            $stmt->bindParam('telefoon', $telefoonummer, PDO::PARAM_STR);
+            $stmt->execute();
+
+
+
+            login($gebruikersnaam,$wachtwoord);
 
             redirect('/index.php');
+
+
+        } catch (\PDOException $e) {
+            $db->rollBack();
+            die($e->getMessage());
         }
+
 
     }
 }
@@ -214,122 +273,125 @@ if( isset($_POST[ 'submit' ]) )
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                             <input id="gebruikersnaam" name="gebruikersnaam" type="text"
-                                   class="form-control<?= (isset($error[ 'gebruikersnaam' ])) ? ' is-invalid' : '' ?> "
+                                   class="form-control<?= (isset($error['gebruikersnaam'])) ? ' is-invalid' : '' ?> "
                                    required="required"
                                    placeholder="Gebruikersnaam"
                                    value="<?= (isset($gebruikersnaam)) ? $gebruikersnaam : ''; ?>"
                                    aria-describedby="helpGebruikernaam"/>
                         </div>
-                        <?php if( isset($error[ 'gebruikersnaam' ]) ) { ?>
+                        <?php if (isset($error['gebruikersnaam'])) { ?>
                             <!-- Gebruikersnaam helper -->
                             <span id="helpGebruikernaam"
-                                  class="form-text bg-danger text-white"><?= $error[ 'gebruikersnaam' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['gebruikersnaam']; ?></span>
                         <?php } ?>
                         <!-- Wachtwoord Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                             <input id="wachtwoord" name="wachtwoord" type="password"
-                                   class="form-control<?= (isset($error[ 'wachtwoord' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['wachtwoord'])) ? ' is-invalid' : '' ?>"
                                    required="required" placeholder="Uw wachtwoord" aria-describedby="helpWachtwoord"/>
                         </div>
-                        <?php if( isset($error[ 'wachtwoord' ]) ) { ?>
+                        <?php if (isset($error['wachtwoord'])) { ?>
                             <!-- Wachtwoord helper -->
                             <span id="helpWachtwoord"
-                                  class="form-text bg-danger text-white"><?= $error[ 'wachtwoord' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['wachtwoord']; ?></span>
                         <?php } ?>
                         <!-- repeat_wachtwoord Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                             <input id="herhaal_wachtwoord" name="herhaal_wachtwoord" type="password"
-                                   class="form-control<?= (isset($error[ 'herhaal_wachtwoord' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['herhaal_wachtwoord'])) ? ' is-invalid' : '' ?>"
                                    required="required" placeholder="Herhaal uw wachtwoord"
                                    aria-describedby="helpHerhaalWachtwoord"/>
                         </div>
-                        <?php if( isset($error[ 'herhaal_wachtwoord' ]) ) { ?>
+                        <?php if (isset($error['herhaal_wachtwoord'])) { ?>
                             <!-- repeat_wachtwoord helper -->
                             <span id="helpHerhaalWachtwoord"
-                                  class="form-text bg-danger text-white"><?= $error[ 'herhaal_wachtwoord' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['herhaal_wachtwoord']; ?></span>
                         <?php } ?>
 
                         <!-- Roepnaam Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-male"></i></span>
                             <input id="roepnaam" name="roepnaam" type="text"
-                                   class="form-control<?= (isset($error[ 'roepnaam' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['roepnaam'])) ? ' is-invalid' : '' ?>"
                                    required="required"
                                    value="<?= (isset($roepnaam)) ? $roepnaam : ''; ?>"
                                    placeholder="Uw roepnaam"
                                    aria-describedby="helpRoepnaam"/>
                         </div>
-                        <?php if( isset($error[ 'roepnaam' ]) ) { ?>
+                        <?php if (isset($error['roepnaam'])) { ?>
                             <!-- Roepnaam Helper -->
                             <span id="helpRoepnaam"
-                                  class="form-text bg-danger text-white"><?= $error[ 'roepnaam' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['roepnaam']; ?></span>
                         <?php } ?>
                         <!-- Voorvoegsel Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-male"></i></span>
                             <input id="voorvoegsel" name="voorvoegsel" type="text"
-                                   class="form-control<?= (isset($error[ 'voorvoegsel' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['voorvoegsel'])) ? ' is-invalid' : '' ?>"
                                    value="<?= (isset($voorvoegsel)) ? $voorvoegsel : ''; ?>"
                                    placeholder="Uw voorvoegsel"
                                    aria-describedby="helpVoorvoegsel"/>
                         </div>
-                        <?php if( isset($error[ 'voorvoegsel' ]) ) { ?>
+                        <?php if (isset($error['voorvoegsel'])) { ?>
                             <!-- Voervoegsel Helper -->
                             <span id="helpVoorvoegsel"
-                                  class="form-text bg-danger text-white"><?= $error[ 'voorvoegsel' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['voorvoegsel']; ?></span>
                         <?php } ?>
 
                         <!-- Achternaam Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-male"></i></span>
                             <input id="achternaam" name="achternaam" type="text"
-                                   class="form-control<?= (isset($error[ 'achternaam' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['achternaam'])) ? ' is-invalid' : '' ?>"
                                    value="<?= (isset($achternaam)) ? $achternaam : ''; ?>"
                                    placeholder="Uw achternaam"
                                    aria-describedby="helpAchternaam"/>
                         </div>
-                        <?php if( isset($error[ 'achternaam' ]) ) { ?>
+                        <?php if (isset($error['achternaam'])) { ?>
                             <!-- Achternaam Helper -->
                             <span id="helpAchternaam"
-                                  class="form-text bg-danger text-white"><?= $error[ 'achternaam' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['achternaam']; ?></span>
                         <?php } ?>
 
-
-                        <!-- E-mail Form -->
+                        <!-- Telefoonnummer Form -->
                         <div class="input-group mt-3">
-                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            <input id="email" name="email" type="email"
-                                   class="form-control<?= (isset($error[ 'email' ])) ? ' is-invalid' : '' ?>"
-                                   value="<?= (isset($email)) ? $email : ''; ?>"
-                                   placeholder="Uw e-mailadres"
-                                   aria-describedby="helpEmail"/>
+                            <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                            <input id="telefoonnummer" name="telefoonnummer" type="text"
+                                   class="form-control<?= (isset($error['telefoonnummer'])) ? ' is-invalid' : '' ?>"
+                                   value="<?= (isset($telefoonnummer)) ? $telefoonnummer : ''; ?>"
+                                   placeholder="Uw telefoonnummer"
+                                   aria-describedby="helpTelefoonnummer"/>
                         </div>
-                        <?php if( isset($error[ 'email' ]) ) { ?>
-                            <!-- E-mail Helper -->
-                            <span id="helpEmail" class="form-text bg-danger text-white"><?= $error[ 'email' ]; ?></span>
+                        <?php if (isset($error['telefoonnummer'])) { ?>
+                            <!-- Telefoonnummer Helper -->
+                            <span id="helpTelefoonnummer"
+                                  class="form-text bg-danger text-white"><?= $error['telefoonnummer']; ?></span>
                         <?php } ?>
 
                         <!-- Geboortedatum Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             <input id="geboortedatum" name="geboortedatum" type="date"
-                                   class="form-control<?= (isset($error[ 'geboortedatum' ])) ? ' is-invalid' : '' ?>"
+                                   class="form-control<?= (isset($error['geboortedatum'])) ? ' is-invalid' : '' ?>"
                                    value="<?= (isset($geboortedatum)) ? $geboortedatum : ''; ?>"
                                    placeholder="dd-mm-jjjj"
                                    aria-describedby="helpDate"/>
                         </div>
-                        <?php if( isset($error[ 'geboortedatum' ]) ) { ?>
+                        <?php if (isset($error['geboortedatum'])) { ?>
+                            <!-- Geboortedatum Helper -->
                             <span id="helpDate"
-                                  class="form-text bg-danger text-white"><?= $error[ 'geboortedatum' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['geboortedatum']; ?></span>
                         <?php } ?>
+
+
 
                         <!-- Geslacht Form -->
                         <div class="input-group form-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-genderless"></i></span>
                             <select id="geslacht" name="geslacht" required="required"
-                                    class="form-control<?= (isset($error[ 'geslacht' ])) ? ' is-invalid' : '' ?>"
+                                    class="form-control<?= (isset($error['geslacht'])) ? ' is-invalid' : '' ?>"
                                     aria-describedby="helpGeslacht">
                                 <option <?= (!isset($geslacht)) ? 'selected="selected"' : '' ?> value="">Kies uw
                                     geslacht
@@ -345,13 +407,58 @@ if( isset($_POST[ 'submit' ]) )
                                 </option>
                             </select>
                         </div>
-                        <?php if( isset($error[ 'geslacht' ]) ) { ?>
+                        <?php if (isset($error['geslacht'])) { ?>
                             <!-- Geslacht Helper -->
                             <span id="helpGeslacht"
-                                  class="form-text bg-danger text-white"><?= $error[ 'geslacht' ]; ?></span>
+                                  class="form-text bg-danger text-white"><?= $error['geslacht']; ?></span>
                         <?php } ?>
 
 
+                        <!-- Afkorting Form -->
+                        <div class="input-group mt-3">
+                            <span class="input-group-addon"><i class="fa fa-dedent"></i></span>
+                            <input id="afkorting" name="afkorting" type="text"
+                                   class="form-control<?= (isset($error['afkorting'])) ? ' is-invalid' : '' ?>"
+                                   value="<?= (isset($afkorting)) ? $afkorting : ''; ?>"
+                                   placeholder="Uw afkorting"
+                                   aria-describedby="helpAfkorting"/>
+                        </div>
+                        <?php if (isset($error['afkorting'])) { ?>
+                            <!-- Afkorting Helper -->
+                            <span id="helpAfkorting"
+                                  class="form-text bg-danger text-white"><?= $error['afkorting']; ?></span>
+                        <?php } ?>
+
+                        <!-- Functie Form -->
+                        <div class="input-group mt-3">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input id="functie" name="functie" type="text"
+                                   class="form-control<?= (isset($error['functie'])) ? ' is-invalid' : '' ?>"
+                                   value="<?= (isset($functie)) ? $functie : ''; ?>"
+                                   placeholder="Uw functie"
+                                   aria-describedby="helpFunctie"/>
+                        </div>
+                        <?php if (isset($error['functie'])) { ?>
+                            <!-- Functie Helper -->
+                            <span id="helpFunctie"
+                                  class="form-text bg-danger text-white"><?= $error['functie']; ?></span>
+                        <?php } ?>
+
+
+                        <!-- Locatie Form -->
+                        <div class="input-group mt-3">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input id="locatie" name="locatie" type="text"
+                                   class="form-control<?= (isset($error['locatie'])) ? ' is-invalid' : '' ?>"
+                                   value="<?= (isset($locatie)) ? $locatie : ''; ?>"
+                                   placeholder="Uw locatie"
+                                   aria-describedby="helpLocatie"/>
+                        </div>
+                        <?php if (isset($error['locatie'])) { ?>
+                            <!-- Locatie Helper -->
+                            <span id="helpLocatie"
+                                  class="form-text bg-danger text-white"><?= $error['locatie']; ?></span>
+                        <?php } ?>
                         <hr/>
                         <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
                             aanmaken

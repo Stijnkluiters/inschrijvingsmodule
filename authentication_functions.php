@@ -92,12 +92,17 @@ function check_if_role_exists($rolnaam)
     $db = db();
     $stmt = $db->prepare('SELECT id FROM rol WHERE naam = ?');
     $stmt->execute(array($rolnaam));
-    $rowcount = $stmt->rowCount();
-    if(!$rowcount) {
+    $id = $stmt->fetch();
+    if($id !== false) {
+
+        $rol_id = $id['id'];
+
+
         $stmt = $db->prepare('INSERT INTO rol (naam, created_at, updated_at) VALUES (?,?,null)');
-        return $stmt->execute(array($rolnaam,date('Y-m-d')));
+        $stmt->execute(array($rolnaam,date('Y-m-d')));
+        return $db->lastInsertId();
     }
-    return $rowcount;
+    return $id;
 }
 
 function connect_user_to_role($rolename,$user_id)
