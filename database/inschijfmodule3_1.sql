@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`medewerker` (
   `geslacht` VARCHAR(255) NOT NULL,
   `geboortedatum` DATETIME NOT NULL,
   `locatie` VARCHAR(255) NOT NULL,
-  `telefoon` INT NOT NULL,
+  `telefoon` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`afkorting`),
   CONSTRAINT `fk_medewerker_account1`
     FOREIGN KEY (`account_id`)
