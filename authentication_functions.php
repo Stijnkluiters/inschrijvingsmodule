@@ -124,9 +124,8 @@ function get_user_info($account = null) {
         $account_id = $account['account_id'];
     }
     $rolnaam = get_account_his_role($account_id);
+
     if($rolnaam !== null) {
-
-
         $rolnaam = $rolnaam['rolnaam'];
         switch ($rolnaam) {
             case 'beheerder':
@@ -147,7 +146,8 @@ function get_user_info($account = null) {
 
         $sql .= ' WHERE a.account_id = :account_id';
         $stmt = $db->prepare($sql);
-        $stmt->bindParam('account_id',$account['account_id']);
+        $stmt->bindParam('account_id',$account_id);
+
         $stmt->execute();
         return $stmt->fetch();
     } else {
@@ -157,15 +157,16 @@ function get_user_info($account = null) {
 }
 
 
-function formatusername($user = null) {
-    if($user === null) {
-        $user = get_user_info();
+function formatusername($account = null) {
+    if($account === null) {
+        $account = get_user_info();
     }
-    $gebruikernaam = ucfirst($user['roepnaam']) . ' ';
-    if(!empty($user['voorvoegsel'])) {
-        $gebruikernaam .= $user['voorvoegsel']  . ' ';
+    $gebruikernaam = ucfirst($account['roepnaam']) . ' ';
+    if(!empty($account['voorvoegsel'])) {
+        $gebruikernaam .= $account['voorvoegsel']  . ' ';
     }
-    $gebruikernaam .= ucfirst($user['achternaam']);
+    $gebruikernaam .= ucfirst($account['achternaam']);
+
     return $gebruikernaam;
 }
 

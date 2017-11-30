@@ -18,10 +18,10 @@ $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
 
-
-
 ?>
-<table class="table">
+<?php
+if (count($leerlingen)) { ?>
+    <table class="table">
     <thead>
     <tr>
         <th>Student</th>
@@ -40,22 +40,32 @@ $leerlingen = $leerlingQuery->fetchAll();
     </thead>
 
     <tbody>
-    <?php foreach ($leerlingen as $leerling) { ?>
+
+
+    <?php
+    foreach ($leerlingen as $leerling) { ?>
         <tr>
-            <td><?= $leerling[ 'studentcode' ] ?></td>
-            <td><?= $leerling[ 'geslacht' ] ?></td>
-            <td><?= $leerling[ 'roepnaam' ] ?></td>
-            <td><?= $leerling[ 'voorvoegsel' ] ?></td>
-            <td><?= $leerling[ 'achternaam' ] ?></td>
-            <td><?= $leerling[ 'geboortedatum' ] ?></td>
-            <td><?= $leerling[ 'postcode' ] ?></td>
-            <td><?= $leerling[ 'plaatsnaam' ] ?></td>
-            <td><?= $leerling[ 'opleiding_start' ] ?></td>
-            <td><?= $leerling[ 'opleiding_eind' ] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&gebruiker_id='.$leerling['id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td><?= $leerling['studentcode'] ?></td>
+            <td><?= $leerling['geslacht'] ?></td>
+            <td><?= $leerling['roepnaam'] ?></td>
+            <td><?= $leerling['voorvoegsel'] ?></td>
+            <td><?= $leerling['achternaam'] ?></td>
+            <td><?= $leerling['geboortedatum'] ?></td>
+            <td><?= $leerling['postcode'] ?></td>
+            <td><?= $leerling['plaatsnaam'] ?></td>
+            <td><?= $leerling['opleiding_start'] ?></td>
+            <td><?= $leerling['opleiding_eind'] ?></td>
+            <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id=' . $leerling['id']); ?>"><i
+                            class="fa fa-pencil" aria-hidden="true"></i></a></td>
+            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&gebruiker_id=' . $leerling['id']); ?>"><i
+                            class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
-    <?php } ?>
+        <?php } ?>
     </tbody>
 
-</table>
+    </table>
+<?php } else { ?>
+
+    <h2> er zijn geen leerlingen gevonden. </h2>
+
+<?php } ?>
