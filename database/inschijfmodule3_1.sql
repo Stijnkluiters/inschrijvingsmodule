@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule2`.`evenement` (
   `lokaalnummer` VARCHAR(255) NULL COMMENT '',
   `soort` VARCHAR(255) NOT NULL COMMENT '',
   `contactnr` INT NULL COMMENT '',
+  `deleted_at` DATETIME NULL COMMENT '',
   PRIMARY KEY (`evenement_id`)  COMMENT '',
   INDEX `fk_evenement_Soort1_idx` (`soort` ASC)  COMMENT '',
   INDEX `fk_evenement_account1_idx` (`account_id` ASC)  COMMENT '',
