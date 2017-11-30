@@ -16,12 +16,13 @@ $db = db();
 
 /** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
 $docentenQuery = $db->prepare('SELECT 
-g.afkorting as afkorting, 
-g.roepnaam  as roepnaam, 
-g.voorvoegsel as voorvoegsel, 
-g.achternaam as achternaam, 
-g.geslacht as geslacht, 
-g.geboortedatum as geboortedatum  
+g.id,
+g.afkorting, 
+g.roepnaam, 
+g.voorvoegsel, 
+g.achternaam, 
+g.geslacht, 
+g.geboortedatum  
 FROM gebruiker g 
 JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
 JOIN rol r ON r.id = gr.rol_id
@@ -52,6 +53,8 @@ $docenten = $docentenQuery->fetchAll();
             <th>Achternaam</th>
             <th>Geslacht</th>
             <th>Geboortedatum</th>
+            <th>wijzigen</th>
+            <th>verwijderen</th>
         </tr>
     </thead>
     <tfoot>
@@ -62,6 +65,8 @@ $docenten = $docentenQuery->fetchAll();
         <th>Voorvoegsel</th>
         <th>Achternaam</th>
         <th>Geboortedatum</th>
+        <th>wijzigen</th>
+        <th>verwijderen</th>
     </tr>
     </tfoot>
 

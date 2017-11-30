@@ -50,31 +50,31 @@ if(isset($_POST['delete'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Naam</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $docent[ 'roepnaam' ] ?>" id="text-input" name="roepnaam" class="form-control" disable placeholder="<?= $docent[ 'roepnaam' ] ?>">
+            <input type="text" value="<?= $docent[ 'roepnaam' ] ?>" id="text-input" name="roepnaam" class="form-control" disabled placeholder="<?= $docent[ 'roepnaam' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Tussenvoegsel</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $docent[ 'voorvoegsel' ] ?>" id="text-input" name="voorvoegsel" class="form-control" disable placeholder="<?= $docent[ 'voorvoegsel' ] ?>">
+            <input type="text" value="<?= $docent[ 'voorvoegsel' ] ?>" id="text-input" name="voorvoegsel" class="form-control" disabled placeholder="<?= $docent[ 'voorvoegsel' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Achternaam</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $docent[ 'achternaam' ] ?>" id="text-input" name="achternaam" class="form-control" disable placeholder="<?= $docent[ 'achternaam' ] ?>">
+            <input type="text" value="<?= $docent[ 'achternaam' ] ?>" id="text-input" name="achternaam" class="form-control" disabled placeholder="<?= $docent[ 'achternaam' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Geslacht</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $docent[ 'geslacht' ] ?>" id="text-input" name="geslacht" class="form-control" disable placeholder="<?= $docent[ 'geslacht' ] ?>">
+            <input type="text" value="<?= $docent[ 'geslacht' ] ?>" id="text-input" name="geslacht" class="form-control" disabled placeholder="<?= $docent[ 'geslacht' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $docent[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" disable placeholder="<?= $docent[ 'geboortedatum' ] ?>">
+            <input type="date" value="<?= $docent[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $docent[ 'geboortedatum' ] ?>">
         </div>
     </div>
     <?php if(isset($error)) { ?>

@@ -109,7 +109,7 @@ if(isset($_POST['submit'])){
 <?php } ?>
 
 
-<form action="<?= route('/index.php?gebruiker=editdocent&gebruiker_id=' . $_GET['gebruiker_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action<="<?= route('/index.php?gebruiker=editdocent&gebruiker_id=' . $_GET['gebruiker_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">afkorting</label>
         <div class="col-md-9">
@@ -145,9 +145,9 @@ if(isset($_POST['submit'])){
         <div class="col-md-9">
             <input type="date" value="<?= $docent[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" placeholder="<?= $docent[ 'geboortedatum' ] ?>">
         </div>
+    </div>
 
-
-    <?php if(isset($error)) { ?>
+        <?php if(isset($error)) { ?>
         <ul>
             <?php foreach($error as $key => $error) { ?>
                 <li><?= $key . ' : ' . $error; ?></li>
