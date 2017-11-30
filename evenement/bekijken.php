@@ -14,9 +14,10 @@ $stmt->execute();
 //get results from query
 $rows = $stmt->fetchAll();
 
+
 //check for content in results
 $countrow = count($rows);
-if (count($countrow) > 0) {
+if ($countrow > 0) {
 
     //set up base for table
     print('
@@ -47,11 +48,11 @@ if (count($countrow) > 0) {
             $locatie = htmlentities($row["locatie_id"]);
         }
 
-        //print all VISIBLE variable in the table
+        //print all VISIBLE variables in the table
         print('
                 <tr>
                     <td>
-                       <a href="' . route('index.php?evenementen=specifiek&evenement_id=' . $row['id']) . '">' . $row['titel'] . '</a>
+                       <a href="' . route('/index.php?evenementen=specifiek&evenement_id=' . $row['id']) . '">' . $row['titel'] . '</a>
                     </td>
                     <td>' . $row["onderwerp"] . '</td>
                     <td>' . $row["datum"] . '</td>

@@ -4,7 +4,6 @@
     margin: 0 5px 5px 0;
     width: 80%;
     border-radius: 6px;
-    float: left;
 }
 
 .tablehead {
@@ -14,4 +13,13 @@
 #exception{
     margin_top: 30px;
     text-align: center;
+}
+
+i {
+    color: black;
+    float: right;
+}
+
+i:hover {
+    color: #555555;
 }
