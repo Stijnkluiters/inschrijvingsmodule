@@ -163,6 +163,13 @@ else
                     {
                         require 'beheerder/gebruikers/delete_leerling.php';
                     }
+                    elseif( $_GET[ 'gebruiker' ] == 'editdocent' ) {
+                        require 'beheerder/gebruikers/edit_docent.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletedocent' )
+                    {
+                        require 'beheerder/gebruikers/delete_docent.php';
+                    }
                     else
                     {
                         exit;
