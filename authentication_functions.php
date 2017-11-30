@@ -153,15 +153,6 @@ function get_user_info($account) {
 }
 
 
-function AuthUserDetails() {
-    startsession();
-    $db = db();
-
-    $stmt = $db->prepare('select * from  left join adres a on a.id = g.adres_id where g.id = :id');
-    $stmt->bindParam('id',$_SESSION[authenticationSessionName]);
-    $stmt->execute();
-    return $stmt->fetch();
-}
 function formatusername($user = null) {
     if($user === null) {
         $user = AuthUserDetails();
