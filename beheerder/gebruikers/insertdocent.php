@@ -47,7 +47,7 @@ if( isset($_POST[ 'invoeren' ]) )
 
 
         // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
-        foreach ($medewerkers as $key  => $medewerker)
+        foreach ($medewerkers as $regelnummer  => $medewerker)
         {
 
 
@@ -100,7 +100,7 @@ if( isset($_POST[ 'invoeren' ]) )
             /**
              *  Locatie
              */
-            if(strlen($medewerker['Locatie']) === 0) {
+            if(strlen($medewerker['Gekoppelde locaties']) === 0) {
                 $error = 'Locatie is verplicht. op regel: ' . ($regelnummer + 1);
             }
             /**
@@ -186,7 +186,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 throw new PDOException($exception->getMessage());
             }
         }
-        redirect('/index.php?gebruiker=overzichtdocent');
+        //redirect('/index.php?gebruiker=overzichtdocent');
     }
 }
 ?>
