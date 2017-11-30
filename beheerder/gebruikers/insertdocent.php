@@ -44,95 +44,97 @@ if( isset($_POST[ 'invoeren' ]) )
          * }
          */
         $medewerkers = read_csv($_FILES[ 'csv' ]);
-
-
-        // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
-        foreach ($medewerkers as $regelnummer  => $medewerker)
+        if( empty($medewerker) )
+        {
+            $error = 'Het csv bestand moet niet leeg zijn';
+        }
+        else
         {
 
-
-            // KEY + 1 zodat het sleutel van de array + 1 is zodat de correcte regellijn wordt weergeven.
-
-            /**
-             * Roepnaam
-             */
-            if( strlen($medewerker[ 'Roepnaam' ]) === 0 )
+            // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
+            foreach ($medewerkers as $regelnummer => $medewerker)
             {
-                $error = 'Roepnaam is verplicht op regel: ' . ($regelnummer + 1);
-            }
-             /**
-             * Achternaam
-             */
-            if( strlen($medewerker[ 'Achternaam' ]) === 0 )
-            {
-                $error = 'Achternaam is verplicht op regel: ' . ($regelnummer + 1);
-            }
-            /**
-             * Afkorting
-             */
-            if( strlen($medewerker[ 'Afkorting' ]) === 0 )
-            {
-                $error = 'Afkorting is verplicht op regel: ' . ($regelnummer + 1);
-            }
-            //// Functie
-            //if(strlen($medewerker['Functie']) === 0) {
-            //    $error = 'Functie is verplicht op regel: ' . ($regelnummer + 1);
-            //}
-            /**
-             * Geslacht
-             */
-            if( strlen($medewerker[ 'Geslacht' ]) === 0 )
-            {
-                $error = 'Geslacht is verplicht op regel: ' . ($regelnummer + 1);
-            }
-            /**
-             * Geboortedatum
-             */
-            if( strlen($medewerker[ 'Geboortedatum' ]) === 0 )
-            {
-                $error = 'Geboortedatum is verplicht op regel: ' . ($regelnummer + 1);
-            }
-            // Geboortedatum; controleert of het daadwerkelijk een datum is.
-            if( strtotime($medewerker[ 'Geboortedatum' ]) === false )
-            {
-                $error = 'Geboortedatum moet een datum zijn op regel: ' . ($regelnummer + 1);
-            }
-
-            /**
-             * Telefoonnummer
-             */
-            if(strlen($medewerker['Telefoon 1']) === 0) {
-                $error = 'Telefoonnummer is verplicht. op regel: ' . ($regelnummer + 1);
-            }
 
 
+                // KEY + 1 zodat het sleutel van de array + 1 is zodat de correcte regellijn wordt weergeven.
 
-            if( isset($error) )
-            {
-                // breaks out of the foreach loop so the correct error line will be given.
-                break;
-            }
-
-
-            // all checks have been done. add them to the database.
-
-            $db = db();
-            //$db->beginTransaction();
-            try
-            {
                 /**
-                 * Controleer of afkorting al bestaad, unieke waarde.
+                 * Roepnaam
                  */
-                $stmt = $db->prepare('select afkorting from medewerker where afkorting = :afkorting');
-                $stmt->bindParam('afkorting', $medewerker['Afkorting']);
-                $stmt->execute();
-                $rowcount = $stmt->rowCount();
-                /** IMPORTING NEW FRESH GENERATED ACCOUNTS.
-                 * Todo: generate random account for the given medewerker ( could be docent or beheerder, this case: docent; keep this in mind for the function. )
+                if( strlen($medewerker[ 'Roepnaam' ]) === 0 )
+                {
+                    $error = 'Roepnaam is verplicht op regel: ' . ($regelnummer + 1);
+                }
+                /**
+                 * Achternaam
                  */
-                $account_id = 1;
-                if($rowcount === 0) {
-                    $stmt = $db->prepare('INSERT INTO medewerker 
+                if( strlen($medewerker[ 'Achternaam' ]) === 0 )
+                {
+                    $error = 'Achternaam is verplicht op regel: ' . ($regelnummer + 1);
+                }
+                /**
+                 * Afkorting
+                 */
+                if( strlen($medewerker[ 'Afkorting' ]) === 0 )
+                {
+                    $error = 'Afkorting is verplicht op regel: ' . ($regelnummer + 1);
+                }
+                //// Functie
+                //if(strlen($medewerker['Functie']) === 0) {
+                //    $error = 'Functie is verplicht op regel: ' . ($regelnummer + 1);
+                //}
+                /**
+                 * Geslacht
+                 */
+                if( strlen($medewerker[ 'Geslacht' ]) === 0 )
+                {
+                    $error = 'Geslacht is verplicht op regel: ' . ($regelnummer + 1);
+                }
+                /**
+                 * Geboortedatum
+                 */
+                if( strlen($medewerker[ 'Geboortedatum' ]) === 0 )
+                {
+                    $error = 'Geboortedatum is verplicht op regel: ' . ($regelnummer + 1);
+                }
+                // Geboortedatum; controleert of het daadwerkelijk een datum is.
+                if( strtotime($medewerker[ 'Geboortedatum' ]) === false )
+                {
+                    $error = 'Geboortedatum moet een datum zijn op regel: ' . ($regelnummer + 1);
+                }
+
+                /**
+                 * Telefoonnummer
+                 */
+                if( strlen($medewerker[ 'Telefoon 1' ]) === 0 )
+                {
+                    $error = 'Telefoonnummer is verplicht. op regel: ' . ($regelnummer + 1);
+                }
+
+
+                if( isset($error) )
+                {
+                    // breaks out of the foreach loop so the correct error line will be given.
+                    break;
+                }
+                $db = db();
+                //$db->beginTransaction();
+                try
+                {
+                    /**
+                     * Controleer of afkorting al bestaad, unieke waarde.
+                     */
+                    $stmt = $db->prepare('select afkorting from medewerker where afkorting = :afkorting');
+                    $stmt->bindParam('afkorting', $medewerker[ 'Afkorting' ]);
+                    $stmt->execute();
+                    $rowcount = $stmt->rowCount();
+                    /** IMPORTING NEW FRESH GENERATED ACCOUNTS.
+                     * Todo: generate random account for the given medewerker ( could be docent or beheerder, this case: docent; keep this in mind for the function. )
+                     */
+                    $account_id = 1;
+                    if( $rowcount === 0 )
+                    {
+                        $stmt = $db->prepare('INSERT INTO medewerker 
                     (
                     afkorting, 
                     account_id, 
@@ -158,28 +160,29 @@ if( isset($_POST[ 'invoeren' ]) )
                     ?,
                     ?
                     )');
-                    $stmt->execute(array(
-                        $medewerker['Afkorting'],
-                        $account_id,
-                        $medewerker[ 'Roepnaam' ],
-                        $medewerker[ 'Voorvoegsel' ],
-                        $medewerker[ 'Achternaam' ],
-                        $medewerker['Functie'],
-                        $medewerker[ 'Geslacht' ],
-                        date('Y-m-d', strtotime($medewerker[ 'Geboortedatum' ] )),
-                        $medewerker['Gekoppelde locaties'],
-                        $medewerker['Telefoon 1']
-                    ));
-                    $medewerker_id = $db->lastInsertId();
+                        $stmt->execute(array(
+                            $medewerker[ 'Afkorting' ],
+                            $account_id,
+                            $medewerker[ 'Roepnaam' ],
+                            $medewerker[ 'Voorvoegsel' ],
+                            $medewerker[ 'Achternaam' ],
+                            $medewerker[ 'Functie' ],
+                            $medewerker[ 'Geslacht' ],
+                            date('Y-m-d', strtotime($medewerker[ 'Geboortedatum' ])),
+                            $medewerker[ 'Gekoppelde locaties' ],
+                            $medewerker[ 'Telefoon 1' ]
+                        ));
+                        $medewerker_id = $db->lastInsertId();
 
-                    check_if_role_exists('docent');
+                        check_if_role_exists('docent');
 
 
+                    }
+                    //
+                } catch ( PDOException $exception )
+                {
+                    throw new PDOException($exception->getMessage());
                 }
-                //
-            } catch ( PDOException $exception )
-            {
-                throw new PDOException($exception->getMessage());
             }
         }
         //redirect('/index.php?gebruiker=overzichtdocent');
