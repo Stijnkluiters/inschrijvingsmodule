@@ -104,6 +104,7 @@ if(isset($_POST['submit'])){
     $stmt->bindParam('geslacht', $geslacht);
     $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
     $stmt->execute();
+    redirect('/index.php?gebruiker=overzichtleerling');
     }
 }
 

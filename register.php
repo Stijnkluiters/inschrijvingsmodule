@@ -186,7 +186,7 @@ if( isset($_POST[ 'submit' ]) )
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="ROC-midden Nederland evenementenmodule">
-    <meta name="author" content="Stijn Kluiters, ...">
+    <meta name="author" content="Stijn Kluiters, Johan van de Wetering">
     <meta name="keyword"
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>

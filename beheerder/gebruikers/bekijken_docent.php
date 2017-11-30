@@ -77,6 +77,8 @@ $docenten = $docentenQuery->fetchAll();
         <td><?= $docent['achternaam'] ?></td>
         <td><?= $docent['geslacht'] ?></td>
         <td><?= $docent['geboortedatum'] ?></td>
+        <td><a href="<?= route('/index.php?gebruiker=editdocent&gebruiker_id='.$docent['id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=deletedocent&gebruiker_id='.$docent['id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
     </tr>
     <?php
     }
