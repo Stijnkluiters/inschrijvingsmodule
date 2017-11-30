@@ -8,21 +8,21 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema inschrijfmodule
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema inschrijfmodule
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `inschrijfmodule` DEFAULT CHARACTER SET utf8 ;
+USE `inschrijfmodule` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`soort`
+-- Table `inschrijfmodule`.`soort`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`soort` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`soort` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`soort` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`soort` (
   `soort` VARCHAR(255) NOT NULL,
   `benodigdheid` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`soort`))
@@ -30,11 +30,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`rolnaam`
+-- Table `inschrijfmodule`.`rolnaam`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`rolnaam` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`rolnaam` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`rolnaam` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`rolnaam` (
   `rolid` INT NOT NULL AUTO_INCREMENT,
   `rolnaam` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`rolid`))
@@ -42,11 +42,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`account`
+-- Table `inschrijfmodule`.`account`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`account` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`account` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`account` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`account` (
   `account_id` INT(11) NOT NULL,
   `gebruikersnaam` VARCHAR(255) NOT NULL,
   `wachtwoord` VARCHAR(255) NOT NULL,
@@ -54,20 +54,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`account` (
   PRIMARY KEY (`account_id`),
   CONSTRAINT `fk_Account_rolnaam1`
     FOREIGN KEY (`rol_id`)
-    REFERENCES `mydb`.`rolnaam` (`rolid`)
+    REFERENCES `inschrijfmodule`.`rolnaam` (`rolid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Account_rolnaam1_idx` ON `mydb`.`account` (`rol_id` ASC);
+CREATE INDEX `fk_Account_rolnaam1_idx` ON `inschrijfmodule`.`account` (`rol_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`evenement`
+-- Table `inschrijfmodule`.`evenement`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`evenement` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`evenement` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`evenement` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`evenement` (
   `evenement_id` INT NOT NULL AUTO_INCREMENT,
   `account_id` INT NOT NULL,
   `titel` VARCHAR(255) NOT NULL,
@@ -87,28 +87,28 @@ CREATE TABLE IF NOT EXISTS `mydb`.`evenement` (
   PRIMARY KEY (`evenement_id`),
   CONSTRAINT `fk_evenement_Soort1`
     FOREIGN KEY (`soort`)
-    REFERENCES `mydb`.`soort` (`soort`)
+    REFERENCES `inschrijfmodule`.`soort` (`soort`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_evenement_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `mydb`.`account` (`account_id`)
+    REFERENCES `inschrijfmodule`.`account` (`account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 ROW_FORMAT = REDUNDANT;
 
-CREATE INDEX `fk_evenement_Soort1_idx` ON `mydb`.`evenement` (`soort` ASC);
+CREATE INDEX `fk_evenement_Soort1_idx` ON `inschrijfmodule`.`evenement` (`soort` ASC);
 
-CREATE INDEX `fk_evenement_account1_idx` ON `mydb`.`evenement` (`account_id` ASC);
+CREATE INDEX `fk_evenement_account1_idx` ON `inschrijfmodule`.`evenement` (`account_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`leerling`
+-- Table `inschrijfmodule`.`leerling`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`leerling` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`leerling` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`leerling` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`leerling` (
   `leerlingnummer` INT(11) NOT NULL,
   `account_id` INT(11) NOT NULL,
   `geslacht` VARCHAR(255) NULL,
@@ -128,20 +128,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`leerling` (
   PRIMARY KEY (`leerlingnummer`),
   CONSTRAINT `fk_leerling_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `mydb`.`account` (`account_id`)
+    REFERENCES `inschrijfmodule`.`account` (`account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_leerling_account1_idx` ON `mydb`.`leerling` (`account_id` ASC);
+CREATE INDEX `fk_leerling_account1_idx` ON `inschrijfmodule`.`leerling` (`account_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`inschrijving`
+-- Table `inschrijfmodule`.`inschrijving`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`inschrijving` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`inschrijving` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`inschrijving` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`inschrijving` (
   `leerlingnummer` INT NOT NULL,
   `evenement_id` INT NOT NULL,
   `present` TINYINT(1) NULL,
@@ -151,27 +151,27 @@ CREATE TABLE IF NOT EXISTS `mydb`.`inschrijving` (
   PRIMARY KEY (`evenement_id`, `leerlingnummer`),
   CONSTRAINT `fk_inschrijving_evenement1`
     FOREIGN KEY (`evenement_id`)
-    REFERENCES `mydb`.`evenement` (`evenement_id`)
+    REFERENCES `inschrijfmodule`.`evenement` (`evenement_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_inschrijving_leerling1`
     FOREIGN KEY (`leerlingnummer`)
-    REFERENCES `mydb`.`leerling` (`leerlingnummer`)
+    REFERENCES `inschrijfmodule`.`leerling` (`leerlingnummer`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_inschrijving_evenement1_idx` ON `mydb`.`inschrijving` (`evenement_id` ASC);
+CREATE INDEX `fk_inschrijving_evenement1_idx` ON `inschrijfmodule`.`inschrijving` (`evenement_id` ASC);
 
-CREATE INDEX `fk_inschrijving_leerling1_idx` ON `mydb`.`inschrijving` (`leerlingnummer` ASC);
+CREATE INDEX `fk_inschrijving_leerling1_idx` ON `inschrijfmodule`.`inschrijving` (`leerlingnummer` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`medewerker`
+-- Table `inschrijfmodule`.`medewerker`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`medewerker` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`medewerker` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`medewerker` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`medewerker` (
   `afkorting` VARCHAR(255) NOT NULL,
   `account_id` INT(11) NOT NULL,
   `roepnaam` VARCHAR(255) NOT NULL,
@@ -185,20 +185,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`medewerker` (
   PRIMARY KEY (`afkorting`),
   CONSTRAINT `fk_medewerker_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `mydb`.`account` (`account_id`)
+    REFERENCES `inschrijfmodule`.`account` (`account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_medewerker_account1_idx` ON `mydb`.`medewerker` (`account_id` ASC);
+CREATE INDEX `fk_medewerker_account1_idx` ON `inschrijfmodule`.`medewerker` (`account_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`invertarisatie`
+-- Table `inschrijfmodule`.`invertarisatie`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`invertarisatie` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`invertarisatie` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`invertarisatie` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`invertarisatie` (
   `invertarisatie_id` INT NOT NULL AUTO_INCREMENT,
   `vakgebied` LONGTEXT NULL,
   `onderwerp` LONGTEXT NULL,
@@ -213,11 +213,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`bedrijf`
+-- Table `inschrijfmodule`.`bedrijf`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`bedrijf` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`bedrijf` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`bedrijf` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`bedrijf` (
   `bedrijf_id` INT NOT NULL AUTO_INCREMENT,
   `inventarisatie_id` INT NOT NULL,
   `bedrijfnaam` VARCHAR(255) NOT NULL,
@@ -230,20 +230,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`bedrijf` (
   PRIMARY KEY (`bedrijf_id`),
   CONSTRAINT `fk_bedrijf_invertarisatie1`
     FOREIGN KEY (`inventarisatie_id`)
-    REFERENCES `mydb`.`invertarisatie` (`invertarisatie_id`)
+    REFERENCES `inschrijfmodule`.`invertarisatie` (`invertarisatie_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_bedrijf_invertarisatie1_idx` ON `mydb`.`bedrijf` (`inventarisatie_id` ASC);
+CREATE INDEX `fk_bedrijf_invertarisatie1_idx` ON `inschrijfmodule`.`bedrijf` (`inventarisatie_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`contactpersoon`
+-- Table `inschrijfmodule`.`contactpersoon`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`contactpersoon` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`contactpersoon` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`contactpersoon` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`contactpersoon` (
   `contact_id` INT NOT NULL AUTO_INCREMENT,
   `account_id` INT(11) NOT NULL,
   `bedrijf_id` INT NOT NULL,
@@ -257,27 +257,27 @@ CREATE TABLE IF NOT EXISTS `mydb`.`contactpersoon` (
   PRIMARY KEY (`contact_id`),
   CONSTRAINT `fk_contactpersoon_bedrijf1`
     FOREIGN KEY (`bedrijf_id`)
-    REFERENCES `mydb`.`bedrijf` (`bedrijf_id`)
+    REFERENCES `inschrijfmodule`.`bedrijf` (`bedrijf_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_contactpersoon_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `mydb`.`account` (`account_id`)
+    REFERENCES `inschrijfmodule`.`account` (`account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_contactpersoon_bedrijf1_idx` ON `mydb`.`contactpersoon` (`bedrijf_id` ASC);
+CREATE INDEX `fk_contactpersoon_bedrijf1_idx` ON `inschrijfmodule`.`contactpersoon` (`bedrijf_id` ASC);
 
-CREATE INDEX `fk_contactpersoon_account1_idx` ON `mydb`.`contactpersoon` (`account_id` ASC);
+CREATE INDEX `fk_contactpersoon_account1_idx` ON `inschrijfmodule`.`contactpersoon` (`account_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`antwoord`
+-- Table `inschrijfmodule`.`antwoord`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`antwoord` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`antwoord` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`antwoord` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`antwoord` (
   `antwoord_id` INT NOT NULL AUTO_INCREMENT,
   `antwoord` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`antwoord_id`))
@@ -285,58 +285,58 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`vragen`
+-- Table `inschrijfmodule`.`vragen`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`vragen` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`vragen` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`vragen` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`vragen` (
   `vraag_id` INT NOT NULL AUTO_INCREMENT,
   `vraag` VARCHAR(255) NOT NULL,
   `antwoord_id` INT NOT NULL,
   PRIMARY KEY (`vraag_id`),
   CONSTRAINT `fk_vragen_antwoord1`
     FOREIGN KEY (`antwoord_id`)
-    REFERENCES `mydb`.`antwoord` (`antwoord_id`)
+    REFERENCES `inschrijfmodule`.`antwoord` (`antwoord_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_vragen_antwoord1_idx` ON `mydb`.`vragen` (`antwoord_id` ASC);
+CREATE INDEX `fk_vragen_antwoord1_idx` ON `inschrijfmodule`.`vragen` (`antwoord_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`vragenlijst`
+-- Table `inschrijfmodule`.`vragenlijst`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`vragenlijst` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`vragenlijst` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`vragenlijst` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`vragenlijst` (
   `lijst` VARCHAR(255) NOT NULL,
   `soort` VARCHAR(255) NOT NULL,
   `vraag_id` INT NOT NULL,
   PRIMARY KEY (`lijst`),
   CONSTRAINT `fk_vragenlijst_soort1`
     FOREIGN KEY (`soort`)
-    REFERENCES `mydb`.`soort` (`soort`)
+    REFERENCES `inschrijfmodule`.`soort` (`soort`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_vragenlijst_vragen1`
     FOREIGN KEY (`vraag_id`)
-    REFERENCES `mydb`.`vragen` (`vraag_id`)
+    REFERENCES `inschrijfmodule`.`vragen` (`vraag_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_vragenlijst_soort1_idx` ON `mydb`.`vragenlijst` (`soort` ASC);
+CREATE INDEX `fk_vragenlijst_soort1_idx` ON `inschrijfmodule`.`vragenlijst` (`soort` ASC);
 
-CREATE INDEX `fk_vragenlijst_vragen1_idx` ON `mydb`.`vragenlijst` (`vraag_id` ASC);
+CREATE INDEX `fk_vragenlijst_vragen1_idx` ON `inschrijfmodule`.`vragenlijst` (`vraag_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`rechten`
+-- Table `inschrijfmodule`.`rechten`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`rechten` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`rechten` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`rechten` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`rechten` (
   `rolnaam` VARCHAR(255) NOT NULL,
   `aanmaken_evenement` TINYINT(1) NOT NULL,
   `wijzigen_evenement` TINYINT(1) NOT NULL,
@@ -351,20 +351,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`rechten` (
   PRIMARY KEY (`rolnaam`),
   CONSTRAINT `fk_rechten_rolnaam1`
     FOREIGN KEY (`rolid`)
-    REFERENCES `mydb`.`rolnaam` (`rolid`)
+    REFERENCES `inschrijfmodule`.`rolnaam` (`rolid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_rechten_rolnaam1_idx` ON `mydb`.`rechten` (`rolid` ASC);
+CREATE INDEX `fk_rechten_rolnaam1_idx` ON `inschrijfmodule`.`rechten` (`rolid` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`foto`
+-- Table `inschrijfmodule`.`foto`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`foto` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`foto` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`foto` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`foto` (
   `foto_id` INT NOT NULL AUTO_INCREMENT,
   `fotonaam` VARCHAR(255) NOT NULL,
   `evenement_id` INT NOT NULL,
@@ -372,20 +372,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`foto` (
   PRIMARY KEY (`foto_id`),
   CONSTRAINT `fk_foto_evenement1`
     FOREIGN KEY (`evenement_id`)
-    REFERENCES `mydb`.`evenement` (`evenement_id`)
+    REFERENCES `inschrijfmodule`.`evenement` (`evenement_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_foto_evenement1_idx` ON `mydb`.`foto` (`evenement_id` ASC);
+CREATE INDEX `fk_foto_evenement1_idx` ON `inschrijfmodule`.`foto` (`evenement_id` ASC);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`beoordeling`
+-- Table `inschrijfmodule`.`beoordeling`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`beoordeling` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`beoordeling` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`beoordeling` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`beoordeling` (
   `beoordeling_id` INT NOT NULL AUTO_INCREMENT,
   `leerlingnummer` INT NOT NULL,
   `evenement_id` INT NOT NULL,
@@ -393,19 +393,19 @@ CREATE TABLE IF NOT EXISTS `mydb`.`beoordeling` (
   PRIMARY KEY (`beoordeling_id`, `leerlingnummer`, `evenement_id`),
   CONSTRAINT `fk_leerling_has_evenement_leerling1`
     FOREIGN KEY (`leerlingnummer`)
-    REFERENCES `mydb`.`leerling` (`leerlingnummer`)
+    REFERENCES `inschrijfmodule`.`leerling` (`leerlingnummer`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_leerling_has_evenement_evenement1`
     FOREIGN KEY (`evenement_id`)
-    REFERENCES `mydb`.`evenement` (`evenement_id`)
+    REFERENCES `inschrijfmodule`.`evenement` (`evenement_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_leerling_has_evenement_evenement1_idx` ON `mydb`.`beoordeling` (`evenement_id` ASC);
+CREATE INDEX `fk_leerling_has_evenement_evenement1_idx` ON `inschrijfmodule`.`beoordeling` (`evenement_id` ASC);
 
-CREATE INDEX `fk_leerling_has_evenement_leerling1_idx` ON `mydb`.`beoordeling` (`leerlingnummer` ASC);
+CREATE INDEX `fk_leerling_has_evenement_leerling1_idx` ON `inschrijfmodule`.`beoordeling` (`leerlingnummer` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
