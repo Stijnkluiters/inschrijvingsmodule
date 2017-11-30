@@ -74,7 +74,6 @@ if(isset($_POST['submit'])){
 
     if(count($error ) === 0){
 
-
     /**
      * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
      */
@@ -82,15 +81,21 @@ if(isset($_POST['submit'])){
             UPDATE leerling SET
             roepnaam = :roepnaam, 
             tussenvoegsel = :tussenvoegsel, 
-            achternaam = :achternaam, 
-            geboortedatum = :geboortedatum, 
+            achternaam = :achternaam,
+            opleiding = :opleiding, 
+            geboortedatum = :geboortedatum,
+            postcode = :postcode,
+            plaats = :plaats, 
             geslacht = :geslacht
-            WHERE leerlingnnummer = :leerlingnummer');
+            WHERE leerlingnummer = :leerlingnummer');
             
     $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
     $stmt->bindParam('tussenvoegsel', $tussenvoegsel, PDO::PARAM_STR);
     $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
+    $stmt->bindParam('opleiding', $opleiding);
     $stmt->bindParam('geboortedatum', $geboortedatum);
+    $stmt->bindParam('postcode', $postcode);
+    $stmt->bindParam('plaats', $plaats);
     $stmt->bindParam('geslacht', $geslacht);
     $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
     $stmt->execute();
@@ -166,7 +171,7 @@ if(isset($_POST['submit'])){
             <input type="date" value="<?= $leerling[ 'einddatum' ] ?>" id="text-input" name="einddatum" class="form-control" placeholder="<?= $leerling[ 'einddatum' ] ?>">
         </div>
     </div>
-    <?php if(isset($error)) { ?>
+        <?php if(isset($error)) { ?>
     <ul>
     <?php foreach($error as $key => $error) { ?>
         <li><?= $key . ' : ' . $error; ?></li>
