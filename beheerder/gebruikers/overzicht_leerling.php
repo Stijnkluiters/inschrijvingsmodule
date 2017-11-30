@@ -7,23 +7,13 @@
  * Time: 11:11
  */
 $db = db();
-$leerlingQuery = $db->prepare('SELECT 
-          g.id,
-          g.studentcode,
-          g.geslacht,
-          g.roepnaam,
-          g.voorvoegsel,
-          g.achternaam,
-          g.geboortedatum,
-          a.postcode,
-          a.plaatsnaam,
-          g.opleiding_start,
-          g.opleiding_eind 
-FROM gebruiker g 
-JOIN adres a ON g.adres_id = a.id 
-JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
-JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "leerling" AND deleted = FALSE');
+$leerlingQuery = $db->prepare('SELECT *
+  FROM leerling l
+  where account_id IN 
+  (select account_id from account where rol_id = (
+    select rolid from rolnaam where rolnaam = "leerling"
+  ))
+  ');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 

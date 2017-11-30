@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`medewerker` (
   `afkorting` VARCHAR(255) NOT NULL,
   `account_id` INT(11) NOT NULL,
   `roepnaam` VARCHAR(255) NOT NULL,
-  `tussenvoegsel` VARCHAR(255) NULL,
+  `tussenvoegsel` VARCHAR(255)   NULL,
   `achternaam` VARCHAR(255) NOT NULL,
   `functie` VARCHAR(255) NULL,
   `geslacht` VARCHAR(255) NOT NULL,
@@ -411,3 +411,7 @@ CREATE INDEX `fk_leerling_has_evenement_leerling1_idx` ON `inschrijfmodule`.`beo
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+INSERT INTO `account` (`account_id`, `gebruikersnaam`, `wachtwoord`, `rol_id`) VALUES
+(1, 'stijnkluiters', '$2y$15$HskhXrSNHg40cAXqGHf5deaNjQsl7w8HrRD5Ud0X/1j/aM7wqnf0m', 1);

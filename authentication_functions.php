@@ -12,7 +12,7 @@ const passwordAlgo = PASSWORD_BCRYPT;
 
 const options = [ 'cost' => 15 ];
 
-const authenticationSessionName = 'User';
+const authenticationSessionName = 'account';
 
 function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
@@ -102,48 +102,62 @@ function check_if_role_exists($rolnaam)
     return $id;
 }
 
-function connect_user_to_role($rolename,$user_id)
+
+function get_account_his_role($account_id)
 {
-
-    check_if_role_exists($rolename);
-
     $db = db();
 
-    $stmt = $db->prepare('select id from rol where naam = :naam');
-    $stmt->bindParam('naam', $rolename);
+    $stmt = $db->prepare('
+        select * from rolnaam WHERE rol_id = (select rol_id from account where account_id = :account_id)
+    ');
+    $stmt->bindParam(':account_id', $account_id);
     $stmt->execute();
-    $rol_id = $stmt->fetch();
-    if($rol_id) {
-        $stmt = $db->prepare('INSERT INTO gebruiker_heeft_rol (rol_id, gebruiker_id) VALUES (:role_id,:user_id)');
-        $stmt->bindParam('role_id',$rol_id['id'],PDO::PARAM_STR);
-        $stmt->bindParam('user_id',$user_id,PDO::PARAM_STR);
+    return $stmt->fetch();
+}
+// haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
+function get_user_info($account) {
+
+    $rolnaam = get_account_his_role($account['account_id']);
+    if($rolnaam !== null) {
+
+        $db = db();
+
+        $rolnaam = $rolnaam['rolnaam'];
+        switch ($rolnaam) {
+            case 'beheerder':
+            case "docent":
+                $sql = 'SELECT * FROM account a JOIN medewerker m ON a.account_id = m.account_id';
+            break;
+            case "leerling":
+                $sql = 'SELECT * FROM account a JOIN leerling l ON a.account_id = l.account_id';
+                break;
+            case "contactpersoon":
+                $sql = 'SELECT * FROM account a JOIN contactpersoon c ON a.account_id = c.account_id';
+            break;
+            default :
+                $sql = 'SELECT * FROM account';
+                // alleen account, omdat er geen resultaten gevonden extra zijn.
+            break;
+        }
+
+
+        $sql .= ' WHERE a.account_id = :account_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('account_id',$account['account_id']);
         $stmt->execute();
-
+        return $stmt->fetch();
+    } else {
+        throw new \Exception('Er zijn geen resultaten gevonden voor account zijn rol.');
     }
-    return $rol_id;
 
 }
-function check_if_user_has_role($rolename,$user_id)
-{
-    $db = db();
 
-    $stmt = $db->prepare('select id from rol where naam = :naam');
-    $stmt->bindParam(':naam', $rolename);
-    $stmt->execute();
-    $rol_id = $stmt->fetch()['id'];
 
-    $stmt = $db->prepare('SELECT count(*) FROM gebruiker_heeft_rol WHERE 
-      gebruiker_id = :gebruiker_id AND rol_id = :rol_id');
-    $stmt->bindParam(':rol_id',$rol_id,PDO::PARAM_INT);
-    $stmt->bindParam(':gebruiker_id',$user_id,PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->rowCount() > 0;
-
-}
 function AuthUserDetails() {
     startsession();
     $db = db();
-    $stmt = $db->prepare('select * from gebruiker g left join adres a on a.id = g.adres_id where g.id = :id');
+
+    $stmt = $db->prepare('select * from  left join adres a on a.id = g.adres_id where g.id = :id');
     $stmt->bindParam('id',$_SESSION[authenticationSessionName]);
     $stmt->execute();
     return $stmt->fetch();
