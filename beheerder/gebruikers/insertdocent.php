@@ -97,12 +97,7 @@ if( isset($_POST[ 'invoeren' ]) )
             {
                 $error = 'Geboortedatum moet een datum zijn op regel: ' . ($regelnummer + 1);
             }
-            /**
-             *  Locatie
-             */
-            if(strlen($medewerker['Gekoppelde locaties']) === 0) {
-                $error = 'Locatie is verplicht. op regel: ' . ($regelnummer + 1);
-            }
+
             /**
              * Telefoonnummer
              */
@@ -150,6 +145,7 @@ if( isset($_POST[ 'invoeren' ]) )
                     locatie, 
                     telefoon
                     ) 
+                    VALUES 
                     (
                     ?,
                     ?,
@@ -171,7 +167,7 @@ if( isset($_POST[ 'invoeren' ]) )
                         $medewerker['Functie'],
                         $medewerker[ 'Geslacht' ],
                         date('Y-m-d', strtotime($medewerker[ 'Geboortedatum' ] )),
-                        $medewerker['Locatie'],
+                        $medewerker['Gekoppelde locaties'],
                         $medewerker['Telefoon 1']
                     ));
                     $medewerker_id = $db->lastInsertId();
