@@ -85,7 +85,7 @@ if( isset($_POST[ 'submit' ]) )
                                 <span class="input-group-addon"><i class="icon-user"></i></span>
                                 <input type="text" class="form-control"
                                        placeholder="Gebruikersnaam"
-                                       value="<?= (isset($password)) ? $password : ''; ?>"
+                                       value="<?= (isset($username)) ? $username : ''; ?>"
                                        name="gebruikersnaam"
                                        required="required"/>
                             </div>
