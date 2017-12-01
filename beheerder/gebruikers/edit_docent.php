@@ -11,6 +11,7 @@ $afkorting = ($_GET['afkorting']);
 
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = $afkorting");
+$docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
 $docenten = $docentQuery->fetch();
 var_dump($_GET);
