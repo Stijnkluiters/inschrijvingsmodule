@@ -32,6 +32,7 @@ if (count($leerlingen)) { ?>
         <th>Geboortedatum</th>
         <th>Postcode</th>
         <th>Plaats</th>
+        <th>Opleiding</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
         <th>Edit</th>
@@ -45,19 +46,20 @@ if (count($leerlingen)) { ?>
     <?php
     foreach ($leerlingen as $leerling) { ?>
         <tr>
-            <td><?= $leerling['studentcode'] ?></td>
+            <td><?= $leerling['leerlingnummer'] ?></td>
             <td><?= $leerling['geslacht'] ?></td>
             <td><?= $leerling['roepnaam'] ?></td>
-            <td><?= $leerling['voorvoegsel'] ?></td>
+            <td><?= $leerling['tussenvoegsel'] ?></td>
             <td><?= $leerling['achternaam'] ?></td>
             <td><?= $leerling['geboortedatum'] ?></td>
             <td><?= $leerling['postcode'] ?></td>
-            <td><?= $leerling['plaatsnaam'] ?></td>
-            <td><?= $leerling['opleiding_start'] ?></td>
-            <td><?= $leerling['opleiding_eind'] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editleerling&gebruiker_id=' . $leerling['id']); ?>"><i
+            <td><?= $leerling['plaats'] ?></td>
+            <td><?= $leerling['opleiding'] ?></td>
+            <td><?= $leerling['begindatum'] ?></td>
+            <td><?= $leerling['einddatum'] ?></td>
+            <td><a href="<?= route('/index.php?gebruiker=editleerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&gebruiker_id=' . $leerling['id']); ?>"><i
+            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
         <?php } ?>
@@ -66,6 +68,6 @@ if (count($leerlingen)) { ?>
     </table>
 <?php } else { ?>
 
-    <h2> er zijn geen leerlingen gevonden. </h2>
+    <h2> Er zijn geen leerlingen gevonden. </h2>
 
 <?php } ?>

@@ -7,23 +7,13 @@
  */
 
 $db = db();
-$leerlingQuery = $db->prepare('SELECT 
-          g.id,
-          g.studentcode,
-          g.geslacht,
-          g.roepnaam,
-          g.voorvoegsel,
-          g.achternaam,
-          g.geboortedatum,
-          a.postcode,
-          a.plaatsnaam,
-          g.opleiding_start,
-          g.opleiding_eind 
-FROM gebruiker g 
-JOIN adres a ON g.adres_id = a.id 
-JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
-JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "leerling"');
+$leerlingQuery = $db->prepare('SELECT *
+  FROM leerling l
+  where account_id IN 
+  (select account_id from account where rol_id = (
+    select rolid from rolnaam where rolnaam = "leerling"
+  ))
+  ');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
@@ -46,11 +36,11 @@ if(isset($_POST['submit'])){
         }
         $roepnaam = strtolower($roepnaam);
         /** Voorvoegsel */
-        $voorvoegsel = filter_input(INPUT_POST, 'voorvoegsel', FILTER_SANITIZE_STRING);
-        if ($voorvoegsel === false) {
-            $error['voorvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
+        $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
+        if ($tussenvoegsel === false) {
+            $error['tussenvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
         }
-        $voorvoegsel = strtolower($voorvoegsel);
+        $tussenvoegsel = strtolower($tussenvoegsel);
         /** Achternaam */
         if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
             $error['achternaam'] = ' Achternaam is verplicht';
@@ -89,20 +79,20 @@ if(isset($_POST['submit'])){
      * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
      */
     $stmt = $db->prepare('
-            UPDATE gebruiker SET
+            UPDATE leerling SET
             roepnaam = :roepnaam, 
-            voorvoegsel = :voorvoegsel, 
+            tussenvoegsel = :tussenvoegsel, 
             achternaam = :achternaam, 
             geboortedatum = :geboortedatum, 
             geslacht = :geslacht
-            WHERE id = :gebruiker_id');
+            WHERE leerlingnnummer = :leerlingnummer');
             
     $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
-    $stmt->bindParam('voorvoegsel', $voorvoegsel, PDO::PARAM_STR);
+    $stmt->bindParam('tussenvoegsel', $tussenvoegsel, PDO::PARAM_STR);
     $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
     $stmt->bindParam('geboortedatum', $geboortedatum);
     $stmt->bindParam('geslacht', $geslacht);
-    $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
+    $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtleerling');
     }
@@ -115,11 +105,11 @@ if(isset($_POST['submit'])){
 <?php } ?>
 
 
-<form action="<?= route('/index.php?gebruiker=editleerling&gebruiker_id=' . $_GET['gebruiker_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editleerling&leerling_id=' . $_GET['leerling_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
-        <label class="col-md-3 form-control-label">Studentcode</label>
+        <label class="col-md-3 form-control-label">Leerlingnummer</label>
         <div class="col-md-9">
-            <p class="form-control-static"><?= $leerling[ 'studentcode' ] ?></p>
+            <p class="form-control-static"><?= $leerling[ 'leerlingnummer' ] ?></p>
         </div>
     </div>
     <div class="form-group row">
@@ -131,7 +121,7 @@ if(isset($_POST['submit'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Tussenvoegsel</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $leerling[ 'voorvoegsel' ] ?>" id="text-input" name="voorvoegsel" class="form-control" placeholder="<?= $leerling[ 'voorvoegsel' ] ?>">
+            <input type="text" value="<?= $leerling[ 'tussenvoegsel' ] ?>" id="text-input" name="tussenvoegsel" class="form-control" placeholder="<?= $leerling[ 'tussenvoegsel' ] ?>">
         </div>
     </div>
     <div class="form-group row">
@@ -161,19 +151,19 @@ if(isset($_POST['submit'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Woonplaats</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $leerling[ 'plaatsnaam' ] ?>" id="text-input" name="plaatsnaam" class="form-control" placeholder="<?= $leerling[ 'plaatsnaam' ] ?>">
+            <input type="text" value="<?= $leerling[ 'plaats' ] ?>" id="text-input" name="plaats" class="form-control" placeholder="<?= $leerling[ 'plaats' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'opleiding_start' ] ?>" id="text-input" name="opleiding_start" class="form-control" placeholder="<?= $leerling[ 'opleiding_start' ] ?>">
+            <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" placeholder="<?= $leerling[ 'begindatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Eind van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'opleiding_eind' ] ?>" id="text-input" name="opleiding_einde" class="form-control" placeholder="<?= $leerling[ 'opleiding_eind' ] ?>">
+            <input type="date" value="<?= $leerling[ 'einddatum' ] ?>" id="text-input" name="einddatum" class="form-control" placeholder="<?= $leerling[ 'einddatum' ] ?>">
         </div>
     </div>
     <?php if(isset($error)) { ?>
