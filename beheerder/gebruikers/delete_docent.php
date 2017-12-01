@@ -6,21 +6,9 @@
  * Time: 12:05
  */
 $db = db();
-$docentQuery = $db->prepare('SELECT 
-          g.id,
-          g.afkorting,
-          g.geslacht,
-          g.roepnaam,
-          g.voorvoegsel,
-          g.achternaam,
-          g.geboortedatum 
-FROM gebruiker g 
-JOIN adres a ON g.adres_id = a.id 
-JOIN gebruiker_heeft_rol gr ON g.id = gr.gebruiker_id
-JOIN rol r ON r.id = gr.rol_id
-WHERE r.naam = "docent"');
+$docentQuery = $db->prepare('SELECT * FROM medewerker');
 $docentQuery->execute();
-$docenten = $docentQuery->fetchAll();
+$docenten = $docentQuery->fetch();
 
 if(isset($_POST['delete'])){
     $stmt = $db->prepare('
@@ -28,7 +16,7 @@ if(isset($_POST['delete'])){
             deleted = true
             WHERE id = :gebruiker_id');
 
-    $stmt->bindParam('gebruiker_id', $_GET ['gebruiker_id']);
+    $stmt->bindParam('afkorting', $_GET ['afkorting']);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtdocent');
 }
@@ -40,7 +28,7 @@ if(isset($_POST['delete'])){
 <?php } ?>
 
 
-<form action="<?= route('/index.php?gebruiker=deletedocent&gebruiker_id=' . $_GET['gebruiker_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=deletedocent&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">afkorting</label>
         <div class="col-md-9">
@@ -66,6 +54,12 @@ if(isset($_POST['delete'])){
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">functie</label>
+        <div class="col-md-9">
+            <input type="text" value="<?= $docent[ 'functie' ] ?>" id="text-input" name="functie" class="form-control" disabled placeholder="<?= $docent[ 'functie' ] ?>">
+        </div>
+    </div>
+    <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Geslacht</label>
         <div class="col-md-9">
             <input type="text" value="<?= $docent[ 'geslacht' ] ?>" id="text-input" name="geslacht" class="form-control" disabled placeholder="<?= $docent[ 'geslacht' ] ?>">
@@ -75,6 +69,18 @@ if(isset($_POST['delete'])){
         <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
         <div class="col-md-9">
             <input type="date" value="<?= $docent[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $docent[ 'geboortedatum' ] ?>">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">locatie</label>
+        <div class="col-md-9">
+            <input type="text" value="<?= $docent[ 'locatie' ] ?>" id="text-input" name="locatie" class="form-control" disabled placeholder="<?= $docent[ 'locatie' ] ?>">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">telefoon</label>
+        <div class="col-md-9">
+            <input type="text" value="<?= $docent[ 'telefoon' ] ?>" id="text-input" name="telefoon" class="form-control" disabled placeholder="<?= $docent[ 'telefoon' ] ?>">
         </div>
     </div>
     <?php if(isset($error)) { ?>

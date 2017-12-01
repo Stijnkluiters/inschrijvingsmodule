@@ -6,10 +6,15 @@
  * Time: 11:58
  */
 
+
+$afkorting = ($_GET['afkorting']);
+
 $db = db();
-$docentQuery = $db->prepare('SELECT * FROM medewerker');
+$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = $afkorting");
 $docentQuery->execute();
-$docenten = $docentQuery->fetchAll();
+$docenten = $docentQuery->fetch();
+var_dump($_GET);
+
 
 if (isset($_POST['submit'])) {
 
@@ -17,15 +22,6 @@ if (isset($_POST['submit'])) {
     /** gebruikersnaam */
     $error = array();
 
-    /** afkorting */
-    if (!isset($_POST['afkorting']) || empty($_POST['afkorting'])) {
-        $error['afkorting'] = ' Afkorting is verplicht';
-    }
-    $afkorting = filter_input(INPUT_POST, 'afkorting', FILTER_SANITIZE_STRING);
-    if (empty($afkorting)) {
-        $error['afkorting'] = ' Het filteren van afkorting ging verkeerd';
-    }
-    $afkorting = strtolower($roepnaam);
 
     /** Roepnaam */
     if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
@@ -39,7 +35,7 @@ if (isset($_POST['submit'])) {
 
     /** tussenvoegsel */
     $voorvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
-    if ($voorvoegsel == false) {
+    if ($voorvoegsel === false) {
         $error['tussenvoegsel'] = ' het filteren van tussenvoegsel ging verkeerd';
     }
     $voorvoegsel = strtolower($voorvoegsel);
@@ -54,13 +50,13 @@ if (isset($_POST['submit'])) {
     }
     $achternaam = strtolower($achternaam);
 
-    /** fucntie */
-    if (!isset($_POST['fucntiet']) || empty($_POST['fucntie'])) {
-        $error['fucntie'] = ' fucntie is verplicht.';
+    /** functie */
+    if (!isset($_POST['functie']) || empty($_POST['functie'])) {
+        $error['functie'] = ' functie is verplicht.';
     }
-    $fucntie = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
-    if (empty($geslacht)) {
-        $error['fucntie'] = ' het filteren van fucntie ging verkeerd';
+    $functie = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
+    if (empty($functie)) {
+        $error['functie'] = ' het filteren van functie ging verkeerd';
     }
 
     /** geslacht */
@@ -121,7 +117,7 @@ if (isset($_POST['submit'])) {
             geboortedatum = :geboortedatum, 
             locatie = :locatie,
             telefoon = :telefoon
-            WHERE afkroting = :afkorting');
+            WHERE afkorting = :afkorting');
 
         $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
         $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
@@ -131,7 +127,7 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('geslacht', $geslacht);
         $stmt->bindParam('geboortedatum', $geboortedatum);
         $stmt->bindParam('locatie', $locatie, PDO::PARAM_STR);
-        $stmt->bindParam('telefoon', $locatie);
+        $stmt->bindParam('telefoon', $telefoon);
         $stmt->bindParam('afkorting', $_GET ['afkorting']);
         $stmt->execute();
         redirect('/index.php?gebruiker=overzichtdocent');
@@ -144,7 +140,7 @@ if (isset($_POST['submit'])) {
 <?php } ?>
 
 
-<form action<="<?= route('/index.php?gebruiker=editdocent&gebruiker_id=' . $_GET['gebruiker_id']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action<="<?= route('/index.php?gebruiker=editdocent&afkorting=' . $_GET['afkorting']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
 <div class="form-group row">
     <label class="col-md-3 form-control-label">afkorting</label>
     <div class="col-md-9">
