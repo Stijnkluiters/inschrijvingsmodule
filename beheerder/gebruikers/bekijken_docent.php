@@ -15,7 +15,7 @@
 $db = db();
 
 /** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
-$docentenQuery = $db->prepare('SELECT * FROM medewerker ');
+$docentenQuery = $db->prepare('SELECT * FROM medewerker WHERE deleted = FALSE ');
 /** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
 $docentenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
@@ -38,7 +38,7 @@ $docenten = $docentenQuery->fetchAll();
         <tr>
             <th>afkorting</th>
             <th>Roepnaam</th>
-            <th>Voorvoegsel</th>
+            <th>Tussenvoegsel</th>
             <th>Achternaam</th>
             <th>functie</th>
             <th>Geslacht</th>
@@ -53,7 +53,7 @@ $docenten = $docentenQuery->fetchAll();
     <tr>
         <th>afkorting</th>
         <th>Roepnaam</th>
-        <th>Voorvoegsel</th>
+        <th>Tussenvoegsel</th>
         <th>Achternaam</th>
         <th>functie</th>
         <th>Geslacht</th>
@@ -80,8 +80,8 @@ $docenten = $docentenQuery->fetchAll();
         <td><?= $docent['geboortedatum'] ?></td>
         <td><?= $docent['locatie'] ?></td>
         <td><?= $docent['telefoon'] ?></td>
-        <td><a href="<?= route('/index.php?gebruiker=editdocent&gebruiker_id='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-        <td><a href="<?= route('/index.php?gebruiker=deletedocent&gebruiker_id='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=editdocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=deletedocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
     </tr>
     <?php
     }
