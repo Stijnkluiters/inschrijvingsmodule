@@ -57,9 +57,9 @@ if (count($leerlingen)) { ?>
             <td><?= $leerling['opleiding'] ?></td>
             <td><?= $leerling['begindatum'] ?></td>
             <td><?= $leerling['einddatum'] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editleerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
+            <td><a href="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerling_id=' . $leerling['leerlingnummer']); ?>"><i
+            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
         <?php } ?>

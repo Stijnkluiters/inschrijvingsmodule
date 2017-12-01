@@ -15,7 +15,7 @@ $leerlingQuery = $db->prepare('SELECT *
   ))
   ');
 $leerlingQuery->execute();
-$leerlingen = $leerlingQuery->fetchAll();
+$leerling = $leerlingQuery->fetch();
 
 if(isset($_POST['submit'])){
 
@@ -71,6 +71,13 @@ if(isset($_POST['submit'])){
         if (empty($geslacht)) {
             $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
         }
+        if (!isset($_POST['postcode']) || empty($_POST['postcode'])) {
+            $error['postcode'] = ' postcode is verplicht.';
+        }
+        $geslacht = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
+        if (empty($geslacht)) {
+            $error['postcode'] = ' het filteren van postcode ging verkeerd';
+        }
 
     if(count($error ) === 0){
 
@@ -88,7 +95,7 @@ if(isset($_POST['submit'])){
             plaats = :plaats, 
             geslacht = :geslacht
             WHERE leerlingnummer = :leerlingnummer');
-            
+
     $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
     $stmt->bindParam('tussenvoegsel', $tussenvoegsel, PDO::PARAM_STR);
     $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
@@ -100,17 +107,15 @@ if(isset($_POST['submit'])){
     $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtleerling');
+
     }
 }
 
 
 
 ?>
-<?php foreach ($leerlingen as $leerling) { ?>
-<?php } ?>
 
-
-<form action="<?= route('/index.php?gebruiker=editleerling&leerling_id=' . $_GET['leerling_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $_GET['leerlingnummer'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">Leerlingnummer</label>
         <div class="col-md-9">
@@ -160,6 +165,12 @@ if(isset($_POST['submit'])){
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">Opleiding</label>
+        <div class="col-md-9">
+            <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="plaats" class="form-control" placeholder="<?= $leerling[ 'opleiding' ] ?>">
+        </div>
+    </div>
+    <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
             <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" placeholder="<?= $leerling[ 'begindatum' ] ?>">
@@ -178,8 +189,7 @@ if(isset($_POST['submit'])){
     <?php } ?>
     </ul>
     <?php } ?>
-    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
-        wijzigen
+    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Accoun wijzigen
     </button>
 </form>
 </html>

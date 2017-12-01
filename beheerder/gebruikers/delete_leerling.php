@@ -24,17 +24,15 @@ if(isset($_POST['delete'])){
 
     $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtleerling');
+    //redirect('/index.php?gebruiker=overzichtleerling');
 }
-
-
 
 ?>
 <?php foreach ($leerlingen as $leerling) { ?>
 <?php } ?>
 
 
-<form action="<?= route('/index.php?gebruiker=deleteLeerling&leerling_id=' . $_GET['leerling_id'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $_GET['leerlingnummer'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">Studentcode</label>
         <div class="col-md-9">
@@ -84,6 +82,12 @@ if(isset($_POST['delete'])){
         </div>
     </div>
     <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">Opleiding</label>
+        <div class="col-md-9">
+            <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="plaats" class="form-control" disabled placeholder="<?= $leerling[ 'opleiding' ] ?>">
+        </div>
+    </div>
+    <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
             <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" disabled placeholder="<?= $leerling[ 'begindatum' ] ?>">
@@ -102,8 +106,7 @@ if(isset($_POST['delete'])){
             <?php } ?>
         </ul>
     <?php } ?>
-    <button id="delete" name="delete" type="delete" class="btn btn-block btn-primary mb-3">Account
-        verwijderen
+    <button id="delete" name="delete" type="delete" class="btn btn-block btn-primary mb-3">Account verwijderen
     </button>
 </form>
 </html>
