@@ -182,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`medewerker` (
   `geboortedatum` DATETIME NOT NULL,
   `locatie` VARCHAR(255) NULL,
   `telefoon` VARCHAR(255) NOT NULL,
+  `deleted` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`afkorting`),
   CONSTRAINT `fk_medewerker_account1`
     FOREIGN KEY (`account_id`)
