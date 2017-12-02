@@ -22,6 +22,7 @@ function is_csv($filetype)
 
 function read_csv($file)
 {
+
     // hier controleren we voor de laatste keer of het daadwerkelijk een CSV bestand is.
     if( !is_csv($file[ 'type' ]) )
     {

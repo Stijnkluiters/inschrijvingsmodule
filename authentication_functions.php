@@ -114,47 +114,6 @@ function get_account_his_role($account_id)
     $stmt->execute();
     return $stmt->fetch();
 }
-// haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
-function get_user_info($account = null) {
-    startsession();
-    $db = db();
-    if($account === null) {
-        $account_id = $_SESSION[authenticationSessionName];
-    } else {
-        $account_id = $account['account_id'];
-    }
-    $rolnaam = get_account_his_role($account_id);
-
-    if($rolnaam !== null) {
-        $rolnaam = $rolnaam['rolnaam'];
-        switch ($rolnaam) {
-            case 'beheerder':
-            case "docent":
-                $sql = 'SELECT * FROM account a JOIN medewerker m ON a.account_id = m.account_id';
-            break;
-            case "leerling":
-                $sql = 'SELECT * FROM account a JOIN leerling l ON a.account_id = l.account_id';
-                break;
-            case "contactpersoon":
-                $sql = 'SELECT * FROM account a JOIN contactpersoon c ON a.account_id = c.account_id';
-            break;
-            default :
-                $sql = 'SELECT * FROM account a';
-                // alleen account, omdat er geen resultaten gevonden extra zijn.
-            break;
-        }
-
-        $sql .= ' WHERE a.account_id = :account_id';
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam('account_id',$account_id);
-
-        $stmt->execute();
-        return $stmt->fetch();
-    } else {
-        throw new \Exception('Er zijn geen resultaten gevonden voor account zijn rol.');
-    }
-
-}
 
 
 function formatusername($account = null) {
