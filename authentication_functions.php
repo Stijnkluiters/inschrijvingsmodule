@@ -22,7 +22,7 @@ function check_logged_in_user()
         logout();
         redirect('/login.php');
     }
-
+    // check if current user still exists in database.
     $db = db();
     $stmt = $db->prepare('select * from account where account_id = :account_id');
     $stmt->bindParam('account_id',$_SESSION[authenticationSessionName],PDO::PARAM_INT);
@@ -39,7 +39,7 @@ function check_logged_in_user()
     if(!isset($_SESSION['fingerprint'])) {
         $_SESSION['fingerprint'] = $encryptedfingerprint;
     }
-
+    // check if fingerprint is equal to the older fingerprint, this way we can ensure it's the same user
     if($_SESSION['fingerprint'] != $encryptedfingerprint) {
         logout();
         redirect('/login.php');
