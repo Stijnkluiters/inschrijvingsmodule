@@ -11,15 +11,29 @@ $leerlingQuery = $db->prepare('SELECT *
   FROM leerling l
   where account_id IN 
   (select account_id from account where rol_id = (
-    select rolid from rolnaam where rolnaam = "leerling"
-  ))
+    select rolid from rolnaam where rolnaam = "student"
+  )
+  )
+  ORDER BY leerlingnummer asc
   ');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
 
 ?>
+<div class="card" >
+    <div class="card-header">
+        <strong>Leerlingen importeren</strong>
+    </div>
+    <div class="card-body">
+        <p>
+            Hier kan je leerlingen importeren d.m.v. csv bestand
+        </p>
+        <a href="<?= route('/index.php?gebruiker=invoerenleerling'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Leerlingen importeren</a>
+    </div>
+</div>
 <?php
+
 if (count($leerlingen)) { ?>
     <table class="table">
     <thead>

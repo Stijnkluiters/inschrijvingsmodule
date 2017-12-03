@@ -147,6 +147,10 @@ else
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
                     }
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenleerling' )
+                    {
+                        require 'beheerder/gebruikers/insertstudent.php';
+                    }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtleerling' )
                     {
                         require 'beheerder/gebruikers/overzicht_leerling.php';

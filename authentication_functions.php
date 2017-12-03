@@ -10,7 +10,7 @@ require_once 'config.php';
 
 const passwordAlgo = PASSWORD_BCRYPT;
 
-const options = [ 'cost' => 15 ];
+const options = [ 'cost' => 11 ];
 
 const authenticationSessionName = 'account';
 

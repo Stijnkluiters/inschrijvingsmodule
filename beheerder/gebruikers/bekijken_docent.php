@@ -36,34 +36,19 @@ $docenten = $docentenQuery->fetchAll();
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th>afkorting</th>
+            <th>Afkorting</th>
             <th>Roepnaam</th>
             <th>Tussenvoegsel</th>
             <th>Achternaam</th>
-            <th>functie</th>
+            <th>Functie</th>
             <th>Geslacht</th>
             <th>Geboortedatum</th>
-            <th>locatie</th>
-            <th>telefoon</th>
-            <th>wijzigen</th>
-            <th>verwijderen</th>
+            <th>Locatie</th>
+            <th>Telefoon</th>
+            <th>Wijzigen</th>
+            <th>Verwijderen</th>
         </tr>
     </thead>
-    <tfoot>
-    <tr>
-        <th>afkorting</th>
-        <th>Roepnaam</th>
-        <th>Tussenvoegsel</th>
-        <th>Achternaam</th>
-        <th>functie</th>
-        <th>Geslacht</th>
-        <th>Geboortedatum</th>
-        <th>locatie</th>
-        <th>telefoon</th>
-        <th>wijzigen</th>
-        <th>verwijderen</th>
-    </tr>
-    </tfoot>
 
     <?php
     /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
