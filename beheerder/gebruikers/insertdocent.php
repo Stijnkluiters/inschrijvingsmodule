@@ -188,11 +188,11 @@ if( isset($_POST[ 'invoeren' ]) )
 ?>
 
 <div class="card">
-    <form action="<?= route('/index.php?gebruiker=invoerendocent'); ?>" method="post" enctype="multipart/form-data"
+    <form action="<?= route('/index.php?gebruiker=invoerenmedewerker'); ?>" method="post" enctype="multipart/form-data"
           class="form-horizontal">
 
         <div class="card-header">
-            <strong>Docenten Importeren</strong>
+            <strong>Medewerkers Importeren</strong>
         </div>
         <?php
 

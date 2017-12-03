@@ -111,9 +111,9 @@ else
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtdocent'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtmedewerker'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
-                        Docenten
+                        Medewerkers
                     </a>
                 </li>
             </ul>
@@ -140,10 +140,10 @@ else
                 {
                     if( $_GET[ 'gebruiker' ] === 'alles' )
                     {
-                        require 'beheerder/gebruikers/all.php';
+                        //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'invoerendocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenmedewerker' )
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
                     }
@@ -155,7 +155,7 @@ else
                     {
                         require 'beheerder/gebruikers/overzicht_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'overzichtdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
                         require 'beheerder/gebruikers/bekijken_docent.php';
                     }
@@ -167,11 +167,11 @@ else
                     {
                         require 'beheerder/gebruikers/delete_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'editdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
                         require 'beheerder/gebruikers/edit_docent.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletedocent' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
                     {
                         require 'beheerder/gebruikers/delete_docent.php';
                     }

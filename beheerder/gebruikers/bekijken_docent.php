@@ -24,13 +24,13 @@ $docenten = $docentenQuery->fetchAll();
 ?>
 <div class="card" >
     <div class="card-header">
-        <strong>Docenten importeren</strong>
+        <strong>Medewerkers importeren</strong>
     </div>
     <div class="card-body">
         <p>
-            Hier kan je docenten importeren d.m.v. csv bestand
+            Hier kan je medewerkers importeren d.m.v. csv bestand
         </p>
-        <a href="<?= route('/index.php?gebruiker=invoerendocent'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Docenten importeren</a>
+        <a href="<?= route('/index.php?gebruiker=invoerenmedewerker'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Medewerkers importeren</a>
     </div>
 </div>
 <table class="table">
@@ -65,8 +65,8 @@ $docenten = $docentenQuery->fetchAll();
         <td><?= $docent['geboortedatum'] ?></td>
         <td><?= $docent['locatie'] ?></td>
         <td><?= $docent['telefoon'] ?></td>
-        <td><a href="<?= route('/index.php?gebruiker=editdocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-        <td><a href="<?= route('/index.php?gebruiker=deletedocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=editmedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=deletemedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
     </tr>
     <?php
     }
