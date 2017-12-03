@@ -19,6 +19,7 @@ function check_logged_in_user()
     startsession();
     // check if user is still logged in; check if user that is logged in is still in database.
     if(!isset($_SESSION[ authenticationSessionName ])) {
+        logout();
         redirect('/login.php');
     }
 
@@ -27,7 +28,7 @@ function check_logged_in_user()
     $stmt->bindParam('account_id',$_SESSION[authenticationSessionName],PDO::PARAM_INT);
     $stmt->execute();
     if(!$stmt->rowCount()) {
-
+        logout();
         redirect('/login.php');
     }
 
@@ -36,7 +37,6 @@ function check_logged_in_user()
     $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
 
     if(!isset($_SESSION['fingerprint'])) {
-        $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
         $_SESSION['fingerprint'] = $encryptedfingerprint;
     }
 
