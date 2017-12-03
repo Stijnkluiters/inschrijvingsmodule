@@ -29,5 +29,6 @@ include_once 'authentication_functions.php';
 include_once 'user_functions.php';
 include_once 'permission_functions.php';
 include_once 'file_functions.php';
+include_once 'request_functions.php';
 startsession();
 
