@@ -31,8 +31,8 @@ function check_logged_in_user()
         redirect('/login.php');
     }
 
-
     $fingerprint = 'ROCMNROCKS';
+    // this doesn't work behind loadbalancing.
     $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
 
     if(!isset($_SESSION['fingerprint'])) {
@@ -40,7 +40,7 @@ function check_logged_in_user()
         $_SESSION['fingerprint'] = $encryptedfingerprint;
     }
 
-    if($_SESSION['fingerprint'] !== $encryptedfingerprint) {
+    if($_SESSION['fingerprint'] != $encryptedfingerprint) {
         logout();
         redirect('/login.php');
     }
