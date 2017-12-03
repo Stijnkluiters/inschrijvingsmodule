@@ -20,8 +20,8 @@ ini_set('display_errors', 'On');
 
 include_once 'config.php';
 startsession();
-
-if( !isset($_SESSION[ authenticationSessionName ]) )
+session_regenerate_id();
+if( check_logged_in_user() )
 {
     redirect('/login.php');
 }
@@ -33,7 +33,8 @@ else
 }
 
 
-
+//9bcratj86fvn52ov5lsrvtlv2u
+//
 ?>
 <!DOCTYPE html>
 <html lang="en">

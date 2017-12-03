@@ -14,6 +14,39 @@ const options = [ 'cost' => 11 ];
 
 const authenticationSessionName = 'account';
 
+function check_logged_in_user()
+{
+    startsession();
+    // check if user is still logged in; check if user that is logged in is still in database.
+    if(!isset($_SESSION[ authenticationSessionName ])) {
+        redirect('/login.php');
+    }
+
+    $db = db();
+    $stmt = $db->prepare('select * from account where account_id = :account_id');
+    $stmt->bindParam('account_id',$_SESSION[authenticationSessionName],PDO::PARAM_INT);
+    $stmt->execute();
+    if(!$stmt->rowCount()) {
+
+        redirect('/login.php');
+    }
+
+
+    $fingerprint = 'ROCMNROCKS';
+    $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
+
+    if(!isset($_SESSION['fingerprint'])) {
+        $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
+        $_SESSION['fingerprint'] = $encryptedfingerprint;
+    }
+
+    if($_SESSION['fingerprint'] !== $encryptedfingerprint) {
+        logout();
+        redirect('/login.php');
+    }
+
+}
+
 function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
 
@@ -29,9 +62,8 @@ function checkPassword($hashedOriginalPassword, $input, $originalID)
             $newHash = generatePassword($input);
 
             $dbh = db();
-            // TODO: correct query with correct details
-            $stmt = $dbh->prepare('UPDATE gebruiker SET password = :password WHERE id = :ID');
-            $stmt->bindParam('password', $newHash, PDO::PARAM_STR);
+            $stmt = $dbh->prepare('UPDATE account SET wachtwoord = :wachtwoord WHERE account_id = :id');
+            $stmt->bindParam('wachtwoord', $newHash, PDO::PARAM_STR);
             $stmt->bindParam('id', $originalID, PDO::PARAM_INT);
 
             return $stmt->execute();
@@ -65,12 +97,14 @@ function login($username, $password)
         if( checkPassword($result['wachtwoord'], $password, intval($result[ 'account_id' ])) )
         {
             startsession();
+            session_regenerate_id(true);
             $_SESSION[ authenticationSessionName ] = $result[ 'account_id' ];
 
             return $_SESSION[ authenticationSessionName ];
         }
         else
         {
+
             return 'INVALIDPASSWORD';
         }
     }
@@ -83,6 +117,7 @@ function login($username, $password)
 function logout ()
 {
     startsession();
+    session_regenerate_id(true);
     unset($_SESSION[authenticationSessionName]);
     return true;
 }

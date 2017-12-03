@@ -17,6 +17,9 @@
 
 
 // haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
+
+
+
 function get_user_info($account = null) {
     startsession();
     $db = db();
