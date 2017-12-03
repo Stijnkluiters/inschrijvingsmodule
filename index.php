@@ -21,16 +21,11 @@ ini_set('display_errors', 'On');
 include_once 'config.php';
 startsession();
 session_regenerate_id();
-if( check_logged_in_user() )
-{
-    redirect('/login.php');
-}
-else
-{
+check_logged_in_user();
 
-    $user = get_user_info();
+$user = get_user_info();
 
-}
+
 
 
 //9bcratj86fvn52ov5lsrvtlv2u
