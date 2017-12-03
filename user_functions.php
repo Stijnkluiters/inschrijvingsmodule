@@ -25,6 +25,7 @@ function get_user_info($account = null) {
     } else {
         $account_id = $account['account_id'];
     }
+
     $rolnaam = get_account_his_role($account_id);
 
     if($rolnaam !== null) {
@@ -34,7 +35,7 @@ function get_user_info($account = null) {
             case "docent":
                 $sql = 'SELECT * FROM account a JOIN medewerker m ON a.account_id = m.account_id';
                 break;
-            case "leerling":
+            case "student":
                 $sql = 'SELECT * FROM account a JOIN leerling l ON a.account_id = l.account_id';
                 break;
             case "contactpersoon":

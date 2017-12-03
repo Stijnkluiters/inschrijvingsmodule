@@ -126,7 +126,7 @@ if( isset($_POST[ 'invoeren' ]) )
                             $medewerker[ 'Achternaam' ],
                             $medewerker[ 'Functie' ],
                             $medewerker[ 'Geslacht' ],
-                            $medewerker[ 'Geboortedatum' ],
+                            date('Y-m-d', strtotime($medewerker[ 'Geboortedatum' ])),
                             $medewerker[ 'Gekoppelde locaties' ],
                             $medewerker[ 'Telefoon 1' ],
                             0,
@@ -182,7 +182,7 @@ if( isset($_POST[ 'invoeren' ]) )
             }
         }
 
-        //redirect('/index.php?gebruiker=overzichtdocent');
+        redirect('/index.php?gebruiker=overzichtdocent');
     }
 }
 ?>
