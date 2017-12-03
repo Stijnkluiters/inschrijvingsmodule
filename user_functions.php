@@ -5,15 +5,15 @@
  * Date: 2-12-2017
  * Time: 11:13
  */
-
-function delete_medewerker($afkorting)
-{
-    // also delete all underneath records
-    $db = db();
-    $stmt = $db->prepare('delete from medewerker where afkorting = :afkorting');
-    $stmt->bindParam('afkorting',$afkorting);
-    return $stmt->execute();
-}
+//
+//function delete_medewerker($afkorting)
+//{
+//    // also delete all underneath records
+//    $db = db();
+//    $stmt = $db->prepare('delete from medewerker where afkorting = :afkorting');
+//    $stmt->bindParam('afkorting',$afkorting);
+//    return $stmt->execute();
+//}
 
 
 // haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.

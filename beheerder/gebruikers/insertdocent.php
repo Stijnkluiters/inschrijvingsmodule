@@ -98,47 +98,74 @@ if( isset($_POST[ 'invoeren' ]) )
                 /**
                  * Controleer of afkorting al bestaad, unieke waarde.
                  */
-                $stmt = $db->prepare('select afkorting,deleted from medewerker where afkorting = :afkorting');
+                $stmt = $db->prepare('select afkorting from medewerker where afkorting = :afkorting');
                 $stmt->bindParam('afkorting', $medewerker[ 'Afkorting' ]);
                 $stmt->execute();
-                $controleMedewerker = $stmt->fetch();
+                $rowcount = $stmt->rowCount();
                 // check if the medewerker is deleted; if so, harddelete afterall
 
-                if( empty($controleMedewerker) || $controleMedewerker[ 'deleted' ] == 1 )
+                if( $rowcount )
                 {
-                    if( $controleMedewerker[ 'deleted' ] == 1 )
-                    {
-                        delete_medewerker($controleMedewerker[ 'afkorting' ]);
-                    }
 
+
+                    $stmt = $db->prepare('update medewerker set 
+                            roepnaam = ?, 
+                            tussenvoegsel = ?, 
+                            achternaam = ?, 
+                            functie = ?, 
+                            geslacht = ?, 
+                            geboortedatum = ?, 
+                            locatie = ?, 
+                            telefoon = ?,
+                            deleted = ?                          
+                            WHERE afkorting = ?
+                          ');
+                    $stmt->execute(array(
+                            $medewerker[ 'Roepnaam' ],
+                            $medewerker[ 'Voorvoegsel' ],
+                            $medewerker[ 'Achternaam' ],
+                            $medewerker[ 'Functie' ],
+                            $medewerker[ 'Geslacht' ],
+                            $medewerker[ 'Geboortedatum' ],
+                            $medewerker[ 'Gekoppelde locaties' ],
+                            $medewerker[ 'Telefoon 1' ],
+                            0,
+                            $medewerker[ 'Afkorting' ]
+                        )
+                    );
+
+                }
+                else
+                {
                     /** IMPORTING NEW FRESH GENERATED ACCOUNTS. **/
                     $account_id = generateRandomAccountForRole($medewerker[ 'Afkorting' ], 'docent');
+
                     $stmt = $db->prepare('INSERT INTO medewerker 
-                        (
-                        afkorting, 
-                        account_id, 
-                        roepnaam, 
-                        tussenvoegsel, 
-                        achternaam, 
-                        functie, 
-                        geslacht, 
-                        geboortedatum, 
-                        locatie, 
-                        telefoon
-                        ) 
-                        VALUES 
-                        (
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?
-                        )');
+                            (
+                            afkorting, 
+                            account_id, 
+                            roepnaam, 
+                            tussenvoegsel, 
+                            achternaam, 
+                            functie, 
+                            geslacht, 
+                            geboortedatum, 
+                            locatie, 
+                            telefoon
+                            ) 
+                            VALUES 
+                            (
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?,
+                            ?
+                            )');
                     $stmt->execute(array(
                         $medewerker[ 'Afkorting' ],
                         $account_id,
@@ -154,6 +181,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 }
             }
         }
+
         //redirect('/index.php?gebruiker=overzichtdocent');
     }
 }
