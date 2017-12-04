@@ -73,7 +73,6 @@ if( isset($_POST[ 'titel' ]) )
     }
 
 
-
     /** locatie */
     if( !isset($_POST[ 'locatie' ]) || empty($_POST[ 'locatie' ]) )
     {
@@ -145,8 +144,9 @@ if( isset($_POST[ 'titel' ]) )
     }
 
 
-    if(count($error) === 0) {
-    $stmt = $db->prepare('
+    if( count($error) === 0 )
+    {
+        $stmt = $db->prepare('
         UPDATE `evenement` SET 
         `titel`=?,
         `begintijd`=?,
@@ -162,23 +162,23 @@ if( isset($_POST[ 'titel' ]) )
         `contactnr`= ?
         WHERE 
         `evenement_id`= ?');
-    $stmt->execute(array(
-        $titel,
-        $starttijd,
-        $eindtijd,
-        $onderwerp,
-        $locatie,
-        $omschrijving,
-        $vervoer,
-        $min_leerlingen,
-        $max_leerlingen,
-        $lokaalnummer,
-        $soort,
-        $contactnummer,
-        $id
-    ));
+        $stmt->execute(array(
+            $titel,
+            $starttijd,
+            $eindtijd,
+            $onderwerp,
+            $locatie,
+            $omschrijving,
+            $vervoer,
+            $min_leerlingen,
+            $max_leerlingen,
+            $lokaalnummer,
+            $soort,
+            $contactnummer,
+            $id
+        ));
 
-    $stmt->execute();
+        $stmt->execute();
     }
 
 }
@@ -249,7 +249,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 <div class="form-group">
                     <label for="vervoer">Vervoer</label>
                     <input type="text" class="form-control" id="vervoer" name="vervoer"
-                           value="<?= $row['vervoer']; ?>"
+                           value="<?= $row[ 'vervoer' ]; ?>"
                            placeholder="vervoer">
                 </div>
 
@@ -257,41 +257,42 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-group col-sm-6">
                         <label for="min_leerlingen">Minimaal aantal leerlingen</label>
                         <input type="number" class="form-control" id="min_leerlingen" name="min_leerlingen"
-                               value="<?= $row['min_leerlingen']; ?>"
+                               value="<?= $row[ 'min_leerlingen' ]; ?>"
                                placeholder="Minimaal aantal leerlingen"/>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label for="max_leerlingen">Maximaal aantal leerlingen</label>
                         <input type="number" class="form-control" id="max_leerlingen" name="max_leerlingen"
-                               value="<?= $row['max_leerlingen']; ?>"
+                               value="<?= $row[ 'max_leerlingen' ]; ?>"
                                placeholder="Maximaal aantal leerlingen"/>
                     </div>
 
                 </div>
                 <div class="form-group">
                     <label for="locatie">Locatie</label>
-                    <input type="text" class="form-control" id="locatie" name="locatie" value="<?= $row['locatie'];?>" placeholder="Locatie">
+                    <input type="text" class="form-control" id="locatie" name="locatie"
+                           value="<?= $row[ 'locatie' ]; ?>" placeholder="Locatie">
                 </div>
                 <div class="form-group">
                     <label for="lokaalnummer">Lokaalnummer ( indien van toepassing )</label>
                     <input type="text" class="form-control" name='lokaalnummer' id="lokaalnummer"
-                           value="<?= $row['lokaalnummer'] ?>"
+                           value="<?= $row[ 'lokaalnummer' ] ?>"
                            placeholder="lokaalnummer">
                 </div>
                 <div class="form-group">
                     <label for="soort">Soort</label>
-                    <select class="form-control" id="soort" name="soort">
+                    <select class="form-control" id="soort" name="soort" required="required">
                         <option value="">Seleceer uw soort</option>
                         <?php
 
                         foreach ($soorten as $key => $soort)
                         {
-                            if( !empty($soort['soort']) )
+                            if( !empty($soort[ 'soort' ]) )
                             {
 
                                 echo '<option value="' .
-                                $soort[ 'soort' ] .
+                                    $soort[ 'soort' ] .
                                     '">' .
                                     $soort[ 'soort' ] .
                                     '<option>';
@@ -305,10 +306,12 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
             <?php
 
-            if(isset($error)) {
+            if( isset($error) )
+            {
                 print '<ul>';
-                foreach ($error as $key => $message) {
-                    print '<li>'.$key.':'.$message.'</li>';
+                foreach ($error as $key => $message)
+                {
+                    print '<li>' . $key . ':' . $message . '</li>';
                 }
                 print '</ul>';
             }
