@@ -5,18 +5,21 @@
  * Date: 30/11/2017
  * Time: 12:05
  */
+$afkorting = ($_GET['afkorting']);
+
 $db = db();
-$docentQuery = $db->prepare('SELECT * FROM medewerker');
+$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
+$docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
-$docenten = $docentQuery->fetch();
+$docent = $docentQuery->fetch();
 
 if(isset($_POST['delete'])){
     $stmt = $db->prepare('
-            UPDATE gebruiker SET
+            UPDATE medewerker SET
             deleted = true
-            WHERE id = :gebruiker_id');
+            WHERE afkorting = :afkorting');
 
-    $stmt->bindParam('afkorting', $_GET ['afkorting']);
+    $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtdocent');
 }
@@ -24,8 +27,6 @@ if(isset($_POST['delete'])){
 
 
 ?>
-<?php foreach ($docenten as $docent) { ?>
-<?php } ?>
 
 
 <form action="<?= route('/index.php?gebruiker=deletedocent&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -44,7 +45,7 @@ if(isset($_POST['delete'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Tussenvoegsel</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $docent[ 'voorvoegsel' ] ?>" id="text-input" name="voorvoegsel" class="form-control" disabled placeholder="<?= $docent[ 'voorvoegsel' ] ?>">
+            <input type="text" value="<?= $docent[ 'tussenvoegsel' ] ?>" id="text-input" name="tussenvoegsel" class="form-control" disabled placeholder="<?= $docent[ 'tussenvoegsel' ] ?>">
         </div>
     </div>
     <div class="form-group row">

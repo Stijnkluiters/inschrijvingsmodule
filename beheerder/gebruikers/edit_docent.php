@@ -10,11 +10,11 @@
 $afkorting = ($_GET['afkorting']);
 
 $db = db();
-$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = $afkorting");
+$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
 $docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
-$docenten = $docentQuery->fetch();
-var_dump($_GET);
+$docent = $docentQuery->fetch();
+
 
 
 if (isset($_POST['submit'])) {
@@ -35,11 +35,11 @@ if (isset($_POST['submit'])) {
     $roepnaam = strtolower($roepnaam);
 
     /** tussenvoegsel */
-    $voorvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
-    if ($voorvoegsel === false) {
+    $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
+    if ($tussenvoegsel === false) {
         $error['tussenvoegsel'] = ' het filteren van tussenvoegsel ging verkeerd';
     }
-    $voorvoegsel = strtolower($voorvoegsel);
+    $tussenvoegsel = strtolower($tussenvoegsel);
 
     /** Achternaam */
     if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
@@ -87,7 +87,7 @@ if (isset($_POST['submit'])) {
         $error['locatie'] = ' locatie is verplicht.';
     }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if ($locatie == false) {
+    if ($locatie === false) {
         $error['locatie'] = ' het filteren van locatie ging verkeerd';
     }
 
@@ -137,11 +137,9 @@ if (isset($_POST['submit'])) {
 
 
 ?>
-<?php foreach ($docenten as $docent) { ?>
-<?php } ?>
 
 
-<form action<="<?= route('/index.php?gebruiker=editdocent&afkorting=' . $_GET['afkorting']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editdocent&afkorting=' . $_GET['afkorting']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
 <div class="form-group row">
     <label class="col-md-3 form-control-label">afkorting</label>
     <div class="col-md-9">
@@ -158,7 +156,7 @@ if (isset($_POST['submit'])) {
 <div class="form-group row">
     <label class="col-md-3 form-control-label" for="text-input">Tussenvoegsel</label>
     <div class="col-md-9">
-        <input type="text" value="<?= $docent['tussenvoegsel'] ?>" id="text-input" name="voorvoegsel"
+        <input type="text" value="<?= $docent['tussenvoegsel'] ?>" id="text-input" name="tussenvoegsel"
                class="form-control" placeholder="<?= $docent['tussenvoegsel'] ?>">
     </div>
 </div>

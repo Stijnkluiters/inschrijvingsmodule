@@ -116,6 +116,12 @@ else
                         Docenten
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtcontactpersonen'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Contactpersonen
+                    </a>
+                </li>
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -170,6 +176,10 @@ else
                     elseif ( $_GET[ 'gebruiker' ] == 'deletedocent' )
                     {
                         require 'beheerder/gebruikers/delete_docent.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
+                    {
+                        require 'beheerder/gebruikers/overzichtcontactpersonen.php';
                     }
                     else
                     {
