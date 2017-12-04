@@ -5,6 +5,8 @@
  * Date: 30/11/2017
  * Time: 12:05
  */
+$afkorting = ($_GET['afkorting']);
+
 $db = db();
 $docentQuery = $db->prepare('SELECT * FROM medewerker WHERE afkorting = :afkorting AND deleted = 0');
 $docentQuery->bindParam('afkorting',$_GET['afkorting']);
@@ -17,7 +19,7 @@ if(isset($_POST['delete'])){
             deleted = true
             WHERE afkorting = :afkorting');
 
-    $stmt->bindParam('afkorting', $_GET ['afkorting']);
+    $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtdocent');
 }
@@ -27,6 +29,7 @@ if(empty($docent)) {
 }
 
 ?>
+
 
 
 <form action="<?= route('/index.php?gebruiker=deletedocent&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">

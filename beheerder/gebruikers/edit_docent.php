@@ -11,6 +11,8 @@ $afkorting = ($_GET['afkorting']);
 
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
+$docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
+$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
 $docentQuery->bindParam(':afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
 $docent = $docentQuery->fetch();
@@ -50,8 +52,15 @@ if (isset($_POST['submit'])) {
     }
     $achternaam = strtolower($achternaam);
 
-
+    /** functie */
+    if (!isset($_POST['functie']) || empty($_POST['functie'])) {
+        $error['functie'] = ' functie is verplicht.';
+    }
     $functie = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
+    if (empty($functie)) {
+        $error['functie'] = ' het filteren van functie ging verkeerd';
+    }
+
     /** geslacht */
     if (!isset($_POST['geslacht']) || empty($_POST['geslacht'])) {
         $error['geslacht'] = ' Geslacht is verplicht.';
@@ -74,8 +83,12 @@ if (isset($_POST['submit'])) {
         $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
     }
 
+    /** locatie */
+    if (!isset($_POST['locatie']) || empty($_POST['locatie'])) {
+        $error['locatie'] = ' locatie is verplicht.';
+    }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if ($locatie === false) {
+    if ($locatie == false) {
         $error['locatie'] = ' het filteren van locatie ging verkeerd';
     }
 
