@@ -71,8 +71,8 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`evenement` (
   `evenement_id` INT NOT NULL AUTO_INCREMENT,
   `account_id` INT NOT NULL,
   `titel` VARCHAR(255) NOT NULL,
-  `datum` DATETIME NOT NULL,
-  `begintijd` DATETIME NOT NULL,
+  `datum` DATE NOT NULL,
+  `begintijd` TIME NOT NULL,
   `eindtijd` VARCHAR(255) NOT NULL,
   `onderwerp` VARCHAR(255) NOT NULL,
   `omschrijving` VARCHAR(255) NOT NULL,
@@ -416,3 +416,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 INSERT INTO `account` (`account_id`, `gebruikersnaam`, `wachtwoord`, `rol_id`) VALUES
 (1, 'stijnkluiters', '$2y$15$HskhXrSNHg40cAXqGHf5deaNjQsl7w8HrRD5Ud0X/1j/aM7wqnf0m', 1);
+
+INSERT INTO `evenement` (`evenement_id`, `account_id`, `titel`, `datum`, `begintijd`, `eindtijd`, `onderwerp`, `omschrijving`, `vervoer`, `min_leerlingen`, `max_leerlingen`, `comment`, `locatie`, `lokaalnummer`, `soort`, `contactnr`) VALUES
+(NULL, '1', 'eventone', '2017-11-15', '2017-11-15 15:36:01', '', 'school', 'scho ho hool, merry schoolmas.', NULL, NULL, NULL, NULL, 'Amersfoort', NULL, 'hooi', NULL);

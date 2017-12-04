@@ -4,11 +4,8 @@ $db = db();
 
 //take info from database/evenement
 $stmt = $db->prepare("
-SELECT e.id, e.titel, es.onderwerp, e.datum, e.adres_id, e.locatie_id 
-FROM evenement e JOIN evenement_soort es 
-ON evenement_soort_id = es.id 
-LEFT JOIN locatie l ON l.id = e.locatie_id 
-LEFT JOIN adres a ON a.id = e.adres_id");
+SELECT evenement_id, titel, onderwerp, datum, soort, locatie
+FROM evenement");
 $stmt->execute();
 
 //get results from query
@@ -28,36 +25,36 @@ if ($countrow > 0) {
                 <th class="tablehead">onderwerp</th>
                 <th class="tablehead">datum</th>
                 <th class="tablehead">plaats</th>
-                <th class="tablehead">locatie</th>
+                <th class="tablehead">soort</th>
             </tr>
         ');
     //create a loop to get the needed info per part
 
     foreach ($rows as $row) {
         //put all data in variables
-        htmlentities($row["id"]);
+        htmlentities($row["evenement_id"]);
         $adres = "n.v.t.";
         $locatie = "n.v.t.";
         htmlentities($row["titel"]);
         htmlentities($row["onderwerp"]);
         htmlentities($row["datum"]);
-        if ($row["adres_id"] != "") {
-            $adres = htmlentities($row["adres_id"]);
+        if ($row["locatie"] != "") {
+            $locatie = htmlentities($row["locatie"]);
         }
-        if ($row["locatie_id"] != "") {
-            $locatie = htmlentities($row["locatie_id"]);
+        if ($row["soort"] != "") {
+            $soort = htmlentities($row["soort"]);
         }
 
         //print all VISIBLE variables in the table
         print('
                 <tr>
                     <td>
-                       <a href="' . route('/index.php?evenementen=specifiek&evenement_id=' . $row['id']) . '">' . $row['titel'] . '</a>
+                       <a href="' . route('/index.php?evenementen=specifiek&evenement_id=' . $row['evenement_id']) . '">' . $row['titel'] . '</a>
                     </td>
                     <td>' . $row["onderwerp"] . '</td>
                     <td>' . $row["datum"] . '</td>
-                    <td>' . $adres . '</td>
                     <td>' . $locatie . '</td>
+                    <td>' . $soort . '</td>
             </tr>
             ');
     }
