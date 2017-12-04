@@ -43,10 +43,11 @@ $user = get_user_info();
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>
 
-    <!-- Icons -->
+<!--     Icons -->
     <link href="public/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
+
 
     <!-- Main styles for this application -->
     <link href="public/css/style.css" rel="stylesheet">
@@ -57,6 +58,10 @@ $user = get_user_info();
         echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
     }
     ?>
+
+    <!--Table order-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.0/css/dataTables.responsive.css">
+
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 <header class="app-header navbar">
@@ -224,5 +229,12 @@ $user = get_user_info();
 <!-- Custom scripts required by this view -->
 <script src="public/js/main.js"></script>
 
+<!--Script for order table leerling-->
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#dataTable').DataTable();
+    });
+</script>
 </body>
 </html>
