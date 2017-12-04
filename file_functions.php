@@ -22,6 +22,7 @@ function is_csv($filetype)
 
 function read_csv($file)
 {
+
     // hier controleren we voor de laatste keer of het daadwerkelijk een CSV bestand is.
     if( !is_csv($file[ 'type' ]) )
     {
@@ -38,7 +39,7 @@ function read_csv($file)
             // de eerste rij in een CSV bestand zijn de sleutels die overeen komen in de database.
             if( !$firstrow )
             {
-                $firstrow = $row;
+                $firstrow = array_map('trim',$row);
             }
             // alles behalve de eerste rij zijn waardes in een CSV bestand dus die voegen we samen tot een array.
             else

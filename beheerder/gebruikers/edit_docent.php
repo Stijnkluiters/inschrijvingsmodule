@@ -12,9 +12,10 @@ $afkorting = ($_GET['afkorting']);
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
 $docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
+$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
+$docentQuery->bindParam(':afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
 $docent = $docentQuery->fetch();
-
 
 
 if (isset($_POST['submit'])) {
@@ -87,7 +88,7 @@ if (isset($_POST['submit'])) {
         $error['locatie'] = ' locatie is verplicht.';
     }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if ($locatie === false) {
+    if ($locatie == false) {
         $error['locatie'] = ' het filteren van locatie ging verkeerd';
     }
 
@@ -184,7 +185,7 @@ if (isset($_POST['submit'])) {
 <div class="form-group row">
     <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
     <div class="col-md-9">
-        <input type="date" value="<?= $docent['geboortedatum'] ?>" id="email-input" name="geboortedatum"
+        <input type="date" value="<?= date('Y-m-d',strtotime($docent['geboortedatum'])) ?>" id="email-input" name="geboortedatum"
                class="form-control" placeholder="<?= $docent['geboortedatum'] ?>">
     </div>
 </div>
@@ -213,4 +214,3 @@ if (isset($_POST['submit'])) {
     wijzigen
 </button>
 </form>
-</html>

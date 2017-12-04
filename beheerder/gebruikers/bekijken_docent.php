@@ -24,46 +24,31 @@ $docenten = $docentenQuery->fetchAll();
 ?>
 <div class="card" >
     <div class="card-header">
-        <strong>Docenten importeren</strong>
+        <strong>Medewerkers importeren</strong>
     </div>
     <div class="card-body">
         <p>
-            Hier kan je docenten importeren d.m.v. csv bestand
+            Hier kan je medewerkers importeren d.m.v. csv bestand
         </p>
-        <a href="<?= route('/index.php?gebruiker=invoerendocent'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Docenten importeren</a>
+        <a href="<?= route('/index.php?gebruiker=invoerenmedewerker'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Medewerkers importeren</a>
     </div>
 </div>
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th>afkorting</th>
+            <th>Afkorting</th>
             <th>Roepnaam</th>
             <th>Tussenvoegsel</th>
             <th>Achternaam</th>
-            <th>functie</th>
+            <th>Functie</th>
             <th>Geslacht</th>
             <th>Geboortedatum</th>
-            <th>locatie</th>
-            <th>telefoon</th>
-            <th>wijzigen</th>
-            <th>verwijderen</th>
+            <th>Locatie</th>
+            <th>Telefoon</th>
+            <th>Wijzigen</th>
+            <th>Verwijderen</th>
         </tr>
     </thead>
-    <tfoot>
-    <tr>
-        <th>afkorting</th>
-        <th>Roepnaam</th>
-        <th>Tussenvoegsel</th>
-        <th>Achternaam</th>
-        <th>functie</th>
-        <th>Geslacht</th>
-        <th>Geboortedatum</th>
-        <th>locatie</th>
-        <th>telefoon</th>
-        <th>wijzigen</th>
-        <th>verwijderen</th>
-    </tr>
-    </tfoot>
 
     <?php
     /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
@@ -80,8 +65,8 @@ $docenten = $docentenQuery->fetchAll();
         <td><?= $docent['geboortedatum'] ?></td>
         <td><?= $docent['locatie'] ?></td>
         <td><?= $docent['telefoon'] ?></td>
-        <td><a href="<?= route('/index.php?gebruiker=editdocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-        <td><a href="<?= route('/index.php?gebruiker=deletedocent&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=editmedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+        <td><a href="<?= route('/index.php?gebruiker=deletemedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
     </tr>
     <?php
     }

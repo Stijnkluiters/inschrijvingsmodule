@@ -6,15 +6,14 @@
  * Time: 12:08
  */
 
+$leerlingnummer = ($_GET['leerlingnummer']);
+
 $db = db();
-$leerlingQuery = $db->prepare('SELECT *
-  FROM leerling l
-  where account_id IN 
-  (select account_id from account where rol_id = (
-    select rolid from rolnaam where rolnaam = "leerling"))
-  ');
+$leerlingQuery = $db->prepare("SELECT * FROM leerling WHERE leerlingnummer = :leerlingnummer");
+$leerlingQuery->bindParam('leerlingnummer' ,$leerlingnummer, PDO::PARAM_STR);
 $leerlingQuery->execute();
-$leerlingen = $leerlingQuery->fetchAll();
+$leerling = $leerlingQuery->fetch();
+
 
 if(isset($_POST['delete'])){
     $stmt = $db->prepare('
@@ -22,14 +21,12 @@ if(isset($_POST['delete'])){
             deleted = true
             WHERE leerlingnummer = :leerlingnummer');
 
-    $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
+    $stmt->bindParam('leerlingnummer', $leerlingnummer);
     $stmt->execute();
-    //redirect('/index.php?gebruiker=overzichtleerling');
-}
+    redirect('/index.php?gebruiker=overzichtleerling');
+}//TODO: check if it is a beheerder!!!!!!!!!!!!!!!!!!!!!!!!
 
 ?>
-<?php foreach ($leerlingen as $leerling) { ?>
-<?php } ?>
 
 
 <form action="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $_GET['leerlingnummer'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">

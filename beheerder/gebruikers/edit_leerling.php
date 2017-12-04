@@ -5,20 +5,18 @@
  * Date: 22-11-2017
  * Time: 13:08
  */
+$leerlingnummer = ($_GET['leerlingnummer']);
 
 $db = db();
-$leerlingQuery = $db->prepare('SELECT *
-  FROM leerling l
-  where account_id IN 
-  (select account_id from account where rol_id = (
-    select rolid from rolnaam where rolnaam = "leerling"
-  ))
-  ');
+$leerlingQuery = $db->prepare("SELECT * FROM leerling WHERE leerlingnummer = :leerlingnummer");
+$leerlingQuery->bindParam('leerlingnummer' ,$leerlingnummer, PDO::PARAM_STR);
 $leerlingQuery->execute();
 $leerling = $leerlingQuery->fetch();
 
-if(isset($_POST['submit'])){
 
+if(isset($_POST['submit'])){
+    //var_dump($_POST);
+    //exit;
         /**
          * Filter input from user, which is required in order to continue the request->post.
          */
@@ -72,13 +70,31 @@ if(isset($_POST['submit'])){
         if (empty($geslacht)) {
             $error['geslacht'] = ' het filteren van geslacht ging verkeerd';
         }
+        //**poscode*/
         if (!isset($_POST['postcode']) || empty($_POST['postcode'])) {
             $error['postcode'] = ' postcode is verplicht.';
         }
-        $geslacht = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
-        if (empty($geslacht)) {
+        $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
+        if (empty($postcode)) {
             $error['postcode'] = ' het filteren van postcode ging verkeerd';
         }
+        /**plaats*/
+        if (!isset($_POST['plaats']) || empty($_POST['plaats'])) {
+            $error['plaats'] = ' plaats is verplicht.';
+        }
+        $plaats = filter_input(INPUT_POST, 'plaats', FILTER_SANITIZE_STRING);
+        if (empty($plaats)) {
+            $error['plaats'] = ' het filteren van plaats ging verkeerd';
+        }
+        /**opleiding*/
+        if (!isset($_POST['opleiding']) || empty($_POST['opleiding'])) {
+            $error['opleiding'] = ' opleiding is verplicht.';
+        }
+        $opleiding = filter_input(INPUT_POST, 'opleiding', FILTER_SANITIZE_STRING);
+        if (empty($opleiding)) {
+            $error['opleiding'] = ' het filteren van opleiding ging verkeerd';
+        }
+
 
     if(count($error ) === 0){
 
@@ -168,7 +184,7 @@ if(isset($_POST['submit'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Opleiding</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="plaats" class="form-control" placeholder="<?= $leerling[ 'opleiding' ] ?>">
+            <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="opleiding" class="form-control" placeholder="<?= $leerling[ 'opleiding' ] ?>">
         </div>
     </div>
     <div class="form-group row">

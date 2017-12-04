@@ -12,16 +12,31 @@ $leerlingQuery = $db->prepare('SELECT *
   where account_id IN 
   (select account_id from account where rol_id = (
     select rolid from rolnaam where rolnaam = "leerling"
-  ))
+  )
+  )
+  ORDER BY leerlingnummer asc
   ');
 $leerlingQuery->execute();
 $leerlingen = $leerlingQuery->fetchAll();
 
 
 ?>
+<div class="card" >
+    <div class="card-header">
+        <strong>Leerlingen importeren</strong>
+    </div>
+    <div class="card-body">
+        <p>
+            Hier kan je leerlingen importeren d.m.v. csv bestand
+        </p>
+        <a href="<?= route('/index.php?gebruiker=invoerenleerling'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Leerlingen importeren</a>
+    </div>
+</div>
 <?php
+
+
 if (count($leerlingen)) { ?>
-    <table class="table">
+    <table id="dataTable" class="display">
     <thead>
     <tr>
         <th>Student</th>
@@ -35,13 +50,29 @@ if (count($leerlingen)) { ?>
         <th>Opleiding</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
-        <th>Edit</th>
-        <th>Deleted</th>
+        <th>Wijzigen</th>
+        <th>Verwijderen</th>
     </tr>
     </thead>
+        <tfoot>
+        <tr>
+            <th>Student</th>
+            <th>Geslacht</th>
+            <th>Roepnaam</th>
+            <th>Voorvoegsel</th>
+            <th>Achternaam</th>
+            <th>Geboortedatum</th>
+            <th>Postcode</th>
+            <th>Plaats</th>
+            <th>Opleiding</th>
+            <th>Opleiding Begin</th>
+            <th>Opleiding Eind</th>
+            <th>Wijzigen</th>
+            <th>Verwijderen</th>
+        </tr>
+        </tfoot>
 
     <tbody>
-
 
     <?php
     foreach ($leerlingen as $leerling) { ?>

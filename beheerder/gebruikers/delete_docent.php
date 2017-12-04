@@ -8,8 +8,8 @@
 $afkorting = ($_GET['afkorting']);
 
 $db = db();
-$docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
-$docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
+$docentQuery = $db->prepare('SELECT * FROM medewerker WHERE afkorting = :afkorting AND deleted = 0');
+$docentQuery->bindParam('afkorting',$_GET['afkorting']);
 $docentQuery->execute();
 $docent = $docentQuery->fetch();
 
@@ -24,9 +24,12 @@ if(isset($_POST['delete'])){
     redirect('/index.php?gebruiker=overzichtdocent');
 }
 
-
+if(empty($docent)) {
+    redirect('/index.php?gebruiker=overzichtdocent');
+}
 
 ?>
+
 
 
 <form action="<?= route('/index.php?gebruiker=deletedocent&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">

@@ -20,20 +20,16 @@ ini_set('display_errors', 'On');
 
 include_once 'config.php';
 startsession();
+session_regenerate_id();
+check_logged_in_user();
 
-if( !isset($_SESSION[ authenticationSessionName ]) )
-{
-    redirect('/login.php');
-}
-else
-{
-
-    $user = get_user_info();
-
-}
+$user = get_user_info();
 
 
 
+
+//9bcratj86fvn52ov5lsrvtlv2u
+//
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,10 +43,11 @@ else
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>
 
-    <!-- Icons -->
+<!--     Icons -->
     <link href="public/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
+
 
     <!-- Main styles for this application -->
     <link href="public/css/style.css" rel="stylesheet">
@@ -61,6 +58,10 @@ else
         echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
     }
     ?>
+
+    <!--Table order-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.0/css/dataTables.responsive.css">
+
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 <header class="app-header navbar">
@@ -111,9 +112,9 @@ else
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtdocent'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtmedewerker'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
-                        Docenten
+                        Medewerkers
                     </a>
                 </li>
                 <li class="nav-item">
@@ -146,18 +147,22 @@ else
                 {
                     if( $_GET[ 'gebruiker' ] === 'alles' )
                     {
-                        require 'beheerder/gebruikers/all.php';
+                        //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'invoerendocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenmedewerker' )
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
+                    }
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenleerling' )
+                    {
+                        require 'beheerder/gebruikers/insertstudent.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtleerling' )
                     {
                         require 'beheerder/gebruikers/overzicht_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'overzichtdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
                         require 'beheerder/gebruikers/bekijken_docent.php';
                     }
@@ -169,11 +174,11 @@ else
                     {
                         require 'beheerder/gebruikers/delete_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'editdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
                         require 'beheerder/gebruikers/edit_docent.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletedocent' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
                     {
                         require 'beheerder/gebruikers/delete_docent.php';
                     }
@@ -209,7 +214,6 @@ else
                     }
                 }
 
-
             }
             ?>
         </div>
@@ -239,5 +243,12 @@ else
 <!-- Custom scripts required by this view -->
 <script src="public/js/main.js"></script>
 
+<!--Script for order table leerling-->
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#dataTable').DataTable();
+    });
+</script>
 </body>
 </html>
