@@ -6,7 +6,8 @@
  * Time: 13:39
  */
 
-
+//titel, datum, begintijd, eindtijd, onderwerp, omschrijving leerlingnummer
+//vervoer min_leerlingen max_leerlingen locatie lokaalnummer soort contactnummer account_id
 //Get the id that's been given from bekijken.php
 $id = ($_GET['evenement_id']);
 
