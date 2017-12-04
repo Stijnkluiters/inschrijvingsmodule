@@ -11,7 +11,7 @@ $leerlingQuery = $db->prepare('SELECT *
   FROM leerling l
   where account_id IN 
   (select account_id from account where rol_id = (
-    select rolid from rolnaam where rolnaam = "student"
+    select rolid from rolnaam where rolnaam = "leerling"
   )
   )
   ORDER BY leerlingnummer asc
@@ -49,8 +49,8 @@ if (count($leerlingen)) { ?>
         <th>Opleiding</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
-        <th>Edit</th>
-        <th>Deleted</th>
+        <th>Wijzigen</th>
+        <th>Verwijderen</th>
     </tr>
     </thead>
 

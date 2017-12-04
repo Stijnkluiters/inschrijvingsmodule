@@ -156,8 +156,8 @@ function formatusername($account = null) {
         $account = get_user_info();
     }
     $gebruikernaam = ucfirst($account['roepnaam']) . ' ';
-    if(!empty($account['voorvoegsel'])) {
-        $gebruikernaam .= $account['voorvoegsel']  . ' ';
+    if(!empty($account['tussenvoegsel'])) {
+        $gebruikernaam .= $account['tussenvoegsel']  . ' ';
     }
     $gebruikernaam .= ucfirst($account['achternaam']);
 

@@ -182,7 +182,7 @@ if( isset($_POST[ 'invoeren' ]) )
             }
         }
 
-        redirect('/index.php?gebruiker=overzichtdocent');
+        redirect('/index.php?gebruiker=overzichtmedewerker');
     }
 }
 ?>
