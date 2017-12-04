@@ -11,42 +11,59 @@ include 'config.php';
 if( isset($_POST[ 'submit' ]) )
 {
 
+    //secret recaptcha key:
+    $secret_key = '6LcffjsUAAAAAMqC6IpdiCP7x1nWmJB-CDGnEia3';
+    $response = post_request('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => $secret_key,
+        'response' => $_POST[ 'g-recaptcha-response' ]
+    ]);
+    $response = json_decode($response,true);
 
-    $username = $_POST[ 'gebruikersnaam' ];
-    $password = $_POST[ 'wachtwoord' ];
 
-    if( empty($username) )
+    if( $response['success'] )
     {
-        $error = 'gebruikersnaam is verplicht.';
-    }
-    if( strlen($username) < 5 )
-    {
-        $error = 'gebruikersnaam moet minimaal 5 karakters zijn';
-    }
-    $username = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
+        $username = $_POST[ 'gebruikersnaam' ];
+        $password = $_POST[ 'wachtwoord' ];
 
-    if( strlen($password) < 8 )
-    {
-        $error = 'wachtwoord moet langer dan 7 karakters zijn';
-    }
-    $password = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
-
-    if( !isset($error) )
-    {
-        $output = login($username, $password);
-
-        if( $output === 'NOUSER' || $output === 'INVALIDPASSWORD' )
+        if( empty($username) )
         {
-            $error = 'incorrecte gegevens, probeer het opnieuw.';
+            $error = 'gebruikersnaam is verplicht.';
         }
-        else
+        if( strlen($username) < 5 )
         {
-            //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
-            redirect('/index.php');
+            $error = 'gebruikersnaam moet minimaal 5 karakters zijn';
+        }
+        $username = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
+
+        if( strlen($password) < 8 )
+        {
+            $error = 'wachtwoord moet langer dan 7 karakters zijn';
+        }
+        $password = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
+
+        if( !isset($error) )
+        {
+            $output = login($username, $password);
+
+            if( $output === 'NOUSER' || $output === 'INVALIDPASSWORD' )
+            {
+                $error = 'incorrecte gegevens, probeer het opnieuw.';
+            }
+            else
+            {
+                //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
+                redirect('/index.php');
+            }
+
+        }
+
+    } else {
+
+        if(in_array('missing-input-response',$response['error-codes'])) {
+            $error = 'Recaptcha is verplicht';
         }
 
     }
-
 }
 
 ?>
@@ -115,7 +132,7 @@ if( isset($_POST[ 'submit' ]) )
                             }
                             ?>
                         </div>
-
+                        <div class="g-recaptcha" data-sitekey="6LcffjsUAAAAAK_qsbG5FQm4UnceLL2O5ztC0Kp7"></div>
                     </form>
                 </div>
 
@@ -133,7 +150,6 @@ if( isset($_POST[ 'submit' ]) )
         </div>
     </div>
 </div>
-
-
 </body>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

@@ -10,9 +10,42 @@ require_once 'config.php';
 
 const passwordAlgo = PASSWORD_BCRYPT;
 
-const options = [ 'cost' => 15 ];
+const options = [ 'cost' => 11 ];
 
 const authenticationSessionName = 'account';
+
+function check_logged_in_user()
+{
+    startsession();
+    // check if user is still logged in; check if user that is logged in is still in database.
+    if(!isset($_SESSION[ authenticationSessionName ])) {
+        logout();
+        redirect('/login.php');
+    }
+    // check if current user still exists in database.
+    $db = db();
+    $stmt = $db->prepare('select * from account where account_id = :account_id');
+    $stmt->bindParam('account_id',$_SESSION[authenticationSessionName],PDO::PARAM_INT);
+    $stmt->execute();
+    if(!$stmt->rowCount()) {
+        logout();
+        redirect('/login.php');
+    }
+
+    $fingerprint = 'ROCMNROCKS';
+    // this doesn't work behind loadbalancing.
+    $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
+
+    if(!isset($_SESSION['fingerprint'])) {
+        $_SESSION['fingerprint'] = $encryptedfingerprint;
+    }
+    // check if fingerprint is equal to the older fingerprint, this way we can ensure it's the same user
+    if($_SESSION['fingerprint'] != $encryptedfingerprint) {
+        logout();
+        redirect('/login.php');
+    }
+
+}
 
 function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
@@ -29,9 +62,8 @@ function checkPassword($hashedOriginalPassword, $input, $originalID)
             $newHash = generatePassword($input);
 
             $dbh = db();
-            // TODO: correct query with correct details
-            $stmt = $dbh->prepare('UPDATE gebruiker SET password = :password WHERE id = :ID');
-            $stmt->bindParam('password', $newHash, PDO::PARAM_STR);
+            $stmt = $dbh->prepare('UPDATE account SET wachtwoord = :wachtwoord WHERE account_id = :id');
+            $stmt->bindParam('wachtwoord', $newHash, PDO::PARAM_STR);
             $stmt->bindParam('id', $originalID, PDO::PARAM_INT);
 
             return $stmt->execute();
@@ -65,12 +97,14 @@ function login($username, $password)
         if( checkPassword($result['wachtwoord'], $password, intval($result[ 'account_id' ])) )
         {
             startsession();
+            session_regenerate_id(true);
             $_SESSION[ authenticationSessionName ] = $result[ 'account_id' ];
 
             return $_SESSION[ authenticationSessionName ];
         }
         else
         {
+
             return 'INVALIDPASSWORD';
         }
     }
@@ -83,6 +117,7 @@ function login($username, $password)
 function logout ()
 {
     startsession();
+    session_regenerate_id(true);
     unset($_SESSION[authenticationSessionName]);
     return true;
 }
@@ -113,47 +148,6 @@ function get_account_his_role($account_id)
     $stmt->bindParam(':account_id', $account_id);
     $stmt->execute();
     return $stmt->fetch();
-}
-// haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
-function get_user_info($account = null) {
-    startsession();
-    $db = db();
-    if($account === null) {
-        $account_id = $_SESSION[authenticationSessionName];
-    } else {
-        $account_id = $account['account_id'];
-    }
-    $rolnaam = get_account_his_role($account_id);
-
-    if($rolnaam !== null) {
-        $rolnaam = $rolnaam['rolnaam'];
-        switch ($rolnaam) {
-            case 'beheerder':
-            case "docent":
-                $sql = 'SELECT * FROM account a JOIN medewerker m ON a.account_id = m.account_id';
-            break;
-            case "leerling":
-                $sql = 'SELECT * FROM account a JOIN leerling l ON a.account_id = l.account_id';
-                break;
-            case "contactpersoon":
-                $sql = 'SELECT * FROM account a JOIN contactpersoon c ON a.account_id = c.account_id';
-            break;
-            default :
-                $sql = 'SELECT * FROM account a';
-                // alleen account, omdat er geen resultaten gevonden extra zijn.
-            break;
-        }
-
-        $sql .= ' WHERE a.account_id = :account_id';
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam('account_id',$account_id);
-
-        $stmt->execute();
-        return $stmt->fetch();
-    } else {
-        throw new \Exception('Er zijn geen resultaten gevonden voor account zijn rol.');
-    }
-
 }
 
 

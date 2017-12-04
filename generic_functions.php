@@ -40,6 +40,46 @@ function route($url)
 {
     return htmlspecialchars(Projectroot . $url);
 }
+/*
+ * Create a random string
+ * @param $length the length of the string to create
+ * @return $str the string
+ */
+function randomString($length = 6) {
+    $str = "";
+    $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+    $max = count($characters) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $rand = mt_rand(0, $max);
+        $str .= $characters[$rand];
+    }
+    return $str;
+}
+/**
+ * @param $rolename
+ * @return integer account_id from table account
+ */
+function generateRandomAccountForRole($username,$rolename)
+{
+    $rol_id = check_if_role_exists($rolename);
+    $randomString = randomString(8);
+    $randompassword = generatePassword(
+        $randomString
+    );
+
+    $db = db();
+    $stmt = $db->prepare('insert into account (gebruikersnaam, wachtwoord, rol_id) VALUES (
+              ?,?,?
+            )');
+    $stmt->execute(array(
+       $username,
+        $randompassword,
+        $rol_id
+    ));
+    return $db->lastInsertId();
+
+
+}
 
 function startsession()
 {

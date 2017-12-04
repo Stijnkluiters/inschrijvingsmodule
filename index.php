@@ -20,20 +20,16 @@ ini_set('display_errors', 'On');
 
 include_once 'config.php';
 startsession();
+session_regenerate_id();
+check_logged_in_user();
 
-if( !isset($_SESSION[ authenticationSessionName ]) )
-{
-    redirect('/login.php');
-}
-else
-{
-
-    $user = get_user_info();
-
-}
+$user = get_user_info();
 
 
 
+
+//9bcratj86fvn52ov5lsrvtlv2u
+//
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,9 +107,9 @@ else
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtdocent'); ?>">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtmedewerker'); ?>">
                         <i class="fa fa-users" aria-hidden="true"></i>
-                        Docenten
+                        Medewerkers
                     </a>
                 </li>
             </ul>
@@ -140,18 +136,22 @@ else
                 {
                     if( $_GET[ 'gebruiker' ] === 'alles' )
                     {
-                        require 'beheerder/gebruikers/all.php';
+                        //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'invoerendocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenmedewerker' )
                     {
                         require 'beheerder/gebruikers/insertdocent.php';
+                    }
+                    elseif( $_GET[ 'gebruiker' ] == 'invoerenleerling' )
+                    {
+                        require 'beheerder/gebruikers/insertstudent.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtleerling' )
                     {
                         require 'beheerder/gebruikers/overzicht_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'overzichtdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
                         require 'beheerder/gebruikers/bekijken_docent.php';
                     }
@@ -163,11 +163,11 @@ else
                     {
                         require 'beheerder/gebruikers/delete_leerling.php';
                     }
-                    elseif( $_GET[ 'gebruiker' ] == 'editdocent' )
+                    elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
                         require 'beheerder/gebruikers/edit_docent.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletedocent' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
                     {
                         require 'beheerder/gebruikers/delete_docent.php';
                     }
@@ -194,7 +194,6 @@ else
                         include 'evenement/wijzigen.php';
                     }
                 }
-
 
             }
             ?>
