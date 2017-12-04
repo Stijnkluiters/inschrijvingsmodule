@@ -179,7 +179,11 @@ else
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
                     {
-                        require 'beheerder/gebruikers/overzichtcontactpersonen.php';
+                        require 'beheerder/gebruikers/overzichtcontactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'edit_contactpersonen' )
+                    {
+                        require 'beheerder/gebruikers/edit_contactpersoon.php';
                     }
                     else
                     {

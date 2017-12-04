@@ -19,7 +19,7 @@ $contactenQuery = $db->prepare('SELECT * FROM contactpersoon');
 /** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
 $contactenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
-$contact = $contactenQuery->fetchAll();
+$contacten = $contactenQuery->fetchAll();
 
 ?>
 
@@ -30,7 +30,6 @@ $contact = $contactenQuery->fetchAll();
         <th>Roepnaam</th>
         <th>Tussenvoegsel</th>
         <th>Achternaam</th>
-        <th>bedrijf</th>
         <th>functie</th>
         <th>Email</th>
         <th>telefoon</th>
@@ -43,7 +42,6 @@ $contact = $contactenQuery->fetchAll();
         <th>Roepnaam</th>
         <th>Tussenvoegsel</th>
         <th>Achternaam</th>
-        <th>bedrijf</th>
         <th>functie</th>
         <th>Email</th>
         <th>telefoon</th>
@@ -61,11 +59,10 @@ $contact = $contactenQuery->fetchAll();
             <td><?= $contact['roepnaam'] ?></td>
             <td><?= $contact['tussenvoegsel'] ?></td>
             <td><?= $contact['achternaam'] ?></td>
-            <td><?= $contact['bedrijf'] ?></td>
             <td><?= $contact['functie'] ?></td>
             <td><?= $contact['email-adres'] ?></td>
-            <td><?= $contact['telefoon'] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editdocent&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+            <td><?= $contact['telefoonnr.'] ?></td>
+            <td><a href="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             <td><a href="<?= route('/index.php?gebruiker=deletedocent&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
         </tr>
         <?php
