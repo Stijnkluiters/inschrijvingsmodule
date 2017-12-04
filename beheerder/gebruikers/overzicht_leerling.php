@@ -49,8 +49,8 @@ if (count($leerlingen)) { ?>
         <th>Opleiding</th>
         <th>Opleiding Begin</th>
         <th>Opleiding Eind</th>
-        <th>Edit</th>
-        <th>Deleted</th>
+        <th>Wijzigen</th>
+        <th>Verwijderen</th>
     </tr>
     </thead>
 
