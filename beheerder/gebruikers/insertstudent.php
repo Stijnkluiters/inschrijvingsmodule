@@ -116,9 +116,14 @@ if( isset($_POST[ 'invoeren' ]) )
                 {
                     $error = ' Kolomnaam Groepscode is verplicht';
                 }
+                if(!empty($leerling[ '(W)Postcode en plaats' ])) {
                 $weirddata = explode('  ', $leerling[ '(W)Postcode en plaats' ]);
                 $postcode = trim($weirddata[ 0 ]);
                 $plaats = trim($weirddata[ 1 ]);
+                } else {
+                    $postcode = '';
+                    $plaats = '';
+                }
 
 
                 if( isset($error) )
@@ -179,7 +184,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 else
                 {
                     /** IMPORTING NEW FRESH GENERATED ACCOUNTS. **/
-                    $account_id = generateRandomAccountForRole($leerling[ 'Nummer' ], 'student');
+                    $account_id = generateRandomAccountForRole($leerling[ 'Nummer' ], 'leerling');
 
                     $stmt = $db->prepare('INSERT INTO leerling 
                             (
