@@ -164,7 +164,7 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
-                        require 'beheerder/gebruikers/bekijken_docent.php';
+                        require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editleerling' )
                     {
@@ -176,19 +176,23 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
-                        require 'beheerder/gebruikers/edit_docent.php';
+                        require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
                     {
-                        require 'beheerder/gebruikers/delete_docent.php';
+                        require 'beheerder/gebruikers/medewerker/delete_docent.php';
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
                     {
-                        require 'beheerder/gebruikers/overzichtcontactpersoon.php';
+                        require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'edit_contactpersonen' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'editcontactpersoon' )
                     {
-                        require 'beheerder/gebruikers/edit_contactpersoon.php';
+                        require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletecontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     }
                     else
                     {

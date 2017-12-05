@@ -252,9 +252,10 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`contactpersoon` (
   `tussenvoegsel` VARCHAR(255) NULL,
   `achternaam` VARCHAR(255) NOT NULL,
   `functie` VARCHAR(255) NOT NULL,
-  `telefoonnr.` VARCHAR(255) NOT NULL,
-  `email-adres` VARCHAR(255) NOT NULL,
+  `telefoonnummer` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
   `inventarisatie_id` INT NOT NULL,
+  `deleted` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`contact_id`),
   CONSTRAINT `fk_contactpersoon_bedrijf1`
     FOREIGN KEY (`bedrijf_id`)
