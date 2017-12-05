@@ -66,3 +66,4 @@ if ($countrow > 0) {
 
 ?>
 
+<a href="<?= route('/index.php?evenementen=toevoegen') ?> "><i class="fa fa-plus" aria-hidden="true"></i></a>

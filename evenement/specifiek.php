@@ -34,7 +34,7 @@ if ($row["locatie"] != "") {
 } else {
     $adres = "n.v.t.";
 }
-//check if the user has a certain user_id (admin or the corresponding builder_id)
+//*check if the user has a certain user_id (admin or the corresponding builder_id)
 if (0 == 'a') {
     $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></a>';
 }

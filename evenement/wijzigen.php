@@ -43,9 +43,7 @@ if($update == true){
     $stmt->bindParam('locatie', $locatie, PDO::PARAM_STR);
     $stmt->bindParam('id', $id);
     $stmt->execute();
-} ?>
-<!--<a href=" <?php //route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>" >terug naar evenement bekijken</a>-->
-<?php
+}
 //load info from database using the id
 
 $stmt = $db->prepare("
@@ -70,6 +68,6 @@ $lokaalnr = $row['lokaalnummer'];
     Onderwerp: <input type = "text" name = "onderwerp" value = "<?= $onderwerp?>"><br>
     datum: <input type = "text" name = "datum" value = "<?= $datum?>"><br>
     locatie: <input type = "text" name = "locatie" value = "<?= $locatie?>"><br>
-    lokaalnummer: <input type = "text" name = "lokaalnummer" value = "<?= $lokaalnr?>"><br>
+    <!--lokaalnummer: <input type = "text" name = "lokaalnummer" value = "<?= $lokaalnr?>"><br>-->
     <input type="Submit" value="Wijzig" />
 </form >
