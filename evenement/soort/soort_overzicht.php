@@ -31,5 +31,8 @@ foreach ($rows as $row){
     <?php } ?>
 
 </table>
-
-<a href"<?php route('/index.php?soorten=toevoegen')?>">soort toevoegen</a>
+<?php
+if(1==1) {
+print('<a href = "' . route('/index.php?soorten=toevoegen') . '" ><i class="fa fa-plus" aria - hidden = "true" ></i ></a>');
+}
+?>

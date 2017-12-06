@@ -15,8 +15,11 @@
     text-align: center;
 }
 
-i {
+i{
     color: black;
+}
+
+#wijzig {
     float: right;
 }
 

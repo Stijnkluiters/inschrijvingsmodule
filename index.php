@@ -212,6 +212,21 @@ $user = get_user_info();
                     {
                         include 'evenement/wijzigen.php';
                     }
+                    elseif( $_GET[ 'evenementen' ] === 'toevoegen' )
+                    {
+                        include 'evenement/toevoegen.php';
+                    }
+                }
+                // soorten evenementen
+                if(isset($_GET[ 'soorten' ]) )
+                {
+                    if($_GET[ 'soorten' ] === 'overzicht') {
+                        include 'evenement/soort/soort_overzicht.php';
+                    }
+                    if($_GET['soorten'] === 'toevoegen')
+                    {
+                        include 'evenement/soort/soort_toevoegen.php';
+                    }
                 }
 
             }

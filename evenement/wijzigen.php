@@ -228,7 +228,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="form-group">
-                    <label for="company">Begin datum en tijd*</label>
+                    <label for="company">Eind datum en tijd*</label>
                     <input type="datetime-local" class="form-control" id="eindtijd" name="eindtijd"
                            placeholder="Eindtijd" value="<?= date('Y-m-d\TH:i', strtotime($row[ 'eindtijd' ])); ?>"/>
                 </div>
@@ -301,7 +301,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                     </select>
                 </div>
-
+                <p>* = Verplicht</p>
             </div>
 
             <?php
@@ -317,6 +317,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
             }
 
             ?>
+
             <div class="card-footer">
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Aanpassen</button>
             </div>

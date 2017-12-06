@@ -13,7 +13,7 @@ $id = ($_GET['evenement_id']);
 //load info from database using the id
 $db = db();
 $stmt = $db->prepare("
-SELECT e.evenement_id, titel, e.datum, e.begintijd, e.eindtijd, e.onderwerp, e.omschrijving, e.vervoer, 
+SELECT e.evenement_id, titel, e.begintijd, e.eindtijd, e.onderwerp, e.omschrijving, e.vervoer, 
 e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, e.soort, e.contactnr, e.account_id
 FROM evenement e
 LEFT JOIN inschrijving i ON e.evenement_id = i.evenement_id
@@ -24,11 +24,16 @@ $stmt->execute();
 //put the info in $row
 $row = $stmt->fetch();
 
-//get the info out of $row into other changeble variables
+//get the info out of $row into variables
 $titel = $row["titel"];
 $onderwerp = $row["onderwerp"];
-$datum = $row["datum"];
+$begindatum = $row["begindatum"];
+if($row['einddatum']){
+    $einddatum = $row['einddatum'];
+}
+else{
 
+}
 if ($row["locatie"] != "") {
     $adres = $row["locatie"];
 } else {
@@ -36,7 +41,7 @@ if ($row["locatie"] != "") {
 }
 //*check if the user has a certain user_id (admin or the corresponding builder_id)
 if (0 == 'a') {
-    $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></a>';
+    $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"><i id="wijzig" class="fa fa-pencil fa-3x" aria-hidden="true"></i></a>';
 }
 else {
     $wijzigknop = '';
@@ -56,8 +61,12 @@ if ($row["lokaalnummer"] != "") {
         <td><?= "$onderwerp" ?></td>
     </tr>
     <tr>
-        <td>Datum: </td>
-        <td><?= "$datum" ?></td>
+        <td>Begindatum: </td>
+        <td><?= "$begindatum" ?></td>
+    </tr>
+    <tr>
+        <td>Einddatum: </td>
+        <td><?= "$einddatum" ?></td>
     </tr>
     <tr>
         <td>Adres: </td>
