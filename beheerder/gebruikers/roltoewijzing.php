@@ -35,7 +35,9 @@ if (isset($_POST) && !empty($_POST)) {
         }
     }
 }
-$stmt = $db->query('select * from account');
+$stmt = $db->prepare('select * from account WHERE account_id <> :account_id');
+$stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
+$stmt->execute();
 $accounts = $stmt->fetchAll();
 
 foreach ($accounts as $account) {
