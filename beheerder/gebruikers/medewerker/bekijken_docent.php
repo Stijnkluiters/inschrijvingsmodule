@@ -57,13 +57,13 @@ $docenten = $docentenQuery->fetchAll();
     ?>
     <tr>
         <td><?= $docent['afkorting'] ?></td>
-        <td><?= $docent['roepnaam'] ?></td>
+        <td><?= ucfirst($docent['roepnaam']) ?></td>
         <td><?= $docent['tussenvoegsel'] ?></td>
-        <td><?= $docent['achternaam'] ?></td>
+        <td><?= ucfirst($docent['achternaam']) ?></td>
         <td><?= $docent['functie'] ?></td>
         <td><?= $docent['geslacht'] ?></td>
         <td><?= $docent['geboortedatum'] ?></td>
-        <td><?= $docent['locatie'] ?></td>
+        <td><?= ucfirst($docent['locatie']) ?></td>
         <td><?= $docent['telefoon'] ?></td>
         <td><a href="<?= route('/index.php?gebruiker=editmedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
         <td><a href="<?= route('/index.php?gebruiker=deletemedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>

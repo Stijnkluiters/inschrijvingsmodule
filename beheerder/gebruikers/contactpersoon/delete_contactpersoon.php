@@ -15,20 +15,16 @@ $contactQuery->bindParam('contact_id' ,$contact_id, PDO::PARAM_STR);
 $contactQuery->execute();
 $contact = $contactQuery->fetch();
 
-
 if(isset($_POST['delete'])){
     $stmt = $db->prepare('
             UPDATE contactpersoon SET
             deleted = true
-            WHERE afkorting = :afkorting');
+            WHERE contact_id = :contact_id');
 
     $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtcontactpersoon');
-}
+    redirect('/index.php?gebruiker=overzichtcontactpersonen');
 
-if(empty($contact)) {
-    redirect('/index.php?gebruiker=overzichtcontactpersoon');
 }
 
 
@@ -86,7 +82,7 @@ if(empty($contact)) {
             <?php } ?>
         </ul>
     <?php } ?>
-    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
+    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account
         verwijderen
     </button>
 </form>
