@@ -73,9 +73,9 @@ if ($countrow > 0) {
     print("Er zijn geen evenementen op dit moment");
 }
 if(1==1) {
-    print('<a href = "' . route('/index.php?evenementen=toevoegen') . '" ><i class="fa fa-plus" aria - hidden = "true" ></i ></a>');
+    print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
 }
 if(1==1) {
-    print('<a href = "' . route('/index.php?soorten=overzicht') . '">soorten beheren</a>');
+    print('<p><a href = "' . route('/index.php?soorten=overzicht') . '"><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
 }
 

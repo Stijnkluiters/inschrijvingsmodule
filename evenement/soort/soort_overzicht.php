@@ -33,6 +33,6 @@ foreach ($rows as $row){
 </table>
 <?php
 if(1==1) {
-print('<a href = "' . route('/index.php?soorten=toevoegen') . '" ><i class="fa fa-plus" aria - hidden = "true" ></i ></a>');
+print('<a href = "' . route('/index.php?soorten=toevoegen') . '" >soort toevoegen</a>');
 }
 ?>

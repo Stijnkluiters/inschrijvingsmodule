@@ -6,7 +6,6 @@
  * Time: 15:44
  */
 $db = db();
-//Get the id that's been given from specifiek.php
 var_dump($_POST);
 if (isset($_POST['titel'])) {
     $error = [];
@@ -163,8 +162,6 @@ if (isset($_POST['titel'])) {
             $contactnummer,
             $_SESSION[authenticationSessionName]
             ));
-
-        $stmt->execute();
     }
 
 }
