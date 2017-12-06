@@ -123,6 +123,13 @@ $user = get_user_info();
                         Contactpersonen
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=roltoewijzen'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Roltoewijzing
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -194,6 +201,10 @@ $user = get_user_info();
                     {
                         require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     }
+                    elseif ( $_GET[ 'gebruiker' ] == 'roltoewijzen' )
+                    {
+                        require 'beheerder/gebruikers/roltoewijzing.php';
+                    }
                     else
                     {
                         exit;
@@ -232,6 +243,7 @@ $user = get_user_info();
                         include 'evenement/soort/soort_toevoegen.php';
                     }
                 }
+
 
             }
             ?>
