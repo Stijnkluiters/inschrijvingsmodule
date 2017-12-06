@@ -11,7 +11,7 @@ $afkorting = ($_GET['afkorting']);
 
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
-$docentQuery->bindParam(':afkorting' ,$afkorting, PDO::PARAM_STR);
+$docentQuery->bindParam('afkorting' ,$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
 $docent = $docentQuery->fetch();
 
@@ -50,8 +50,15 @@ if (isset($_POST['submit'])) {
     }
     $achternaam = strtolower($achternaam);
 
+    /** functie */
+    if (!isset($_POST['functie']) || empty($_POST['functie'])) {
+        $error['functie'] = ' functie is verplicht.';
+    }
+    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
+    if (empty($functie)) {
+        $error['functie'] = ' het filteren van functie ging verkeerd';
+    }
 
-    $functie = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
     /** geslacht */
     if (!isset($_POST['geslacht']) || empty($_POST['geslacht'])) {
         $error['geslacht'] = ' Geslacht is verplicht.';
@@ -74,8 +81,12 @@ if (isset($_POST['submit'])) {
         $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
     }
 
+    /** locatie */
+    if (!isset($_POST['locatie']) || empty($_POST['locatie'])) {
+        $error['locatie'] = ' locatie is verplicht.';
+    }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if ($locatie === false) {
+    if ($locatie == false) {
         $error['locatie'] = ' het filteren van locatie ging verkeerd';
     }
 
@@ -119,7 +130,7 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('telefoon', $telefoon);
         $stmt->bindParam('afkorting', $_GET ['afkorting']);
         $stmt->execute();
-        redirect('/index.php?gebruiker=overzichtdocent');
+        redirect('/index.php?gebruiker=overzichtmedewerker');
     }
 }
 
@@ -127,7 +138,7 @@ if (isset($_POST['submit'])) {
 ?>
 
 
-<form action="<?= route('/index.php?gebruiker=editdocent&afkorting=' . $_GET['afkorting']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editmedewerker&afkorting=' . $_GET['afkorting']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
 <div class="form-group row">
     <label class="col-md-3 form-control-label">afkorting</label>
     <div class="col-md-9">

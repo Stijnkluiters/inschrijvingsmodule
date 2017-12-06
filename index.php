@@ -117,6 +117,12 @@ $user = get_user_info();
                         Medewerkers
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtcontactpersonen'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Contactpersonen
+                    </a>
+                </li>
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -158,7 +164,7 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
-                        require 'beheerder/gebruikers/bekijken_docent.php';
+                        require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editleerling' )
                     {
@@ -170,11 +176,23 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
-                        require 'beheerder/gebruikers/edit_docent.php';
+                        require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
                     {
-                        require 'beheerder/gebruikers/delete_docent.php';
+                        require 'beheerder/gebruikers/medewerker/delete_docent.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'editcontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletecontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     }
                     else
                     {
@@ -197,6 +215,21 @@ $user = get_user_info();
                     elseif( $_GET[ 'evenementen' ] === 'wijzigen' )
                     {
                         include 'evenement/wijzigen.php';
+                    }
+                    elseif( $_GET[ 'evenementen' ] === 'toevoegen' )
+                    {
+                        include 'evenement/toevoegen.php';
+                    }
+                }
+                // soorten evenementen
+                if(isset($_GET[ 'soorten' ]) )
+                {
+                    if($_GET[ 'soorten' ] === 'overzicht') {
+                        include 'evenement/soort/soort_overzicht.php';
+                    }
+                    if($_GET['soorten'] === 'toevoegen')
+                    {
+                        include 'evenement/soort/soort_toevoegen.php';
                     }
                 }
 

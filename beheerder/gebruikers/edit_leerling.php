@@ -34,9 +34,10 @@ if(isset($_POST['submit'])){
         }
         $roepnaam = strtolower($roepnaam);
         /** Voorvoegsel */
+
         $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
         if ($tussenvoegsel === false) {
-            $error['tussenvoegsel'] = ' het filteren van voorvoegsel ging verkeerd';
+            $error['tussenvoegsel'] = ' het filteren van tussenvoegsel ging verkeerd';
         }
         $tussenvoegsel = strtolower($tussenvoegsel);
         /** Achternaam */
