@@ -1,16 +1,18 @@
+<a href="<?= route('/index.php?soorten=overzicht') ?>">terug naar soortoverzicht</a>
 <?php
 /**
  * Created by PhpStorm.
  * User: Jonas
  * Date: 12/6/2017
- * Time: 10:01
+ * Time: 14:04
  */
+
 //create database
 $db = db();
 
 //create a variable to catch errors
-    $error = [];
-
+$error = [];
+$soort = $_GET['soort'];
 
 //filter and check the content in the post variable
 /**soortnaam*/
@@ -23,23 +25,34 @@ if (empty($soortnaam)) {
 }
 
 /** benodigdheden */
-$benodigdheden = filter_input(INPUT_POST, 'benodigdheden', FILTER_SANITIZE_STRING);
+$benodigdheid = filter_input(INPUT_POST, 'omschrijving', FILTER_SANITIZE_STRING);
 
 //if there are no errors, continue with the query
 if (count($error) === 0) {
-    $stmt = $db->prepare("
-    INSERT INTO soort (
-    soort, benodigdheid
-    )VALUES (
-        ?,
-        ?
-    )");
+    $stmt = $db->prepare('
+    UPDATE `soort` SET 
+    `soort`=?,
+    `benodigdheid`=?
+    WHERE 
+    `soort`= ?
+');
     //connect the variables to the information in the query
     $stmt->execute(array(
         $soortnaam,
-        $benodigdheden));
+        $benodigdheid,
+        $soort));
 
 }
+
+
+$stmt2 = $db->prepare('
+SELECT soort, benodigdheid
+FROM soort
+WHERE soort = ?');
+
+$stmt2->execute(array($soort));
+
+$prevalue = $stmt2->fetch();
 ?>
 <!-- form where user can insert a 'soort' -->
 <form name="evenementWijzigen" method="post"
@@ -47,15 +60,14 @@ if (count($error) === 0) {
     <div class="col-sm-12">
         <div class="card-body">
             <div class="form-group">
-                <label for="company">soortnaam*</label>
-                <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="evenementsoort">
+                <label for="company">Soortnaam*</label>
+                <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
+                       value="<?= $prevalue['soort']; ?>"/>
             </div>
-
             <div class="form-group">
-                <label for="omschrijving">benodigdheden</label>
-                <textarea class="form-control" id="benodigdheden" name="benodigdheden"
-                          placeholder="benodigdheden bij soort evenement"
-                          required="required"></textarea>
+                <label for="omschrijving">Omschrijving</label>
+                <textarea class="form-control" id="omschrijving" name="omschrijving"
+                          placeholder="Omschrijving voor het evenement"><?= $prevalue[ 'benodigdheid' ]; ?></textarea>
             </div>
             <div class="card-footer">
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Created by PhpStorm.
@@ -159,7 +158,7 @@ if( isset($_POST[ 'titel' ]) )
         `max_leerlingen`=?,
         `lokaalnummer`=?,
         `soort`=?,
-        `contactnr`= ?
+        `contactnr`=?
         WHERE 
         `evenement_id`= ?');
         $stmt->execute(array(
@@ -204,6 +203,7 @@ $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+<a href=" <?= route("/index.php?evenementen=specifiek&id=" . $id) ?>">terug naar evenement bekiijken</a>
 <form name="evenementWijzigen" method="post"
       action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">

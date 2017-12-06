@@ -242,6 +242,10 @@ $user = get_user_info();
                     {
                         include 'evenement/soort/soort_toevoegen.php';
                     }
+                    if($_GET['soorten'] === 'aanpassen')
+                    {
+                        include 'evenement/soort/soort_aanpassen.php';
+                    }
                 }
 
 
