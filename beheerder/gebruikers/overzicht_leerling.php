@@ -79,15 +79,15 @@ if (count($leerlingen)) { ?>
         <tr>
             <td><?= $leerling['leerlingnummer'] ?></td>
             <td><?= $leerling['geslacht'] ?></td>
-            <td><?= $leerling['roepnaam'] ?></td>
+            <td><?= ucfirst($leerling['roepnaam']); ?></td>
             <td><?= $leerling['tussenvoegsel'] ?></td>
-            <td><?= $leerling['achternaam'] ?></td>
-            <td><?= $leerling['geboortedatum'] ?></td>
+            <td><?= ucfirst($leerling['achternaam']) ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['geboortedatum'])); ?></td>
             <td><?= $leerling['postcode'] ?></td>
-            <td><?= $leerling['plaats'] ?></td>
+            <td><?= ucfirst($leerling['plaats']) ?></td>
             <td><?= $leerling['opleiding'] ?></td>
-            <td><?= $leerling['begindatum'] ?></td>
-            <td><?= $leerling['einddatum'] ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['begindatum'])); ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['einddatum'])); ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
             <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
