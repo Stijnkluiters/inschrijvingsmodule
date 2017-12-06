@@ -30,30 +30,27 @@ function get_user_info($account = null) {
     }
 
     $rolnaam = get_account_his_role($account_id);
-
     if($rolnaam !== null) {
         $rolnaam = $rolnaam['rolnaam'];
         switch ($rolnaam) {
             case 'beheerder':
             case "docent":
-                $sql = 'SELECT * FROM account a JOIN medewerker m ON a.account_id = m.account_id';
+                $sql = 'SELECT * FROM account a JOIN rolnaam r ON a.rol_id = r.rolid LEFT JOIN medewerker m ON a.account_id = m.account_id';
                 break;
             case "leerling":
-                $sql = 'SELECT * FROM account a JOIN leerling l ON a.account_id = l.account_id';
+                $sql = 'SELECT * FROM account a  JOIN rolnaam r ON a.rol_id = r.rolid LEFT JOIN leerling l ON a.account_id = l.account_id';
                 break;
-            case "contactpersoon":
-                $sql = 'SELECT * FROM account a JOIN contactpersoon c ON a.account_id = c.account_id';
+            case "externbedrijf":
+                $sql = 'SELECT * FROM account a JOIN rolnaam r ON a.rol_id = r.rolid LEFT JOIN contactpersoon c ON a.account_id = c.account_id';
                 break;
             default :
-                $sql = 'SELECT * FROM account a';
+                $sql = 'SELECT * FROM account a JOIN rolnaam r ON a.rol_id = r.rolid ';
                 // alleen account, omdat er geen resultaten gevonden extra zijn.
                 break;
         }
-
         $sql .= ' WHERE a.account_id = :account_id';
         $stmt = $db->prepare($sql);
         $stmt->bindParam('account_id',$account_id);
-
         $stmt->execute();
         return $stmt->fetch();
     } else {

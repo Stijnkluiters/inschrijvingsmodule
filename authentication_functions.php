@@ -155,12 +155,16 @@ function formatusername($account = null) {
     if($account === null) {
         $account = get_user_info();
     }
-    $gebruikernaam = ucfirst($account['roepnaam']) . ' ';
+    $gebruikernaam = '';
+    if(!empty($account['roepnaam'])) {
+        $gebruikernaam = ucfirst($account['roepnaam']) . ' ';
+    }
     if(!empty($account['tussenvoegsel'])) {
         $gebruikernaam .= $account['tussenvoegsel']  . ' ';
     }
+    if(!empty($account['achternaam'])) {
     $gebruikernaam .= ucfirst($account['achternaam']);
-
+    }
     return $gebruikernaam;
 }
 

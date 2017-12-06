@@ -8,8 +8,8 @@
 $afkorting = ($_GET['afkorting']);
 
 $db = db();
-$docentQuery = $db->prepare('SELECT * FROM medewerker WHERE afkorting = :afkorting AND deleted = 0');
-$docentQuery->bindParam('afkorting',$_GET['afkorting']);
+$docentQuery = $db->prepare('SELECT * FROM medewerker WHERE afkorting = :afkorting');
+$docentQuery->bindParam('afkorting',$afkorting, PDO::PARAM_STR);
 $docentQuery->execute();
 $docent = $docentQuery->fetch();
 
@@ -21,18 +21,14 @@ if(isset($_POST['delete'])){
 
     $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtdocent');
-}
-
-if(empty($docent)) {
-    redirect('/index.php?gebruiker=overzichtdocent');
+    redirect('/index.php?gebruiker=overzichtmedewerker');
 }
 
 ?>
 
 
 
-<form action="<?= route('/index.php?gebruiker=deletedocent&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=deletemedewerker&afkorting=' . $_GET['afkorting'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">afkorting</label>
         <div class="col-md-9">
@@ -93,8 +89,10 @@ if(empty($docent)) {
                 <li><?= $key . ' : ' . $error; ?></li>
             <?php } ?>
         </ul>
+
+
     <?php } ?>
-    <button id="delete" name="delete" type="delete" class="btn btn-block btn-primary mb-3">Account
+    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account
         verwijderen
     </button>
 </form>
