@@ -13,7 +13,7 @@ $leerlingQuery = $db->prepare('SELECT *
   (select account_id from account where rol_id = (
     select rolid from rolnaam where rolnaam = "leerling"
   )
-  )
+  )AND deleted = false
   ORDER BY leerlingnummer asc
   ');
 $leerlingQuery->execute();
@@ -42,7 +42,7 @@ if (count($leerlingen)) { ?>
         <th>Student</th>
         <th>Geslacht</th>
         <th>Roepnaam</th>
-        <th>Voorvoegsel</th>
+        <th>Tussenvoegsel</th>
         <th>Achternaam</th>
         <th>Geboortedatum</th>
         <th>Postcode</th>
@@ -82,7 +82,7 @@ if (count($leerlingen)) { ?>
             <td><?= $leerling['roepnaam'] ?></td>
             <td><?= $leerling['tussenvoegsel'] ?></td>
             <td><?= $leerling['achternaam'] ?></td>
-            <td><?= $leerling['geboortedatum'] ?></td>
+            <td><?= $leerling['geboortedatum']?></td>
             <td><?= $leerling['postcode'] ?></td>
             <td><?= $leerling['plaats'] ?></td>
             <td><?= $leerling['opleiding'] ?></td>

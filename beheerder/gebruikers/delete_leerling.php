@@ -21,11 +21,10 @@ if(isset($_POST['delete'])){
             deleted = true
             WHERE leerlingnummer = :leerlingnummer');
 
-    $stmt->bindParam('leerlingnummer', $leerlingnummer);
+    $stmt->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtleerling');
-}//TODO: check if it is a beheerder!!!!!!!!!!!!!!!!!!!!!!!!
-
+}
 ?>
 
 
@@ -103,7 +102,7 @@ if(isset($_POST['delete'])){
             <?php } ?>
         </ul>
     <?php } ?>
-    <button id="delete" name="delete" type="delete" class="btn btn-block btn-primary mb-3">Account verwijderen
+    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account verwijderen
     </button>
 </form>
 </html>
