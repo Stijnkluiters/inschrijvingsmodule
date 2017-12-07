@@ -6,7 +6,6 @@
  * Time: 15:44
  */
 $db = db();
-var_dump($_POST);
 if (isset($_POST['titel'])) {
     $error = [];
 
