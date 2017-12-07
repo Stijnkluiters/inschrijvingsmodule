@@ -175,14 +175,14 @@ $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<form name="evenementWijzigen" method="post"
+<form name="evenementToevoegen" method="post"
       action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">
 
         <div class="card">
             <div class="card-header">
                 <strong>Evenement</strong>
-                <small>Wijzigen</small>
+                <small>toevoegen</small>
             </div>
             <div class="card-body">
                 <div class="form-group">
@@ -264,7 +264,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                                     $soort['soort'] .
                                     '">' .
                                     $soort['soort'] .
-                                    '<option>';
+                                    '</option>';
                             }
                         }
                         ?>
