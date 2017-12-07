@@ -60,7 +60,7 @@ $user = get_user_info();
     ?>
 
     <!--Table order-->
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.0/css/dataTables.responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
@@ -241,6 +241,10 @@ $user = get_user_info();
                     if($_GET['soorten'] === 'toevoegen')
                     {
                         include 'evenement/soort/soort_toevoegen.php';
+                    }
+                    if($_GET['soorten'] === 'aanpassen')
+                    {
+                        include 'evenement/soort/soort_aanpassen.php';
                     }
                 }
 

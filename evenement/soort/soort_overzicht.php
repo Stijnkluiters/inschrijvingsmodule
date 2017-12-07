@@ -27,9 +27,9 @@ foreach ($rows as $row){
     <tr>
         <td><?= $row['soort']?></td>
         <td><?= $row['benodigdheid']?></td>
+        <td><?='<a href="' . route('/index.php?soorten=aanpassen&soort=' . $row['soort']) . '">wijzigen</a>'?></td>
     </tr>
     <?php } ?>
-
 </table>
 <?php
 if(1==1) {

@@ -62,7 +62,7 @@ $docenten = $docentenQuery->fetchAll();
         <td><?= ucfirst($docent['achternaam']) ?></td>
         <td><?= $docent['functie'] ?></td>
         <td><?= $docent['geslacht'] ?></td>
-        <td><?= $docent['geboortedatum'] ?></td>
+        <td><?= date('d-M-Y',strtotime($docent['geboortedatum'])); ?></td>
         <td><?= ucfirst($docent['locatie']) ?></td>
         <td><?= $docent['telefoon'] ?></td>
         <td><a href="<?= route('/index.php?gebruiker=editmedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
