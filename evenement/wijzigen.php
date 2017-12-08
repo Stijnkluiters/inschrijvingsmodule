@@ -203,7 +203,7 @@ $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<a href=" <?= route("/index.php?evenementen=specifiek&id=" . $id) ?>">terug naar evenement bekiijken</a>
+
 <form name="evenementWijzigen" method="post"
       action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">
@@ -212,6 +212,9 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-header">
                 <strong>Evenement</strong>
                 <small>Wijzigen</small>
+                <div class='pull-right control-group' class="btn btn-primary">
+                    <a href="<?= route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>" class="btn btn-primary">Terug naar evenementen</a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="form-group">
@@ -295,7 +298,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                                     $soort[ 'soort' ] .
                                     '">' .
                                     $soort[ 'soort' ] .
-                                    '<option>';
+                                    '</option>';
                             }
                         }
                         ?>

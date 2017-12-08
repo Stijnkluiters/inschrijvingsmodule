@@ -1,4 +1,3 @@
-<a href="<?= route('/index.php?soorten=overzicht') ?>">terug naar soortoverzicht</a>
 <?php
 /**
  * Created by PhpStorm.
@@ -55,24 +54,31 @@ $stmt2->execute(array($soort));
 $prevalue = $stmt2->fetch();
 ?>
 <!-- form where user can insert a 'soort' -->
-<form name="evenementWijzigen" method="post"
-      action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
-    <div class="col-sm-12">
-        <div class="card-body">
-            <div class="form-group">
-                <label for="company">Soortnaam*</label>
-                <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
-                       value="<?= $prevalue['soort']; ?>"/>
-            </div>
-            <div class="form-group">
-                <label for="omschrijving">Omschrijving</label>
-                <textarea class="form-control" id="omschrijving" name="omschrijving"
-                          placeholder="Omschrijving voor het evenement"><?= $prevalue[ 'benodigdheid' ]; ?></textarea>
-            </div>
-            <div class="card-footer">
-                <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen
+<div class="card">
+    <h4 class="card-header">Soort wijzigen
+        <div class='right' class="btn btn-primary">
+            <a href="<?= route('/index.php?soorten=overzicht') ?>"class="pull-right" class="btn btn-primary">terug naar soortoverzicht</a>
+        </div>
+    </h4>
+    <form name="evenementWijzigen" method="post"
+          action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
+        <div class="col-sm-12">
+
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="company">Soortnaam*</label>
+                    <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
+                           value="<?= $prevalue['soort']; ?>"/>
+                </div>
+                <div class="form-group">
+                    <label for="omschrijving">Omschrijving</label>
+                    <textarea class="form-control" id="omschrijving" name="omschrijving"
+                              placeholder="Omschrijving voor het evenement"><?= $prevalue['benodigdheid']; ?></textarea>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen
+                </div>
             </div>
         </div>
-    </div>
-</form>
-
+    </form>
+</div>

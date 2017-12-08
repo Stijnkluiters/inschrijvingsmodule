@@ -53,7 +53,7 @@ $user = get_user_info();
     <link href="public/css/style.css" rel="stylesheet">
     <?php
 
-    if( isset($_GET[ 'evenementen' ]) )
+    if( isset($_GET[ 'evenementen' ]) || isset($_GET['soorten']))
     {
         echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
     }
