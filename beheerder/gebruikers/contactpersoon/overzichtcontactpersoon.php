@@ -15,7 +15,7 @@
 $db = db();
 
 /** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
-$contactenQuery = $db->prepare('SELECT * FROM contactpersoon WHERE deleted = false');
+$contactenQuery = $db->prepare('SELECT * FROM contactpersoon');
 /** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
 $contactenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
@@ -63,7 +63,21 @@ $contacten = $contactenQuery->fetchAll();
             <td><?= $contact['email'] ?></td>
             <td><?= $contact['telefoonnummer'] ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deletecontactpersoon&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td>
+                <?php
+                if($contact['deleted'] == true){
+                    ?>
+                    <a href="<?= route('/index.php?gebruiker=activatiecontactpersoon&contact_id='.$contact['contact_id']); ?>">
+                        <i class="fa fa-times" aria-hidden="true"></i></a>
+                    <?php
+                }else{
+                    ?>
+                    <a href="<?= route('/index.php?gebruiker=deletecontactpersoon&contact_id='.$contact['contact_id']); ?>">
+                        <i class="fa fa-check" aria-hidden="false"></i></a>
+                    <?php
+                }
+                ?>
+            </td>
         </tr>
         <?php
     }

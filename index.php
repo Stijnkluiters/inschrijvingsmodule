@@ -205,6 +205,10 @@ $user = get_user_info();
                     {
                         require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     }
+                    elseif( $_GET[ 'gebruiker' ] == 'activatiecontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
+                    }
                     elseif ( $_GET[ 'gebruiker' ] == 'roltoewijzen' )
                     {
                         require 'beheerder/gebruikers/roltoewijzing.php';
