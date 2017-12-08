@@ -167,7 +167,7 @@ if (isset($_POST['titel'])) {
 
 
 ?>
-<!--<a href=" <?php //route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>" >terug naar evenement bekijken</a>-->
+
 <?php
 
 
@@ -183,6 +183,9 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-header">
                 <strong>Evenement</strong>
                 <small>toevoegen</small>
+                <div class='right' class="btn btn-primary">
+                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="pull-right" class="btn btn-primary">Terug naar evenementen</a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="form-group">

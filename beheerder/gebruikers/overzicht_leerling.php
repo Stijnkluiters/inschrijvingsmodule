@@ -89,17 +89,16 @@ if (count($leerlingen)) { ?>
                     if($leerling['deleted'] == true){
                         ?>
                             <a href="<?= route('/index.php?gebruiker=activatieleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
-                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <i class="fa fa-times" aria-hidden="true"></i></a>
                         <?php
                     }else{
                         ?>
                             <a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
-                                <i class="fa fa-check" aria-hidden="false">
+                                <i class="fa fa-check" aria-hidden="false"></i></a>
                         <?php
                         }
                     ?>
-
-
+            </td>
         </tr>
         <?php } ?>
         </tbody>

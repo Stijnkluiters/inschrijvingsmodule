@@ -42,6 +42,10 @@ if (count($error) === 0) {
 }
 ?>
 <!-- form where user can insert a 'soort' -->
+<div class="card">
+    <h4 class="card-header">Soort toevoegen<div class='right' class="btn btn-primary">
+            <a href="<?= route('/index.php?soorten=overzicht') ?>"class="pull-right" class="btn btn-primary">Terug naar soortenoverzicht</a>
+        </div></h4>
 <form name="evenementWijzigen" method="post"
       action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">
@@ -63,4 +67,5 @@ if (count($error) === 0) {
         </div>
     </div>
 </form>
+</div>
 
