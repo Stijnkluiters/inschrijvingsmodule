@@ -189,9 +189,9 @@ $user = get_user_info();
                     {
                         require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'activatie-deactivatie-medewerker' )
                     {
-                        require 'beheerder/gebruikers/medewerker/delete_docent.php';
+                        require 'beheerder/gebruikers/medewerker/activeer_deactivieer_docent.php';
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
                     {
