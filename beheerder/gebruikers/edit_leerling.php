@@ -206,7 +206,7 @@ if(isset($_POST['submit'])){
     <?php } ?>
     </ul>
     <?php } ?>
-    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Accoun wijzigen
+    <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account wijzigen
     </button>
 </form>
 </html>

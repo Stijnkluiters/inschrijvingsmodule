@@ -158,7 +158,8 @@ if( isset($_POST[ 'invoeren' ]) )
                             plaatsing = ?,
                             LWOO = ?,
                             LGF = ?,
-                            groepscode = ?            
+                            groepscode = ?,
+                            deleted = ?            
                             WHERE leerlingnummer = ?
                           ');
                     $stmt->execute(array(
@@ -176,6 +177,7 @@ if( isset($_POST[ 'invoeren' ]) )
                             $leerling[ 'LWOO' ],
                             $leerling[ 'LGF' ],
                             $leerling[ 'Groepscode' ],
+                            0,
                             $leerling[ 'Nummer' ]
                         )
                     );

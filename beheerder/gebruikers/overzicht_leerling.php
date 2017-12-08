@@ -41,9 +41,7 @@ if (count($leerlingen)) { ?>
         <tr>
             <th>Leerlingnummer</th>
             <th>Geslacht</th>
-            <th>Roepnaam</th>
-            <th>Voorvoegsel</th>
-            <th>Achternaam</th>
+            <th>Naam</th>
             <th>Geboortedatum</th>
             <th>Postcode</th>
             <th>Plaats</th>
@@ -51,16 +49,14 @@ if (count($leerlingen)) { ?>
             <th>Opleiding Begin</th>
             <th>Opleiding Eind</th>
             <th>Wijzigen</th>
-            <th>Verwijderen</th>
+            <th>Activeren / Deactiveren</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
             <th>Leerlingnummer</th>
             <th>Geslacht</th>
-            <th>Roepnaam</th>
-            <th>Voorvoegsel</th>
-            <th>Achternaam</th>
+            <th>Naam</th>
             <th>Geboortedatum</th>
             <th>Postcode</th>
             <th>Plaats</th>
@@ -68,19 +64,18 @@ if (count($leerlingen)) { ?>
             <th>Opleiding Begin</th>
             <th>Opleiding Eind</th>
             <th>Wijzigen</th>
-            <th>Verwijderen</th>
+            <th>Activeren / Deactiveren</th>
         </tr>
         </tfoot>
-        <tbody>
+
+    <tbody>
 
     <?php
     foreach ($leerlingen as $leerling) { ?>
         <tr>
             <td><?= $leerling['leerlingnummer'] ?></td>
             <td><?= $leerling['geslacht'] ?></td>
-            <td><?= ucfirst($leerling['roepnaam']); ?></td>
-            <td><?= $leerling['tussenvoegsel'] ?></td>
-            <td><?= ucfirst($leerling['achternaam']) ?></td>
+            <td><?= ucfirst($leerling['roepnaam']) . " " . $leerling['tussenvoegsel'] . " " . ucfirst($leerling['achternaam']); ?></td>
             <td><?= date('d-M-Y',strtotime($leerling['geboortedatum'])); ?></td>
             <td><?= $leerling['postcode'] ?></td>
             <td><?= ucfirst($leerling['plaats']) ?></td>
@@ -89,8 +84,21 @@ if (count($leerlingen)) { ?>
             <td><?= date('d-M-Y',strtotime($leerling['einddatum'])); ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
-                            class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td>
+                    <?php
+                    if($leerling['deleted'] == true){
+                        ?>
+                            <a href="<?= route('/index.php?gebruiker=activatieleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
+                                <i class="fa fa-times" aria-hidden="true"></i></a>
+                        <?php
+                    }else{
+                        ?>
+                            <a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
+                                <i class="fa fa-check" aria-hidden="false"></i></a>
+                        <?php
+                        }
+                    ?>
+            </td>
         </tr>
         <?php } ?>
         </tbody>

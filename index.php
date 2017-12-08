@@ -177,6 +177,10 @@ $user = get_user_info();
                     {
                         require 'beheerder/gebruikers/edit_leerling.php';
                     }
+                    elseif( $_GET[ 'gebruiker' ] == 'activatieleerling' )
+                    {
+                        require 'beheerder/gebruikers/activatie_leerling.php';
+                    }
                     elseif( $_GET[ 'gebruiker' ] == 'deleteLeerling' )
                     {
                         require 'beheerder/gebruikers/delete_leerling.php';
