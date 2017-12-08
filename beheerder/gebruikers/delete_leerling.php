@@ -25,6 +25,7 @@ if(isset($_POST['delete'])){
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtleerling');
 }
+
 ?>
 
 
