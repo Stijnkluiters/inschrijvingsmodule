@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`evenement` (
   `begintijd` DATETIME NOT NULL,
   `eindtijd` DATETIME NULL,
   `onderwerp` VARCHAR(255) NOT NULL,
-  `omschrijving` VARCHAR(255) NOT NULL,
+  `omschrijving` TEXT NOT NULL,
   `vervoer` VARCHAR(255) NULL,
   `min_leerlingen` INT NULL,
   `max_leerlingen` INT NULL,
