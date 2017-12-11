@@ -190,6 +190,7 @@ if( isset($_POST[ 'invoeren' ]) )
 
                     $stmt = $db->prepare('INSERT INTO leerling 
                             (
+                            geslacht,
                             leerlingnummer, 
                             account_id, 
                             roepnaam, 
@@ -225,6 +226,8 @@ if( isset($_POST[ 'invoeren' ]) )
                             ?
                             )');
                     $stmt->execute(array(
+
+                        $leerling[ 'Geslacht' ],
                         $leerling[ 'Nummer' ],
                         $account_id,
                         $leerling[ 'Roepnaam' ],
