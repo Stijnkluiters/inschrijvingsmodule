@@ -66,9 +66,11 @@ function randomString($length = 6) {
 function generateRandomAccountForRole($username,$rolename)
 {
     $rol_id = check_if_role_exists($rolename);
-    $randomString = randomString(8);
+
+    $password = randomString(8);
+
     $randompassword = generatePassword(
-        $randomString
+        $password
     );
 
     $db = db();
@@ -80,6 +82,35 @@ function generateRandomAccountForRole($username,$rolename)
         $randompassword,
         $rol_id
     ));
+
+
+    // create mail functionality
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    //Server settings
+    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+    $mail->isSMTP();                                      // Set mailer to use SMTP
+    $mail->Host = mailhost;  // Specify main and backup SMTP servers
+    $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
+    $mail->Username = mailuser;                 // SMTP username
+    $mail->Password = mailpassword;                           // SMTP password
+    $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = mailPort;                                    // TCP port to connect to
+    $mail->setFrom(mailFromEmail, mailFromUser);
+    $mail->addReplyTo(mailFromEmail, mailFromUser);
+    $mail->addBCC(mailFromEmail);
+
+    //Recipients
+    $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
+    $mail->addAddress('ellen@example.com');               // Name is optional
+
+    //Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'Here is the subject';
+    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+
     return $db->lastInsertId();
 
 
