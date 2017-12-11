@@ -52,8 +52,6 @@ if( isset($_POST[ 'submit' ]) )
             else
             {
                 //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
-
-
                 $role = get_account_his_role($_SESSION[authenticationSessionName]);
                 if($role['rolnaam'] === 'leerling') {
                     redirect('/student/index.php');
