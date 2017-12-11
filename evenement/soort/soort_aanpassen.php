@@ -55,11 +55,14 @@ $prevalue = $stmt2->fetch();
 ?>
 <!-- form where user can insert a 'soort' -->
 <div class="card">
-    <h4 class="card-header">Soort wijzigen
-        <div class='right' class="btn btn-primary">
-            <a href="<?= route('/index.php?soorten=overzicht') ?>"class="pull-right" class="btn btn-primary">terug naar soortoverzicht</a>
-        </div>
-    </h4>
+    <div class="card-header">
+        <h4>Soort wijzigen
+            <div class="pull-right">
+                <a href="<?= route('/index.php?soorten=overzicht') ?>" class="btn btn-primary">terug naar
+                    soortoverzicht</a>
+            </div>
+        </h4>
+    </div>
     <form name="evenementWijzigen" method="post"
           action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
         <div class="col-sm-12">
@@ -75,9 +78,7 @@ $prevalue = $stmt2->fetch();
                     <textarea class="form-control" id="omschrijving" name="omschrijving"
                               placeholder="Omschrijving voor het evenement"><?= $prevalue['benodigdheid']; ?></textarea>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen
-                </div>
+                    <button type="submit" name="submit" class="btn btn-sm btn-primary">Wijzigen
             </div>
         </div>
     </form>

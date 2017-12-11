@@ -5,6 +5,7 @@
  * Date: 11/24/2017
  * Time: 15:44
  */
+
 $db = db();
 //Get the id that's been given from specifiek.php
 $id = intval(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING));
@@ -136,7 +137,7 @@ if( isset($_POST[ 'titel' ]) )
     }
     /** Contactnummer */
 
-    $contactnummer = filter_input(INPUT_POST, 'contactnummer', FILTER_SANITIZE_STRING);
+    $contactnummer = filter_input(INPUT_POST, 'contactnummer', FILTER_SANITIZE_NUMBER_INT);
     if( $contactnummer === false )
     {
         $error[ 'contactnummer' ] = ' het filteren van contact ging verkeerd';
@@ -212,7 +213,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-header">
                 <strong>Evenement</strong>
                 <small>Wijzigen</small>
-                <div class='pull-right control-group' class="btn btn-primary">
+                <div class='pull-right control-group'>
                     <a href="<?= route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>" class="btn btn-primary">Terug naar evenementen</a>
                 </div>
             </div>
@@ -284,6 +285,11 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            placeholder="lokaalnummer">
                 </div>
                 <div class="form-group">
+                    <label for="contactnr">Contactnr</label>
+                    <input type="text" class="form-control" id="contactnr" name="contactnr"
+                           value="<?= $row['contactnr'] ?>" placeholder="Contactnr">
+                </div>
+                <div class="form-group">
                     <label for="soort">Soort</label>
                     <select class="form-control" id="soort" name="soort" required="required">
                         <option value="">Seleceer uw soort</option>
@@ -304,9 +310,6 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                     </select>
                 </div>
-                <p>* = Verplicht</p>
-            </div>
-
             <?php
 
             if( isset($error) )
@@ -320,7 +323,8 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
             }
 
             ?>
-
+                <p>* = Verplicht</p>
+        </div>
             <div class="card-footer">
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Aanpassen</button>
             </div>

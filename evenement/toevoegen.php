@@ -178,13 +178,12 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 <form name="evenementToevoegen" method="post"
       action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">
-
         <div class="card">
             <div class="card-header">
                 <strong>Evenement</strong>
                 <small>toevoegen</small>
-                <div class='right' class="btn btn-primary">
-                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="pull-right" class="btn btn-primary">Terug naar evenementen</a>
+                <div class="pull-right">
+                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="btn btn-primary">Terug naar evenementen</a>
                 </div>
             </div>
             <div class="card-body">
