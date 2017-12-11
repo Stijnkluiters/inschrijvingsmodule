@@ -69,8 +69,8 @@ $evenemten = $stmt->fetchAll();
 
                     <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
                     <ul class="list-group">
-                        <li class="list-group-item"><?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
-                        <li class="list-group-item"><?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
+                        <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
+                        <li class="list-group-item">einddatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
                     </ul>
                 </div>
             </div>
