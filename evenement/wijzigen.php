@@ -139,6 +139,7 @@ if (isset($_POST['titel'])) {
         `contactnr`=?
         WHERE 
         `evenement_id`=?');
+
         $stmt->execute(array(
             $titel,
             $starttijd,
