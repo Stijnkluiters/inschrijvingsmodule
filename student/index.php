@@ -1,4 +1,13 @@
-<?php include_once '../config.php'; ?>
+<?php
+
+include_once '../config.php';
+
+$db = db();
+$stmt = $db->query('select * from evenement');
+$evenemten = $stmt->fetchAll();
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,10 +45,11 @@
 <div class="navbar navbar-inverse bg-inverse">
     <div class="container d-flex justify-content-between">
         <a href="#" class="navbar-brand">Roc midden Nederland</a>
+
     </div>
 </div>
 
-<section class="jumbotron text-center">
+<section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
         <p class="lead text-muted">Evenementen overzicht van de student {studentnaam}</p>
@@ -48,16 +58,24 @@
 
 <div class="album text-muted">
     <div class="container">
+        <?php foreach ($evenemten
 
+        as $evenemnt) { ?>
         <div class="row">
-            <div class="card">
+            <div class="card col-12">
                 <div class="card-body">
-                    <h4 class="card-title">evenement titel</h4>
-                    <p class="card-text">Dit is het evenementen beschrijving</p>
-                    <p class="card-text"><small class="text-muted">Start datum - eind datum</small></p>
+                    <h4 class="card-title"><?= ucfirst($evenemnt[ 'titel' ]); ?></h4>
+                    <h5 class="text-muted"><?= ucfirst($evenemnt[ 'onderwerp' ]); ?></h5>
+
+                    <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
+                    <ul class="list-group">
+                        <li class="list-group-item"><?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
+                        <li class="list-group-item"><?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
+                    </ul>
                 </div>
             </div>
-        </div>
+            </div>
+            <?php } ?>
 
     </div>
 </div>
@@ -68,20 +86,25 @@
             <a href="#">Back to top</a>
         </p>
         <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting started guide</a>.</p>
+        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting
+                started guide</a>.</p>
     </div>
 </footer>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
 <script src="https://v4-alpha.getbootstrap.com/assets/js/vendor/holder.min.js"></script>
 <script>
     $(function () {
-        Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+        Holder.addTheme("thumb", {background: "#55595c", foreground: "#eceeef", text: "Thumbnail"});
     });
 </script>
 <script src="https://v4-alpha.getbootstrap.com/dist/js/bootstrap.min.js"></script>
