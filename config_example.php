@@ -11,7 +11,7 @@ $db_pass = '';
 $mailhost = 'localhost';
 $mailSMTP = false;
 $mailSMTPSecure = '';                            // Enable TLS encryption, `ssl` also accepted
-$mailPort = 43;
+$mailPort = 25;
 $mailuser = 'example';
 $mailpassword = 'example';
 $mailFromEmail = 'example@hotmail.com';
@@ -72,12 +72,10 @@ include_once 'permission_functions.php';
 include_once 'file_functions.php';
 include_once 'request_functions.php';
 
-require 'vendor/Exception.php';
-require 'vendor/PHPMailer.php';
-require 'vendor/SMTP.php';
+require_once 'vendor/PHPMailerException.php';
+require_once 'vendor/PHPMailer.php';
+require_once 'vendor/SMTP.php';
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 
 startsession();
