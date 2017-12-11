@@ -56,14 +56,28 @@ $contacten = $contactenQuery->fetchAll();
     {
         ?>
         <tr>
-            <td><?= $contact['roepnaam'] ?></td>
+            <td><?= ucfirst($contact['roepnaam']) ?></td>
             <td><?= $contact['tussenvoegsel'] ?></td>
-            <td><?= $contact['achternaam'] ?></td>
+            <td><?= ucfirst($contact['achternaam']) ?></td>
             <td><?= $contact['functie'] ?></td>
-            <td><?= $contact['email-adres'] ?></td>
-            <td><?= $contact['telefoonnr.'] ?></td>
+            <td><?= $contact['email'] ?></td>
+            <td><?= $contact['telefoonnummer'] ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deletedocent&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td>
+                <?php
+                if($contact['deleted'] == true){
+                    ?>
+                    <a href="<?= route('/index.php?gebruiker=activatiecontactpersoon&contact_id='.$contact['contact_id']); ?>">
+                        <i class="fa fa-times" aria-hidden="true"></i></a>
+                    <?php
+                }else{
+                    ?>
+                    <a href="<?= route('/index.php?gebruiker=deletecontactpersoon&contact_id='.$contact['contact_id']); ?>">
+                        <i class="fa fa-check" aria-hidden="false"></i></a>
+                    <?php
+                }
+                ?>
+            </td>
         </tr>
         <?php
     }

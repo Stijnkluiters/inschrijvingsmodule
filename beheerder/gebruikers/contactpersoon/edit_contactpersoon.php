@@ -6,6 +6,7 @@
  * Time: 15:02
  */
 
+
 $contact_id = ($_GET['contact_id']);
 
 $db = db();
@@ -18,7 +19,7 @@ $contact = $contactQuery->fetch();
 
 if (isset($_POST['submit'])) {
 
-
+var_dump($_GET);
     /** gebruikersnaam */
     $error = array();
 
@@ -54,33 +55,31 @@ if (isset($_POST['submit'])) {
     if (!isset($_POST['functie']) || empty($_POST['functie'])) {
         $error['functie'] = ' functie is verplicht.';
     }
-    $functie = filter_input(INPUT_POST, 'geslacht', FILTER_SANITIZE_STRING);
+    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
     if (empty($functie)) {
         $error['functie'] = ' het filteren van functie ging verkeerd';
     }
 
 
-    /** telefoonnr. */
-    if (!isset($_POST['telefoonnr.']) || empty($_POST['telefoonnr.'])) {
-        $error['telefoonnr.'] = ' telefoonnr. is verplicht.';
-    }
-    $telefoonnr. = filter_input(INPUT_POST, 'telefoon', FILTER_SANITIZE_STRING);
-    if (empty($telefoonnr.)) {
-        $error['telefoonnr.'] = ' het filteren van telefoonnr. ging verkeerd';
-    }
-
-    /** telefoon */
+    /** telefoonnummer */
     if (!isset($_POST['telefoon']) || empty($_POST['telefoon'])) {
-    $error['geslacht'] = ' telefoon is verplicht.';
+        $error['telefoon'] = ' telefoonnummer is verplicht.';
     }
-    $telefoon = filter_input(INPUT_POST, 'telefoon', FILTER_SANITIZE_STRING);
-    if (empty($telefoon)) {
+    $telefoonnummer = filter_input(INPUT_POST, 'telefoon', FILTER_SANITIZE_STRING);
+    if (empty($telefoonnummer)) {
         $error['telefoon'] = ' het filteren van telefoon ging verkeerd';
     }
 
+    /** email */
+    if (!isset($_POST['Email']) || empty($_POST['Email'])) {
+    $error['Email'] = ' email is verplicht.';
+    }
+    $email = filter_input(INPUT_POST, 'Email', FILTER_SANITIZE_STRING);
+    if (empty($email)) {
+        $error['Email'] = ' het filteren van email ging verkeerd';
     }
 
-if (count($error) === 0) {
+
 
     if (count($error) === 0) {
 
@@ -89,14 +88,14 @@ if (count($error) === 0) {
          * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
          */
         $stmt = $db->prepare('
-            UPDATE medewerker SET
+            UPDATE contactpersoon SET
             contact_id = :contact_id,
             roepnaam = :roepnaam, 
             tussenvoegsel = :tussenvoegsel, 
             achternaam = :achternaam,
             functie = :functie, 
-            telefoon = :telefoon,
-            email-adres = :email-adres
+            telefoonnummer = :telefoonnummer,
+            email = :email
             WHERE contact_id = :contact_id');
 
         $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
@@ -104,8 +103,9 @@ if (count($error) === 0) {
         $stmt->bindParam('tussenvoegsel', $tussenvoegsel, PDO::PARAM_STR);
         $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
         $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
-        $stmt->bindParam('telefoon', $telefoon);
-        $stmt->bindParam('contact_id', $_GET ['contact_id']);
+        $stmt->bindParam('telefoonnummer', $telefoonnummer, PDO::PARAM_STR);
+        $stmt->bindParam('email', $email, PDO::PARAM_STR);
+        $stmt->bindParam('contact_id', $contact_id,PDO::PARAM_STR);
         $stmt->execute();
         redirect('/index.php?gebruiker=overzichtcontactpersonen');
     }
@@ -115,7 +115,7 @@ if (count($error) === 0) {
 ?>
 
 
-<form action="<?= route('/index.php?gebruiker=edit_contactpersoon&contact_id=' . $_GET['contact_id']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id=' . $_GET['contact_id']) ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Naam</label>
         <div class="col-md-9">
@@ -143,18 +143,19 @@ if (count($error) === 0) {
             <input type="text" value="<?= $contact['functie'] ?>" id="text-input" name="functie" class="form-control"
                    placeholder="<?= $contact['functie'] ?>">
         </div>
+    </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">telefoon</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $contact['telefoonnr.'] ?>" id="text-input" name="telefoon" class="form-control"
-                   placeholder="<?= $contact['telefoonnr.'] ?>">
+            <input type="text" value="<?= $contact['telefoonnummer'] ?>" id="text-input" name="telefoon" class="form-control"
+                   placeholder="<?= $contact['telefoonnummer'] ?>">
         </div>
     </div>
         <div class="form-group row">
             <label class="col-md-3 form-control-label" for="text-input">Email</label>
             <div class="col-md-9">
-                <input type="text" value="<?= $contact['email-adres'] ?>" id="text-input" name="Email" class="form-control"
-                       placeholder="<?= $contact['email-adres'] ?>">
+                <input type="text" value="<?= $contact['email'] ?>" id="text-input" name="Email" class="form-control"
+                       placeholder="<?= $contact['email'] ?>">
             </div>
         </div>
     <?php if (isset($error)) { ?>

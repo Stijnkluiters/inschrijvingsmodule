@@ -53,14 +53,14 @@ $user = get_user_info();
     <link href="public/css/style.css" rel="stylesheet">
     <?php
 
-    if( isset($_GET[ 'evenementen' ]) )
+    if( isset($_GET[ 'evenementen' ]) || isset($_GET['soorten']))
     {
         echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
     }
     ?>
 
     <!--Table order-->
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.0/css/dataTables.responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
@@ -123,6 +123,13 @@ $user = get_user_info();
                         Contactpersonen
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=roltoewijzen'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Roltoewijzing
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -164,11 +171,15 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
                     {
-                        require 'beheerder/gebruikers/bekijken_docent.php';
+                        require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editleerling' )
                     {
                         require 'beheerder/gebruikers/edit_leerling.php';
+                    }
+                    elseif( $_GET[ 'gebruiker' ] == 'activatieleerling' )
+                    {
+                        require 'beheerder/gebruikers/activatie_leerling.php';
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'deleteLeerling' )
                     {
@@ -176,19 +187,31 @@ $user = get_user_info();
                     }
                     elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
                     {
-                        require 'beheerder/gebruikers/edit_docent.php';
+                        require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletemedewerker' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'activatie-deactivatie-medewerker' )
                     {
-                        require 'beheerder/gebruikers/delete_docent.php';
+                        require 'beheerder/gebruikers/medewerker/activeer_deactivieer_docent.php';
                     }
                     elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
                     {
-                        require 'beheerder/gebruikers/overzichtcontactpersoon.php';
+                        require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
                     }
-                    elseif ( $_GET[ 'gebruiker' ] == 'edit_contactpersonen' )
+                    elseif ( $_GET[ 'gebruiker' ] == 'editcontactpersoon' )
                     {
-                        require 'beheerder/gebruikers/edit_contactpersoon.php';
+                        require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'deletecontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
+                    }
+                    elseif( $_GET[ 'gebruiker' ] == 'activatiecontactpersoon' )
+                    {
+                        require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
+                    }
+                    elseif ( $_GET[ 'gebruiker' ] == 'roltoewijzen' )
+                    {
+                        require 'beheerder/gebruikers/roltoewijzing.php';
                     }
                     else
                     {
@@ -212,7 +235,27 @@ $user = get_user_info();
                     {
                         include 'evenement/wijzigen.php';
                     }
+                    elseif( $_GET[ 'evenementen' ] === 'toevoegen' )
+                    {
+                        include 'evenement/toevoegen.php';
+                    }
                 }
+                // soorten evenementen
+                if(isset($_GET[ 'soorten' ]) )
+                {
+                    if($_GET[ 'soorten' ] === 'overzicht') {
+                        include 'evenement/soort/soort_overzicht.php';
+                    }
+                    if($_GET['soorten'] === 'toevoegen')
+                    {
+                        include 'evenement/soort/soort_toevoegen.php';
+                    }
+                    if($_GET['soorten'] === 'aanpassen')
+                    {
+                        include 'evenement/soort/soort_aanpassen.php';
+                    }
+                }
+
 
             }
             ?>

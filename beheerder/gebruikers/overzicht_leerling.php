@@ -36,31 +36,12 @@ $leerlingen = $leerlingQuery->fetchAll();
 
 
 if (count($leerlingen)) { ?>
-    <table id="dataTable" class="display">
-    <thead>
-    <tr>
-        <th>Student</th>
-        <th>Geslacht</th>
-        <th>Roepnaam</th>
-        <th>Voorvoegsel</th>
-        <th>Achternaam</th>
-        <th>Geboortedatum</th>
-        <th>Postcode</th>
-        <th>Plaats</th>
-        <th>Opleiding</th>
-        <th>Opleiding Begin</th>
-        <th>Opleiding Eind</th>
-        <th>Wijzigen</th>
-        <th>Verwijderen</th>
-    </tr>
-    </thead>
-        <tfoot>
+    <table id="dataTable" class="table table-striped table-bordered">
+        <thead>
         <tr>
-            <th>Student</th>
+            <th>Leerlingnummer</th>
             <th>Geslacht</th>
-            <th>Roepnaam</th>
-            <th>Voorvoegsel</th>
-            <th>Achternaam</th>
+            <th>Naam</th>
             <th>Geboortedatum</th>
             <th>Postcode</th>
             <th>Plaats</th>
@@ -68,7 +49,22 @@ if (count($leerlingen)) { ?>
             <th>Opleiding Begin</th>
             <th>Opleiding Eind</th>
             <th>Wijzigen</th>
-            <th>Verwijderen</th>
+            <th>Activeren / Deactiveren</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Leerlingnummer</th>
+            <th>Geslacht</th>
+            <th>Naam</th>
+            <th>Geboortedatum</th>
+            <th>Postcode</th>
+            <th>Plaats</th>
+            <th>Opleiding</th>
+            <th>Opleiding Begin</th>
+            <th>Opleiding Eind</th>
+            <th>Wijzigen</th>
+            <th>Activeren / Deactiveren</th>
         </tr>
         </tfoot>
 
@@ -79,22 +75,33 @@ if (count($leerlingen)) { ?>
         <tr>
             <td><?= $leerling['leerlingnummer'] ?></td>
             <td><?= $leerling['geslacht'] ?></td>
-            <td><?= $leerling['roepnaam'] ?></td>
-            <td><?= $leerling['tussenvoegsel'] ?></td>
-            <td><?= $leerling['achternaam'] ?></td>
-            <td><?= $leerling['geboortedatum'] ?></td>
+            <td><?= ucfirst($leerling['roepnaam']) . " " . $leerling['tussenvoegsel'] . " " . ucfirst($leerling['achternaam']); ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['geboortedatum'])); ?></td>
             <td><?= $leerling['postcode'] ?></td>
-            <td><?= $leerling['plaats'] ?></td>
+            <td><?= ucfirst($leerling['plaats']) ?></td>
             <td><?= $leerling['opleiding'] ?></td>
-            <td><?= $leerling['begindatum'] ?></td>
-            <td><?= $leerling['einddatum'] ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['begindatum'])); ?></td>
+            <td><?= date('d-M-Y',strtotime($leerling['einddatum'])); ?></td>
             <td><a href="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td><a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
-                            class="fa fa-trash" aria-hidden="true"></i></a></td>
+            <td>
+                    <?php
+                    if($leerling['deleted'] == true){
+                        ?>
+                            <a href="<?= route('/index.php?gebruiker=activatieleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
+                                <i class="fa fa-times" aria-hidden="true"></i></a>
+                        <?php
+                    }else{
+                        ?>
+                            <a href="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>">
+                                <i class="fa fa-check" aria-hidden="false"></i></a>
+                        <?php
+                        }
+                    ?>
+            </td>
         </tr>
         <?php } ?>
-    </tbody>
+        </tbody>
 
     </table>
 <?php } else { ?>

@@ -15,7 +15,7 @@
 $db = db();
 
 /** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
-$docentenQuery = $db->prepare('SELECT * FROM medewerker WHERE deleted = FALSE ');
+$docentenQuery = $db->prepare('SELECT * FROM medewerker');
 /** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
 $docentenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
@@ -46,7 +46,7 @@ $docenten = $docentenQuery->fetchAll();
             <th>Locatie</th>
             <th>Telefoon</th>
             <th>Wijzigen</th>
-            <th>Verwijderen</th>
+            <th>Actief</th>
         </tr>
     </thead>
 
@@ -57,16 +57,28 @@ $docenten = $docentenQuery->fetchAll();
     ?>
     <tr>
         <td><?= $docent['afkorting'] ?></td>
-        <td><?= $docent['roepnaam'] ?></td>
+        <td><?= ucfirst($docent['roepnaam']) ?></td>
         <td><?= $docent['tussenvoegsel'] ?></td>
-        <td><?= $docent['achternaam'] ?></td>
+        <td><?= ucfirst($docent['achternaam']) ?></td>
         <td><?= $docent['functie'] ?></td>
         <td><?= $docent['geslacht'] ?></td>
-        <td><?= $docent['geboortedatum'] ?></td>
-        <td><?= $docent['locatie'] ?></td>
+        <td><?= date('d-M-Y',strtotime($docent['geboortedatum'])); ?></td>
+        <td><?= ucfirst($docent['locatie']) ?></td>
         <td><?= $docent['telefoon'] ?></td>
         <td><a href="<?= route('/index.php?gebruiker=editmedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-        <td><a href="<?= route('/index.php?gebruiker=deletemedewerker&afkorting='.$docent['afkorting']); ?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+        <td><?php
+            if($docent['deleted'] == true){
+                ?>
+                <a href="<?= route('/index.php?gebruiker=activatie-deactivatie-medewerker&afkorting=' . $docent['afkorting']); ?>">
+                    <i class="fa fa-times" aria-hidden="true"></i></a>
+                <?php
+            }else{
+                ?>
+                <a href="<?= route('/index.php?gebruiker=activatie-deactivatie-medewerker&afkorting=' . $docent['afkorting']); ?>">
+                    <i class="fa fa-check" aria-hidden="false"></i></a>
+                <?php
+            }
+            ?></td>
     </tr>
     <?php
     }

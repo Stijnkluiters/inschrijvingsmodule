@@ -13,9 +13,13 @@ function redirect($url)
 {
     if (!is_string($url)) {
         throw new Exception($url . ' is not an String you silly');
+        exit;
     }
-
-    return header(sprintf('Location: %s', Projectroot . $url));
+    if(headers_sent()) {
+        echo '<script> location.replace("'.Projectroot . $url.'"); </script>';
+    } else {
+        return header(sprintf('Location: %s', Projectroot . $url));
+    }
 }
 
 function filter_url($url)

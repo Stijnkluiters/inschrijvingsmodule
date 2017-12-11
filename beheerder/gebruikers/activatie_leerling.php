@@ -2,9 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: Johan Vd Wetering
- * Date: 29-11-2017
- * Time: 12:08
+ * Date: 7-12-2017
+ * Time: 11:52
  */
+
 
 $leerlingnummer = ($_GET['leerlingnummer']);
 
@@ -15,21 +16,20 @@ $leerlingQuery->execute();
 $leerling = $leerlingQuery->fetch();
 
 
-if(isset($_POST['delete'])){
+if(isset($_POST['activeer'])){
     $stmt = $db->prepare('
             UPDATE leerling SET
-            deleted = true
+            deleted = false
             WHERE leerlingnummer = :leerlingnummer');
 
     $stmt->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);
     $stmt->execute();
     redirect('/index.php?gebruiker=overzichtleerling');
 }
-
 ?>
 
 
-<form action="<?= route('/index.php?gebruiker=deleteLeerling&leerlingnummer=' . $_GET['leerlingnummer'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="<?= route('/index.php?gebruiker=activatieleerling&leerlingnummer=' . $_GET['leerlingnummer'])?>" method="post" enctype="multipart/form-data" class="form-horizontal">
     <div class="form-group row">
         <label class="col-md-3 form-control-label">Studentcode</label>
         <div class="col-md-9">
@@ -103,7 +103,7 @@ if(isset($_POST['delete'])){
             <?php } ?>
         </ul>
     <?php } ?>
-    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account verwijderen
+    <button id="activeer" name="activeer" type="submit" class="btn btn-block btn-primary mb-3">Activeren account
     </button>
 </form>
 </html>
