@@ -166,11 +166,6 @@ if (isset($_POST['titel'])) {
 }
 
 
-?>
-
-<?php
-
-
 $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 

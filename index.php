@@ -239,6 +239,10 @@ $user = get_user_info();
                     {
                         include 'evenement/toevoegen.php';
                     }
+                    elseif( $_GET['evenementen'] === 'activatie')
+                    {
+                        include 'evenement/activatie.php';
+                    }
                 }
                 // soorten evenementen
                 if(isset($_GET[ 'soorten' ]) )

@@ -55,9 +55,12 @@ if ($row["lokaalnummer"] != "") {
 
 //actief of niet
 $activatie = $row['status'];
-if ($activatie = 1) {
+if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+} elseif ($activatie == 0) {
+    $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
+    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
 }
 
 //progressbar berekeningen
@@ -106,8 +109,8 @@ if ($current == 0) {
     $inschrijvingen = "Er zijn $current inschrijvingen";
 }
 ?>
-
 <div class="card">
+
     <h4 class="card-header">
         <?= $titel ?>
         <div class='pull-right control-group'>
@@ -119,8 +122,8 @@ if ($current == 0) {
         <p class="card-text"><?= $omschrijving ?></p>
         <?= "$wijzigknop" ?>
     </div>
-
 </div>
+
 <div class="card">
     <h4 class="card-header">Inschrijvingen</h4>
     <div class="card-body">
@@ -130,6 +133,8 @@ if ($current == 0) {
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-6">
 <div class="card">
     <h4 class="card-header">Waar en Wanneer</h4>
     <div class="card-body">
@@ -154,13 +159,16 @@ if ($current == 0) {
             </table>
         </div>
     </div>
+    </div>
 </div>
+    <div class="col-6">
 <div class="card">
     <h4 class=" card-header">Actief?</h4>
     <div class="card-body">
         <h5>Op dit moment: <?= $activatiemessage ?></h5><?= $activatieknop ?>
     </div>
 </div>
-
+</div>
+</div>
 
 

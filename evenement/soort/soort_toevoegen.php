@@ -38,7 +38,9 @@ if (count($error) === 0) {
     $stmt->execute(array(
         $soortnaam,
         $benodigdheden));
-
+    $successmessage = "<div><span class='bg-success'>$soortnaam is toegevoegd</span></div>";
+}else{
+    $successmessage = "";
 }
 ?>
 <!-- form where user can insert a 'soort' -->
@@ -63,6 +65,7 @@ if (count($error) === 0) {
                           placeholder="benodigdheden bij soort evenement"
                           required="required"></textarea>
             </div>
+            <?= $successmessage ?>
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen
         </div>
     </div>

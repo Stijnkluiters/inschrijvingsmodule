@@ -117,13 +117,14 @@ if (isset($_POST['titel'])) {
     /** Contactnummer */
 
     $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_NUMBER_INT);
-
+    if(strlen($contactnr) > 11){
+        $error['contactnummer'] = ' het contactnummer mag niet langer zijn dan 11 karakters';
+    }
     if ($contactnr === false) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
-
     if (count($error) === 0) {
-        $stmt = $db->prepare('
+        $update = $db->prepare('
         UPDATE `evenement` SET 
         `titel`=?,
         `begintijd`=?,
@@ -140,7 +141,7 @@ if (isset($_POST['titel'])) {
         WHERE 
         `evenement_id`=?');
 
-        $stmt->execute(array(
+        $update->execute(array(
             $titel,
             $starttijd,
             $eindtijd,
@@ -156,7 +157,6 @@ if (isset($_POST['titel'])) {
             $id
         ));
 
-        $stmt->execute();
     }
 }
 
@@ -168,7 +168,7 @@ if (isset($_POST['titel'])) {
 //load info from database using the id
 
 $stmt = $db->prepare("
-SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, e.soort, e.contactnr
+SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, e.soort, contactnr
 FROM evenement e 
 JOIN soort s ON s.soort = e.soort
 WHERE evenement_id = $id");
@@ -252,7 +252,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
                 </div>
                 <div class="form-group">
-                    <label for="locatie">Locatie</label>
+                    <label for="locatie">Locatie*</label>
                     <input type="text" class="form-control" id="locatie" name="locatie"
                            value="<?= $row['locatie']; ?>" placeholder="Locatie">
                 </div>
@@ -263,12 +263,12 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            placeholder="lokaalnummer">
                 </div>
                 <div class="form-group">
-                    <label for="contactnr">Contactnr</label>
+                    <label for="contactnr">Contactnummer</label>
                     <input type="text" class="form-control" id="contactnr" name="contactnr"
-                           value="<?= $row['contactnr'] ?>" placeholder="Contactnr">
+                           value="<?= $row['contactnr'] ?>" placeholder="Contactnummer">
                 </div>
                 <div class="form-group">
-                    <label for="soort">Soort</label>
+                    <label for="soort">Soort*</label>
                     <select class="form-control" id="soort" name="soort" required="required">
                         <option value="">Seleceer uw soort</option>
                         <?php
