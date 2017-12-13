@@ -63,28 +63,40 @@ foreach ($accounts as $account) {
             </thead>
             <tbody>
             <?php
+            if(!empty($users)) {
+                foreach ($users as $regelnummer => $account) {
+                    ?>
+                    <tr>
+                        <td><?= ++$regelnummer; ?></td>
+                        <td><?= formatusername($account) . ' ' . $account['gebruikersnaam'] ?></td>
+                        <td>
+                            <input <?= ($account['rolnaam'] == 'leerling') ? 'checked=""' : ''; ?> type="radio"
+                                                                                                   name="rol-<?= $account[0] ?>"
+                                                                                                   value="<?= 1 ?>">
+                        </td>
+                        <td>
 
-            foreach ($users as $regelnummer => $account) {
-                ?>
-                <tr>
-                    <td><?= ++$regelnummer; ?></td>
-                    <td><?= formatusername($account) . ' ' . $account['gebruikersnaam'] ?></td>
-                    <td>
-                        <input <?= ($account['rolnaam'] == 'leerling') ? 'checked=""' : '' ; ?> type="radio" name="rol-<?= $account[0] ?>" value="<?= 1 ?>">
-                    </td>
-                    <td>
+                            <input <?= ($account['rolnaam'] == 'externbedrijf') ? 'checked=""' : ''; ?> type="radio"
+                                                                                                        name="rol-<?= $account[0] ?>"
+                                                                                                        value="<?= 2 ?>">
+                        </td>
+                        <td>
+                            <input <?= ($account['rolnaam'] == 'docent') ? 'checked=""' : ''; ?> type="radio"
+                                                                                                 name="rol-<?= $account[0] ?>"
+                                                                                                 value="<?= 3 ?>">
+                        </td>
+                        <td>
+                            <input <?= ($account['rolnaam'] == 'beheerder') ? 'checked=""' : ''; ?> type="radio"
+                                                                                                    name="rol-<?= $account[0]; ?>"
+                                                                                                    value="<?= 4 ?>">
+                        </td>
+                    </tr>
 
-                        <input <?= ($account['rolnaam'] == 'externbedrijf') ? 'checked=""' : '' ; ?> type="radio" name="rol-<?= $account[0] ?>" value="<?= 2 ?>">
-                    </td>
-                    <td>
-                        <input <?= ($account['rolnaam'] == 'docent') ? 'checked=""' : '' ; ?> type="radio" name="rol-<?= $account[0] ?>" value="<?= 3 ?>">
-                    </td>
-                    <td>
-                        <input <?= ($account['rolnaam'] == 'beheerder') ? 'checked=""' : '' ; ?> type="radio" name="rol-<?= $account[0]; ?>" value="<?= 4 ?>">
-                    </td>
-                </tr>
-
-                <?php
+                    <?php
+                }
+            }
+            else{
+                print("<p class='bg-danger'>! er zijn op dit moment geen gebruikers !</p>");
             }
             ?>
 
