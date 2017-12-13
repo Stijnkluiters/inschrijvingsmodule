@@ -169,6 +169,10 @@ if (isset($_POST['titel'])) {
 $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
+if(count($soorten) === 0) {
+    redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+}
+
 ?>
 <form name="evenementToevoegen" method="post"
       action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">

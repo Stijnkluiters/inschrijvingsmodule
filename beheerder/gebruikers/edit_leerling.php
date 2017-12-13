@@ -166,7 +166,7 @@ if(isset($_POST['submit'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
+            <input type="date" value="<?= date('Y-m-d',strtotime($leerling[ 'geboortedatum' ])); ?>" id="email-input" name="geboortedatum" class="form-control" placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
@@ -187,16 +187,17 @@ if(isset($_POST['submit'])){
             <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="opleiding" class="form-control" placeholder="<?= $leerling[ 'opleiding' ] ?>">
         </div>
     </div>
+
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" placeholder="<?= $leerling[ 'begindatum' ] ?>">
+            <input type="date" value="<?=  date('Y-m-d',strtotime($leerling[ 'begindatum' ])); ?>" id="text-input" name="begindatum" class="form-control" placeholder="<?= $leerling[ 'begindatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Eind van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'einddatum' ] ?>" id="text-input" name="einddatum" class="form-control" placeholder="<?= $leerling[ 'einddatum' ] ?>">
+            <input type="date" value="<?=  date('Y-m-d',strtotime($leerling[ 'einddatum' ])); ?>" id="text-input" name="einddatum" class="form-control" placeholder="<?= $leerling[ 'einddatum' ] ?>">
         </div>
     </div>
         <?php if(isset($error)) { ?>

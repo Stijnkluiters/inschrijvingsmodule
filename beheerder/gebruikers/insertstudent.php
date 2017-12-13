@@ -142,7 +142,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 $rowcount = $stmt->rowCount();
                 // check if the medewerker is deleted; if so, harddelete afterall
 
-                if( $rowcount )
+                if( $rowcount > 0 )
                 {
                     $stmt = $db->prepare('update leerling SET 
                             geslacht = ?,
@@ -181,11 +181,11 @@ if( isset($_POST[ 'invoeren' ]) )
                             $leerling[ 'Nummer' ]
                         )
                     );
-
                 }
                 else
                 {
                     /** IMPORTING NEW FRESH GENERATED ACCOUNTS. **/
+
                     $account_id = generateRandomAccountForRole($leerling[ 'Nummer' ], 'leerling');
 
                     $stmt = $db->prepare('INSERT INTO leerling 
@@ -223,6 +223,7 @@ if( isset($_POST[ 'invoeren' ]) )
                             ?,
                             ?,
                             ?,
+                            ?,
                             ?
                             )');
                     $stmt->execute(array(
@@ -245,6 +246,7 @@ if( isset($_POST[ 'invoeren' ]) )
                         $leerling[ 'Groepscode' ]
                     ));
                 }
+
             }
         }
         redirect('/index.php?gebruiker=overzichtleerling');

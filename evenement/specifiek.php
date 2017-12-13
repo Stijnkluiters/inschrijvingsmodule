@@ -104,9 +104,10 @@ if ($max > 0 && $max > $min) {
 if ($current == 0) {
     $inschrijvingen = 'Er zijn nog geen inschrijvingen';
 } elseif ($current == 1) {
-    $inschrijvingen = 'Er is nog maar 1 inschrijving';
+    $inschrijvingen = '<a href="'.route('/index.php?inschrijving=overzicht&evenement_id='.$id).'">Er is 1 inschrijving</a>';
+
 } else {
-    $inschrijvingen = "Er zijn $current inschrijvingen";
+    $inschrijvingen = '<a href="'.route('/index.php?inschrijving=overzicht&evenement_id='.$id).'">Er zijn '.$current.' inschrijvingen</a>';
 }
 ?>
 <div class="card">

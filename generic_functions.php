@@ -9,20 +9,21 @@
  */
 
 
-function redirect($url)
+function redirect($url, $message = null)
 {
+    if (isset($message)) {
 
-    if( !is_string($url) )
-    {
+        $_SESSION['message'] = $message;
+
+    }
+
+
+    if (!is_string($url)) {
         throw new Exception($url . ' is not an String you silly');
-        exit;
     }
-    if( headers_sent() )
-    {
-        echo '<script> location.replace("' . Projectroot . $url . '"); </script>';
-    }
-    else
-    {
+    if(headers_sent()) {
+        echo '<script> location.replace("'.Projectroot . $url.'"); </script>';
+    } else {
         return header(sprintf('Location: %s', Projectroot . $url));
     }
 }
@@ -61,7 +62,7 @@ function randomString($length = 6)
 {
 
     $str = "";
-    $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+    $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
     $max = count($characters) - 1;
     for ($i = 0; $i < $length; $i++)
     {
@@ -71,44 +72,6 @@ function randomString($length = 6)
 
     return $str;
 }
-
-
-function startsession()
-{
-
-    if( !isset($_SESSION) )
-    {
-        session_start();
-    }
-}
-
-function dump($variable)
-{
-
-    echo "<pre>";
-    var_dump($variable);
-    echo "</pre>";
-}
-
-function success($msg)
-{
-
-    return print(
-        '<div class="alert alert-success" role="alert">
-          <strong>Success!</strong> ' . $msg . '
-        </div>'
-    );
-}
-
-function error($msg)
-{
-
-    return print('<div class="alert alert-danger" role="alert">
-  <strong>Error!</strong> ' . $msg . '
-</div>');
-}
-
-
 /**
  * @param $rolename
  *
@@ -370,4 +333,31 @@ function generateRandomAccountForRole($username, $rolename)
     return $db->lastInsertId();
 
 
+}
+
+function startsession()
+{
+
+    if(!isset($_SESSION)) {
+       session_start();
+    }
+}
+
+function dump($variable)
+{
+    echo "<pre>";
+    var_dump($variable);
+    echo "</pre>";
+}
+function success($msg) {
+    return print(
+        '<div class="alert alert-success" role="alert">
+          <strong>Success!</strong> '.$msg.'
+        </div>'
+    );
+}
+function error($msg) {
+    return print('<div class="alert alert-danger" role="alert">
+  <strong>Error!</strong> '.$msg.'
+</div>');
 }
