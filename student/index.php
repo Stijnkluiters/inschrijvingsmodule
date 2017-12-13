@@ -17,7 +17,7 @@ $evenemten = $stmt->fetchAll();
     <meta name="author" content="">
     <!--<link rel="icon" href="../../favicon.ico">-->
 
-    <title>Studenten evenementne overzicht</title>
+    <title>Studenten evenementen overzicht</title>
 
     <!-- Bootstrap core CSS -->
     <link href="<?= route('/public/css/style.css'); ?>" rel="stylesheet">
@@ -47,6 +47,9 @@ $evenemten = $stmt->fetchAll();
         <a href="#" class="navbar-brand">Roc midden Nederland</a>
 
     </div>
+    <div>
+        <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
+    </div>
 </div>
 
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
@@ -67,12 +70,33 @@ $evenemten = $stmt->fetchAll();
                     <h4 class="card-title"><?= ucfirst($evenemnt[ 'titel' ]); ?></h4>
                     <h5 class="text-muted"><?= ucfirst($evenemnt[ 'onderwerp' ]); ?></h5>
 
-                    <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
-                    <ul class="list-group">
-                        <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
-                        <li class="list-group-item">einddatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
-                    </ul>
-                </div>
+                <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
+                <ul class="list-group">
+                    <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
+                    <li class="list-group-item">einddatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
+                </ul>
+            </div>
+                <form action="<?= route('/student/index.php') ?>" method="post">
+                    <?php
+                        if(isset($_POST['submit'])){
+
+                            $user = get_user_info();
+                            $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
+                            $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
+                            $rowcount = $stmt->rowCount();
+                            if(empty($rowcount)){
+
+                                success('Je hebt je ingeschreven!');
+                                $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+                                $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
+                            }else{
+                                error('Je kan je niet inschrijven!');
+                            }
+                        }
+
+                    ?>
+                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">Inschrijven</button>
+                </form>
             </div>
             </div>
             <?php } ?>
