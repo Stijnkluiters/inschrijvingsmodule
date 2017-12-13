@@ -59,7 +59,9 @@ if(!defined('db_user')) {
     define('db_user',$db_user);
 }
 if(!defined('db_pass')) {
-    define('db_pass',$db_pass);
+    define('db_pass',$db_pass);require_once 'vendor/PHPMailerException.php';
+    require_once 'vendor/PHPMailer.php';
+    require_once 'vendor/SMTP.php';
 }
 
 mb_internal_encoding("UTF-8");
@@ -72,9 +74,7 @@ include_once 'permission_functions.php';
 include_once 'file_functions.php';
 include_once 'request_functions.php';
 
-require_once 'vendor/PHPMailerException.php';
-require_once 'vendor/PHPMailer.php';
-require_once 'vendor/SMTP.php';
+
 
 
 
