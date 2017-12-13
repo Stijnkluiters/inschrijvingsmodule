@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('geslacht', $geslacht);
         $stmt->bindParam('leerlingnummer', $_GET ['leerlingnummer']);
         $stmt->execute();
-        redirect('/index.php?gebruiker=overzichtleerling');
+        redirect('/index.php?gebruiker=overzichtleerling','Leerling ' . $roepnaam . ' aangepast!');
 
     }
 }

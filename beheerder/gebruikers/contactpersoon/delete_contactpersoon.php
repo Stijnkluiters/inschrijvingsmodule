@@ -23,7 +23,7 @@ if(isset($_POST['delete'])){
 
     $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtcontactpersonen');
+    redirect('/index.php?gebruiker=overzichtcontactpersonen', $contact['roepnaam'] . ' is verwijderd!');
 
 }
 

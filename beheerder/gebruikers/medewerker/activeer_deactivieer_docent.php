@@ -21,7 +21,7 @@ if($docent['deleted'] == false){
 
     $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtmedewerker');
+    redirect('/index.php?gebruiker=overzichtmedewerker', $docent['roepnaam'].' is geactiveerd');
 } else {
     $stmt = $db->prepare('
             UPDATE medewerker SET
@@ -30,7 +30,7 @@ if($docent['deleted'] == false){
 
     $stmt->bindParam('afkorting', $afkorting, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtmedewerker');
+    redirect('/index.php?gebruiker=overzichtmedewerker' , $docent['roepnaam'] . ' is gedeactiveerd');
 }
 
 ?>
