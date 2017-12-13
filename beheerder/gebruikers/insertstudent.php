@@ -64,6 +64,7 @@ if( isset($_POST[ 'invoeren' ]) )
              * string(0) ""
              * }
              */
+            $i = 0;
             // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
             foreach ($leerlingen as $regelnummer => $leerling)
             {
@@ -142,7 +143,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 $rowcount = $stmt->rowCount();
                 // check if the medewerker is deleted; if so, harddelete afterall
 
-                if( $rowcount )
+                if( $rowcount > 0 )
                 {
                     $stmt = $db->prepare('update leerling SET 
                             geslacht = ?,
@@ -181,15 +182,16 @@ if( isset($_POST[ 'invoeren' ]) )
                             $leerling[ 'Nummer' ]
                         )
                     );
-
                 }
                 else
                 {
                     /** IMPORTING NEW FRESH GENERATED ACCOUNTS. **/
+
                     $account_id = generateRandomAccountForRole($leerling[ 'Nummer' ], 'leerling');
 
                     $stmt = $db->prepare('INSERT INTO leerling 
                             (
+                            geslacht,
                             leerlingnummer, 
                             account_id, 
                             roepnaam, 
@@ -222,9 +224,12 @@ if( isset($_POST[ 'invoeren' ]) )
                             ?,
                             ?,
                             ?,
+                            ?,
                             ?
                             )');
                     $stmt->execute(array(
+
+                        $leerling[ 'Geslacht' ],
                         $leerling[ 'Nummer' ],
                         $account_id,
                         $leerling[ 'Roepnaam' ],
@@ -242,9 +247,11 @@ if( isset($_POST[ 'invoeren' ]) )
                         $leerling[ 'Groepscode' ]
                     ));
                 }
+
+                $i++;
             }
         }
-        redirect('/index.php?gebruiker=overzichtleerling');
+        redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
     }
 }
 ?>

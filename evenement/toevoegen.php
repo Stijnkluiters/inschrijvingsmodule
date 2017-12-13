@@ -161,30 +161,31 @@ if (isset($_POST['titel'])) {
             $contactnummer,
             $_SESSION[authenticationSessionName]
             ));
+
+        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
+
     }
 
 }
 
 
-?>
-
-<?php
-
-
 $soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
+
+if(count($soorten) === 0) {
+    redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+}
 
 ?>
 <form name="evenementToevoegen" method="post"
       action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
     <div class="col-sm-12">
-
         <div class="card">
             <div class="card-header">
                 <strong>Evenement</strong>
                 <small>toevoegen</small>
-                <div class='right' class="btn btn-primary">
-                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="pull-right" class="btn btn-primary">Terug naar evenementen</a>
+                <div class="pull-right">
+                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="btn btn-primary">Terug naar evenementen</a>
                 </div>
             </div>
             <div class="card-body">

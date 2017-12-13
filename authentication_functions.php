@@ -20,7 +20,7 @@ function check_logged_in_user()
     // check if user is still logged in; check if user that is logged in is still in database.
     if(!isset($_SESSION[ authenticationSessionName ])) {
         logout();
-        redirect('/login.php');
+        redirect('/login.php', 'U bent uitgelogd.');
     }
     // check if current user still exists in database.
     $db = db();
@@ -29,7 +29,7 @@ function check_logged_in_user()
     $stmt->execute();
     if(!$stmt->rowCount()) {
         logout();
-        redirect('/login.php');
+        redirect('/login.php','U bent uitgelogd');
     }
 
     $fingerprint = 'ROCMNROCKS';
@@ -42,7 +42,7 @@ function check_logged_in_user()
     // check if fingerprint is equal to the older fingerprint, this way we can ensure it's the same user
     if($_SESSION['fingerprint'] != $encryptedfingerprint) {
         logout();
-        redirect('/login.php');
+        redirect('/login.php', 'u bent uigelogd');
     }
 
 }

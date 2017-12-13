@@ -24,7 +24,7 @@ if(isset($_POST['activeer'])){
 
     $stmt->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtleerling');
+    redirect('/index.php?gebruiker=overzichtleerling',$leerlingnummer.' is geactiveerd');
 }
 ?>
 
