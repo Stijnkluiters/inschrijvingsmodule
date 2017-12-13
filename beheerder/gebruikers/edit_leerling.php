@@ -187,6 +187,7 @@ if(isset($_POST['submit'])){
             <input type="text" value="<?= $leerling[ 'opleiding' ] ?>" id="text-input" name="opleiding" class="form-control" placeholder="<?= $leerling[ 'opleiding' ] ?>">
         </div>
     </div>
+
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
