@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `inschrijfmodule`.`soort` ;
 CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`soort` (
   `soort` VARCHAR(255) NOT NULL,
   `benodigdheid` VARCHAR(255) NOT NULL,
+  `actief` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`soort`))
 ENGINE = InnoDB;
 

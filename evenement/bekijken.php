@@ -4,8 +4,10 @@ $db = db();
 
 //take info from database/evenement
 $stmt = $db->prepare("
-SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, soort, locatie
-FROM evenement");
+SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, e.soort, locatie, status
+FROM evenement e
+JOIN soort s ON e.soort = s.soort
+WHERE s.actief = 1");
 $stmt->execute();
 
 //get results from query
@@ -24,12 +26,13 @@ if ($countrow > 0) {
         <table class="table table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th scope="col" id="titel" class="tablehead">Evenement</th>
-                <th scope="col" class="tablehead">Onderwerp</th>
-                <th scope="col" class="tablehead">Begindatum</th>
-                <th scope="col" class="tablehead">Einddatum</th>
-                <th scope="col" class="tablehead">Locatie</th>
-                <th scope="col" class="tablehead">Soort</th>
+                <th id="titel" class="tablehead">Evenement</th>
+                <th class="tablehead">Onderwerp</th>
+                <th class="tablehead">Begindatum</th>
+                <th class="tablehead">Einddatum</th>
+                <th class="tablehead">Locatie</th>
+                <th class="tablehead">Soort</th>
+                <th class="tablehead">Actief</th>
             </tr>
             </thead>
             <?php
@@ -44,6 +47,11 @@ if ($countrow > 0) {
                 filter_var($row["titel"], FILTER_SANITIZE_STRING);
                 $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
                 $starttijd = filter_var($row["begintijd"], FILTER_SANITIZE_STRING);
+                if ($row['status'] == false) {
+                    $actief = "<td class='bg-danger'><span>Nee</span></td>";
+                }elseif($row['status'] == true){
+                    $actief = "<td class='bg-success'><span>Ja</span></td>";
+                }
                 if ($row["locatie"] != "") {
                     $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
                 }
@@ -65,6 +73,7 @@ if ($countrow > 0) {
                     <td> <?= $eindtijd ?> </td>
                     <td> <?= $locatie ?> </td>
                     <td> <?= $soort ?> </td>
+                     <?= $actief ?>
                 </tr>
                 <?php
             } ?>
