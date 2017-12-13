@@ -5,7 +5,8 @@ $db = db();
 //take info from database/evenement
 $stmt = $db->prepare("
 SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, soort, locatie
-FROM evenement");
+FROM evenement e
+JOIN soort s ");
 $stmt->execute();
 
 //get results from query
