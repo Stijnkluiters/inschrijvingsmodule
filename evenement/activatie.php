@@ -115,7 +115,7 @@ $row = $stmt->fetch()
         </table>
     </div>
     <div class="card-footer">
-        <form name="evenementWijzigen" method="post"
+        <form name="evenementActivatie" method="post"
               action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
             <?php
             if($row['status'] == 1){

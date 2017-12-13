@@ -244,6 +244,20 @@ $user = get_user_info();
                         include 'evenement/activatie.php';
                     }
                 }
+                if(isset($_GET['inschrijving'])) {
+
+                    if($_GET['inschrijving'] === 'overzicht') {
+                        if(isset($_GET['evenement_id'])) {
+                            if(is_numeric($_GET['evenement_id'])) {
+                                include 'evenement/inschrijving/inschrijvingen.php';
+                            } else {
+                                print 'de waarde is geen ID';
+                            }
+                        } else {
+                            print'welk evenement? geen ID mee gegeven.';
+                        }
+                    }
+                }
                 // soorten evenementen
                 if(isset($_GET[ 'soorten' ]) )
                 {
@@ -299,3 +313,6 @@ $user = get_user_info();
 </script>
 </body>
 </html>
+<?php
+unset($_SESSION['message']);
+?>
