@@ -11,8 +11,6 @@ if(count($evenemten)===0) {
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,18 +20,13 @@ if(count($evenemten)===0) {
     <meta name="description" content="">
     <meta name="author" content="">
     <!--<link rel="icon" href="../../favicon.ico">-->
-
     <title>Studenten evenementen overzicht</title>
-
     <!-- Bootstrap core CSS -->
     <link href="<?= route('/public/css/style.css'); ?>" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="<?= route('/public/css/student.css'); ?>" rel="stylesheet">
 </head>
-
 <body>
-
 <div class="collapse bg-inverse" id="navbarHeader">
     <div class="container">
         <div class="row">
@@ -51,20 +44,17 @@ if(count($evenemten)===0) {
 <div class="navbar navbar-inverse bg-inverse">
     <div class="container d-flex justify-content-between">
         <a href="#" class="navbar-brand">Roc midden Nederland</a>
-
     </div>
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
     </div>
 </div>
-
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
         <?php
             $user = get_user_info();
             $stmt = $db->prepare('select roepnaam FROM leerling WHERE roepnaam = ?');
             $stmt->execute(array($user['roepnaam']));
-
         ?>
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
         <p class="lead text-muted">Evenementen overzicht van <?php print($user['roepnaam']) ; ?></p>
@@ -84,7 +74,6 @@ if(count($evenemten)===0) {
                 <div class="card-body">
                     <h4 class="card-title"><?= ucfirst($evenemnt[ 'titel' ]); ?></h4>
                     <h5 class="text-muted"><?= ucfirst($evenemnt[ 'onderwerp' ]); ?></h5>
-
                 <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
                 <ul class="list-group">
                     <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
@@ -94,13 +83,11 @@ if(count($evenemten)===0) {
                 <form action="<?= route('/student/index.php') ?>" method="post">
                     <?php
                         if(isset($_POST['submit'])){
-
                             $user = get_user_info();
                             $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
                             $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
                             $rowcount = $stmt->rowCount();
                             if(empty($rowcount)){
-
                                 $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
                                 $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
@@ -123,23 +110,19 @@ if(count($evenemten)===0) {
                                 $mail->body = 'HOI!';
                                 $mail->send();
 
-
                                 success('Je hebt je ingeschreven!');
                             }else{
                                 error('Je kan je niet inschrijven!');
                             }
                         }
-
                     ?>
                     <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">Inschrijven</button>
                 </form>
             </div>
             </div>
             <?php } ?>
-
     </div>
 </div>
-
 <footer class="text-muted">
     <div class="container">
         <p class="float-right">
