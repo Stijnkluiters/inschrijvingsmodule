@@ -64,6 +64,7 @@ if( isset($_POST[ 'invoeren' ]) )
              * string(0) ""
              * }
              */
+            $i = 0;
             // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
             foreach ($leerlingen as $regelnummer => $leerling)
             {
@@ -247,9 +248,10 @@ if( isset($_POST[ 'invoeren' ]) )
                     ));
                 }
 
+                $i++;
             }
         }
-        redirect('/index.php?gebruiker=overzichtleerling');
+        redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
     }
 }
 ?>
