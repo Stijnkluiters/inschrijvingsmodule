@@ -71,8 +71,6 @@ if (count($leerlingen)) { ?>
     <tbody>
 
     <?php
-
-
     foreach ($leerlingen as $leerling) { ?>
         <tr>
             <td><?= $leerling['leerlingnummer'] ?></td>

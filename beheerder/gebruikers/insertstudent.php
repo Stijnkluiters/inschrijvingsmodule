@@ -145,6 +145,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 if( $rowcount > 0 )
                 {
                     $stmt = $db->prepare('update leerling SET 
+                            geslacht = ?,
                             roepnaam = ?,
                             tussenvoegsel = ?,
                             achternaam = ?,
@@ -162,6 +163,7 @@ if( isset($_POST[ 'invoeren' ]) )
                             WHERE leerlingnummer = ?
                           ');
                     $stmt->execute(array(
+                            $leerling[ 'Geslacht' ],
                             $leerling[ 'Roepnaam' ],
                             $leerling[ 'Voorvoegsel' ],
                             $leerling[ 'Achternaam' ],
@@ -225,7 +227,8 @@ if( isset($_POST[ 'invoeren' ]) )
                             ?
                             )');
                     $stmt->execute(array(
-                        $leerling['Geslacht'],
+
+                        $leerling[ 'Geslacht' ],
                         $leerling[ 'Nummer' ],
                         $account_id,
                         $leerling[ 'Roepnaam' ],

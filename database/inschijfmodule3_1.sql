@@ -71,11 +71,10 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`evenement` (
   `evenement_id` INT NOT NULL AUTO_INCREMENT,
   `account_id` INT NOT NULL,
   `titel` VARCHAR(255) NOT NULL,
-  `datum` DATETIME NOT NULL,
   `begintijd` DATETIME NOT NULL,
-  `eindtijd` VARCHAR(255) NOT NULL,
+  `eindtijd` DATETIME NULL,
   `onderwerp` VARCHAR(255) NOT NULL,
-  `omschrijving` TEXT NULL,
+  `omschrijving` TEXT NOT NULL,
   `vervoer` VARCHAR(255) NULL,
   `min_leerlingen` INT NULL,
   `max_leerlingen` INT NULL,
@@ -260,6 +259,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`contactpersoon` (
   `telefoonnr.` VARCHAR(255) NOT NULL,
   `email-adres` VARCHAR(255) NOT NULL,
   `inventarisatie_id` INT NOT NULL,
+  `deleted` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`contact_id`),
   CONSTRAINT `fk_contactpersoon_bedrijf1`
     FOREIGN KEY (`bedrijf_id`)
