@@ -3,8 +3,14 @@
 include_once '../config.php';
 
 $db = db();
-$stmt = $db->query('select * from evenement');
+$stmt = $db->prepare('select * from evenement WHERE status = 1 AND eindtijd > ?');
+$stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
+
+if(count($evenemten)===0) {
+    $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
+}
+
 
 
 ?>
@@ -54,16 +60,25 @@ $evenemten = $stmt->fetchAll();
 
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
+        <?php
+            $user = get_user_info();
+            $stmt = $db->prepare('select roepnaam FROM leerling WHERE roepnaam = ?');
+            $stmt->execute(array($user['roepnaam']));
+
+        ?>
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
-        <p class="lead text-muted">Evenementen overzicht van de student {studentnaam}</p>
+        <p class="lead text-muted">Evenementen overzicht van <?php print($user['roepnaam']) ; ?></p>
     </div>
 </section>
 
 <div class="album text-muted">
     <div class="container">
-        <?php foreach ($evenemten
-
-        as $evenemnt) { ?>
+        <?php
+        if(isset($bericht)){
+            print($bericht);
+        }
+        ?>
+        <?php foreach ($evenemten as $evenemnt) { ?>
         <div class="row">
             <div class="card col-12">
                 <div class="card-body">
@@ -86,9 +101,30 @@ $evenemten = $stmt->fetchAll();
                             $rowcount = $stmt->rowCount();
                             if(empty($rowcount)){
 
-                                success('Je hebt je ingeschreven!');
                                 $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
                                 $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
+
+                                // create mail functionality
+                                $mail = new \PHPMailer\PHPMailer\PHPMailer();
+                                //Server settings
+                                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+                                $mail->isSMTP();                                      // Set mailer to use SMTP
+                                $mail->Host = mailhost;  // Specify main and backup SMTP servers
+                                $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
+                                $mail->Username = mailuser;                 // SMTP username
+                                $mail->Password = mailpassword;                           // SMTP password
+                                $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
+                                $mail->Port = mailPort;                                    // TCP port to connect to
+                                $mail->setFrom(mailFromEmail, mailFromUser);
+                                $mail->addReplyTo(mailFromEmail, mailFromUser);
+                                $mail->addBCC(mailFromEmail);
+                                $mail->addAddress($user['leerlingnummer'].'@edu.rocmn.nl');
+                                $mail->subject = 'HI';
+                                $mail->body = 'HOI!';
+                                $mail->send();
+
+
+                                success('Je hebt je ingeschreven!');
                             }else{
                                 error('Je kan je niet inschrijven!');
                             }
