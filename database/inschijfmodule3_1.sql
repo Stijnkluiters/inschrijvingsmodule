@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`invertarisatie` (
   `invertarisatie_id` INT NOT NULL AUTO_INCREMENT,
   `vakgebied` LONGTEXT NULL,
   `onderwerp` LONGTEXT NULL,
-  `aantal_gastcollege` MEDIUMTEXT NULL,
+  `aantal_gastcolleges` MEDIUMTEXT NULL,
   `voorkeur_dag` MEDIUMTEXT NULL,
   `voorkeur_dagdeel` MEDIUMTEXT NULL,
   `hulpmiddel` MEDIUMTEXT NULL,
