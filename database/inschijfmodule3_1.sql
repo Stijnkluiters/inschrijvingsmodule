@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`invertarisatie` (
   `invertarisatie_id` INT NOT NULL AUTO_INCREMENT,
   `vakgebied` LONGTEXT NULL,
   `onderwerp` LONGTEXT NULL,
-  `aantal_gastcollege` MEDIUMTEXT NULL,
+  `aantal_gastcolleges` MEDIUMTEXT NULL,
   `voorkeur_dag` MEDIUMTEXT NULL,
   `voorkeur_dagdeel` MEDIUMTEXT NULL,
   `hulpmiddel` MEDIUMTEXT NULL,
@@ -226,7 +226,7 @@ DROP TABLE IF EXISTS `inschrijfmodule`.`bedrijf` ;
 CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`bedrijf` (
   `bedrijf_id` INT NOT NULL AUTO_INCREMENT,
   `inventarisatie_id` INT NOT NULL,
-  `bedrijfnaam` VARCHAR(255) NOT NULL,
+  `bedrijfsnaam` VARCHAR(255) NOT NULL,
   `branche` VARCHAR(255) NOT NULL,
   `webadres` VARCHAR(255) NULL,
   `adres` VARCHAR(255) NOT NULL,
