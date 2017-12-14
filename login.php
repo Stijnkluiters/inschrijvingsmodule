@@ -7,7 +7,11 @@
  * Time: 13:29
  */
 include 'config.php';
-
+if(isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    //Laat het bericht maar 1x zien per request!
+    unset($_SESSION['message']);
+}
 if( isset($_POST[ 'submit' ]) )
 {
 
@@ -54,9 +58,9 @@ if( isset($_POST[ 'submit' ]) )
                 //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
                 $role = get_account_his_role($_SESSION[authenticationSessionName]);
                 if($role['rolnaam'] === 'leerling') {
-                    redirect('/student/index.php');
+                    redirect('/student/index.php', 'Welkom!');
                 } else {
-                    redirect('/index.php');
+                    redirect('/index.php','Welkom!');
                 }
 
             }
@@ -158,4 +162,40 @@ if( isset($_POST[ 'submit' ]) )
 </div>
 </body>
 <script src='https://www.google.com/recaptcha/api.js'></script>
+
+<!-- Bootstrap and necessary plugins -->
+<script src="public/js/jquery.min.js"></script>
+<script src="public/js/propper.js"></script>
+<script src="public/js/bootstrap.js"></script>
+<script src="public/js/pace.js"></script>
+
+<!-- Plugins and scripts required by all views -->
+<script src="public/js/Chart.min.js"></script>
+
+<!-- GenesisUI main scripts -->
+
+<script src="public/js/app.js"></script>
+
+<!-- Plugins and scripts required by this views -->
+
+<!-- Custom scripts required by this view -->
+<script src="public/js/main.js"></script>
+
+<!--Script for order table leerling-->
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="public/js/notify.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+    <?php
+
+    if(isset($message)) { ?>
+    $.notify("<?= $message; ?>",{
+        className: 'info'
+    });
+    <?php } ?>
+
+
+</script>
 </html>

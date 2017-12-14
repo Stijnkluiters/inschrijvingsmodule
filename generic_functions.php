@@ -13,11 +13,10 @@ function redirect($url, $message = null)
 {
     if (isset($message)) {
 
+        startsession();
         $_SESSION['message'] = $message;
 
     }
-
-
     if (!is_string($url)) {
         throw new Exception($url . ' is not an String you silly');
     }

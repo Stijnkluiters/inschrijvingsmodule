@@ -130,7 +130,7 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('telefoon', $telefoon);
         $stmt->bindParam('afkorting', $_GET ['afkorting']);
         $stmt->execute();
-        redirect('/index.php?gebruiker=overzichtmedewerker');
+        redirect('/index.php?gebruiker=overzichtmedewerker', 'Medewerker '. $roepnaam . ' aangepast!');
     }
 }
 

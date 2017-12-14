@@ -50,7 +50,7 @@ if( isset($_POST[ 'invoeren' ]) )
         }
         else
         {
-
+            $i = 0;
             // Hier gaan we controleren of de verplichte waardes ( gesteld door Jeroen ) wel zijn ingevuld.
             foreach ($medewerkers as $regelnummer => $medewerker)
             {
@@ -179,10 +179,11 @@ if( isset($_POST[ 'invoeren' ]) )
                         $medewerker[ 'Telefoon 1' ]
                     ));
                 }
+
+                $i++;
             }
         }
-
-        redirect('/index.php?gebruiker=overzichtmedewerker');
+        redirect('/index.php?gebruiker=overzichtmedewerker',$i.' medewerkers geimporteerd');
     }
 }
 ?>

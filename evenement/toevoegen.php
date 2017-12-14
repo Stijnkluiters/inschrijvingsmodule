@@ -161,6 +161,9 @@ if (isset($_POST['titel'])) {
             $contactnummer,
             $_SESSION[authenticationSessionName]
             ));
+
+        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
+
     }
 
 }

@@ -20,11 +20,15 @@ ini_set('display_errors', 'On');
 
 include_once 'config.php';
 startsession();
+if(isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    //Laat het bericht maar 1x zien per request!
+    unset($_SESSION['message']);
+}
 session_regenerate_id();
 check_logged_in_user();
 
 $user = get_user_info();
-
 
 
 
@@ -43,7 +47,7 @@ $user = get_user_info();
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>
 
-<!--     Icons -->
+    <!--     Icons -->
     <link href="public/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
@@ -53,8 +57,7 @@ $user = get_user_info();
     <link href="public/css/style.css" rel="stylesheet">
     <?php
 
-    if( isset($_GET[ 'evenementen' ]) || isset($_GET['soorten']))
-    {
+    if (isset($_GET['evenementen']) || isset($_GET['soorten'])) {
         echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
     }
     ?>
@@ -77,7 +80,8 @@ $user = get_user_info();
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
-                <img src="public/img/user.png" class="img-fluid img-avatar" alt="<?= (!empty($user['email']) ? $user['email'] : formatusername($user)); ?>">
+                <img src="public/img/user.png" class="img-fluid img-avatar"
+                     alt="<?= (!empty($user['email']) ? $user['email'] : formatusername($user)); ?>">
                 <span class="d-md-down-none"><?= (!empty($user['email']) ? $user['email'] : formatusername($user)); ?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
@@ -142,134 +146,83 @@ $user = get_user_info();
             <?php
 
 
-            if( count($_GET) === 0 )
-            {
+            if (count($_GET) === 0) {
                 //include 'dashboard.php';
-            }
-            else
-            {
+            } else {
                 // gebruikers
 
-                if( isset($_GET[ 'gebruiker' ]) )
-                {
-                    if( $_GET[ 'gebruiker' ] === 'alles' )
-                    {
+                if (isset($_GET['gebruiker'])) {
+                    if ($_GET['gebruiker'] === 'alles') {
                         //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'invoerenmedewerker' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'invoerenmedewerker') {
                         require 'beheerder/gebruikers/insertdocent.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'invoerenleerling' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'invoerenleerling') {
                         require 'beheerder/gebruikers/insertstudent.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'overzichtleerling' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'overzichtleerling') {
                         require 'beheerder/gebruikers/overzicht_leerling.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'overzichtmedewerker' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'overzichtmedewerker') {
                         require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'editleerling' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'editleerling') {
                         require 'beheerder/gebruikers/edit_leerling.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'activatieleerling' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'activatieleerling') {
                         require 'beheerder/gebruikers/activatie_leerling.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'deleteLeerling' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'deleteLeerling') {
                         require 'beheerder/gebruikers/delete_leerling.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'editmedewerker' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'editmedewerker') {
                         require 'beheerder/gebruikers/medewerker/edit_docent.php';
-                    }
-                    elseif ( $_GET[ 'gebruiker' ] == 'activatie-deactivatie-medewerker' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'activatie-deactivatie-medewerker') {
                         require 'beheerder/gebruikers/medewerker/activeer_deactivieer_docent.php';
-                    }
-                    elseif ( $_GET[ 'gebruiker' ] == 'overzichtcontactpersonen' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'overzichtcontactpersonen') {
                         require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
-                    }
-                    elseif ( $_GET[ 'gebruiker' ] == 'editcontactpersoon' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'editcontactpersoon') {
                         require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
-                    }
-                    elseif ( $_GET[ 'gebruiker' ] == 'deletecontactpersoon' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'deletecontactpersoon') {
                         require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
-                    }
-                    elseif( $_GET[ 'gebruiker' ] == 'activatiecontactpersoon' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'activatiecontactpersoon') {
                         require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
-                    }
-                    elseif ( $_GET[ 'gebruiker' ] == 'roltoewijzen' )
-                    {
+                    } elseif ($_GET['gebruiker'] == 'roltoewijzen') {
                         require 'beheerder/gebruikers/roltoewijzing.php';
-                    }
-                    else
-                    {
+                    } else {
                         exit;
                         // specifieke gebruiker
                     }
                 }
 
                 // evenementen
-                if( isset($_GET[ 'evenementen' ]) )
-                {
-                    if( $_GET[ 'evenementen' ] === 'alles' )
-                    {
+                if (isset($_GET['evenementen'])) {
+                    if ($_GET['evenementen'] === 'alles') {
                         include 'evenement/bekijken.php';
-                    }
-                    elseif( $_GET[ 'evenementen' ] === 'specifiek' )
-                    {
+                    } elseif ($_GET['evenementen'] === 'specifiek') {
                         include 'evenement/specifiek.php';
-                    }
-                    elseif( $_GET[ 'evenementen' ] === 'wijzigen' )
-                    {
+                    } elseif ($_GET['evenementen'] === 'wijzigen') {
                         include 'evenement/wijzigen.php';
-                    }
-                    elseif( $_GET[ 'evenementen' ] === 'toevoegen' )
-                    {
+                    } elseif ($_GET['evenementen'] === 'toevoegen') {
                         include 'evenement/toevoegen.php';
-                    }
-                    elseif( $_GET['evenementen'] === 'activatie')
-                    {
+                    } elseif ($_GET['evenementen'] === 'activatie') {
                         include 'evenement/activatie.php';
                     }
                 }
-                if(isset($_GET['inschrijving'])) {
+                if (isset($_GET['inschrijving'])) {
 
-                    if($_GET['inschrijving'] === 'overzicht') {
-                        if(isset($_GET['evenement_id'])) {
-                            if(is_numeric($_GET['evenement_id'])) {
-                                include 'evenement/inschrijving/inschrijvingen.php';
-                            } else {
-                                print 'de waarde is geen ID';
-                            }
+                    if ($_GET['inschrijving'] === 'overzicht') {
+                        if (isset($_GET['evenement_id'])) {
+                            include 'evenement/inschrijving/inschrijvingen.php';
+
                         } else {
                             print'welk evenement? geen ID mee gegeven.';
                         }
                     }
                 }
                 // soorten evenementen
-                if(isset($_GET[ 'soorten' ]) )
-                {
-                    if($_GET[ 'soorten' ] === 'overzicht') {
+                if (isset($_GET['soorten'])) {
+                    if ($_GET['soorten'] === 'overzicht') {
                         include 'evenement/soort/soort_overzicht.php';
                     }
-                    if($_GET['soorten'] === 'toevoegen')
-                    {
+                    if ($_GET['soorten'] === 'toevoegen') {
                         include 'evenement/soort/soort_toevoegen.php';
                     }
-                    if($_GET['soorten'] === 'aanpassen')
-                    {
+                    if ($_GET['soorten'] === 'aanpassen') {
                         include 'evenement/soort/soort_aanpassen.php';
                     }
                 }
@@ -306,13 +259,20 @@ $user = get_user_info();
 
 <!--Script for order table leerling-->
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="public/js/notify.js"></script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('#dataTable').DataTable();
     });
+    <?php
+
+    if(isset($message)) { ?>
+    $.notify("<?= $message; ?>",{
+        className: 'info'
+    });
+    <?php } ?>
+
+
 </script>
 </body>
 </html>
-<?php
-unset($_SESSION['message']);
-?>

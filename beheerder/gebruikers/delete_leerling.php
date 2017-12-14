@@ -23,7 +23,7 @@ if(isset($_POST['delete'])){
 
     $stmt->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtleerling');
+    redirect('/index.php?gebruiker=overzichtleerling', ' Leerling '.$leerling['roepnaam'].' verwijderd! ');
 }
 
 ?>
