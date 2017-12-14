@@ -4,9 +4,9 @@ $db = db();
 
 //take info from database/evenement
 $stmt = $db->prepare("
-SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, e.soort, locatie, status
+SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, s.soort, locatie, status
 FROM evenement e
-JOIN soort s ON e.soort = s.soort
+JOIN soort s ON e.soort_id = s.soort_id
 WHERE s.actief = 1");
 $stmt->execute();
 

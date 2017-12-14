@@ -33,8 +33,9 @@ WHERE evenement_id = ?;
 
 }
 $stmt = $db->prepare("
-SELECT evenement_id, gebruikersnaam, titel, begintijd, eindtijd, onderwerp, omschrijving, vervoer, min_leerlingen, max_leerlingen, status, locatie, lokaalnummer, soort, contactnr, comment
+SELECT evenement_id, gebruikersnaam, titel, begintijd, eindtijd, onderwerp, omschrijving, vervoer, min_leerlingen, max_leerlingen, status, locatie, lokaalnummer, s.soort, contactnr, comment
 FROM evenement e
+JOIN soort s ON e.soort_id=s.soort_id
 JOIN account a ON e.account_id = a.account_id
 WHERE evenement_id = $id");
 

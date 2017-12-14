@@ -30,17 +30,17 @@ $benodigdheid = filter_input(INPUT_POST, 'omschrijving', FILTER_SANITIZE_STRING)
 if (count($error) === 0) {
     $stmt = $db->prepare('
     UPDATE `soort` SET 
-    `soort`=?,
-    `benodigdheid`=?
+    soort=?,
+    benodigdheid=?
     WHERE 
-    `soort`= ?
+    `soort`= `?`;
 ');
     //connect the variables to the information in the query
     $stmt->execute(array(
         $soortnaam,
         $benodigdheid,
+        $soortnaam,
         $soort));
-
 }
 
 

@@ -13,9 +13,10 @@ $id = ($_GET['evenement_id']);
 //load info from database using the id
 $db = db();
 $stmt = $db->prepare("
-SELECT e.evenement_id, titel, e.begintijd, e.eindtijd, e.onderwerp, e.omschrijving, e.vervoer, 
-e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, e.soort, e.contactnr, e.account_id, e.status
+SELECT e.evenement_id, titel, e.begintijd, TIME(e.begintijd) starttijd, e.eindtijd, TIME(eindtijd) latertijd, e.onderwerp, e.omschrijving, e.vervoer, 
+e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, s.soort, e.contactnr, e.account_id, e.status
 FROM evenement e
+JOIN soort s ON e.soort_id = s.soort_id
 LEFT JOIN inschrijving i ON e.evenement_id = i.evenement_id
 WHERE e.evenement_id = :evenement_id");
 $stmt->bindParam('evenement_id', $id);
@@ -28,8 +29,25 @@ $row = $stmt->fetch();
 $titel = $row["titel"];
 $onderwerp = $row["onderwerp"];
 $begindatum = $row["begintijd"];
+
+$begintijd = $row["starttijd"];
+$begintijd = strtotime($begintijd);
+
+$eindtijd = $row["latertijd"];
+$eindtijd = strtotime($eindtijd);
+
 $omschrijving = $row["omschrijving"];
-if ($row['eindtijd'] != "") {
+
+$soort = $row["soort"];
+if (strlen($soort) > 25) {
+    $soort = substr($soort, 0, 26) . "...";
+} else {
+    $soort = $soort;
+}
+$vervoer = $row["vervoer"];
+$contactnr = $row["contactnr"];
+
+if (!empty($row['eindtijd'])) {
     $einddatum = $row['eindtijd'];
 } else {
     $einddatum = 'n.v.t.';
@@ -73,7 +91,8 @@ $beschikbaar = $max - $current;
 if ($max > 0 && $max > $min) {
     $inschrijvingspercentage = $current / $max * 100;
     if ($current == 0) {
-        $currentbar = 2;
+        $inschrijvingspercentage = 2;
+        $currentbar = $max * 0.02;
     } else {
         $currentbar = $current;
     }
@@ -104,14 +123,13 @@ if ($max > 0 && $max > $min) {
 if ($current == 0) {
     $inschrijvingen = 'Er zijn nog geen inschrijvingen';
 } elseif ($current == 1) {
-    $inschrijvingen = '<a href="'.route('/index.php?inschrijving=overzicht&evenement_id='.$id).'">Er is 1 inschrijving</a>';
+    $inschrijvingen = '<a href="' . route('/index.php?inschrijving=overzicht&evenement_id=' . $id) . '">Er is 1 inschrijving</a>';
 
 } else {
-    $inschrijvingen = '<a href="'.route('/index.php?inschrijving=overzicht&evenement_id='.$id).'">Er zijn '.$current.' inschrijvingen</a>';
+    $inschrijvingen = '<a href="' . route('/index.php?inschrijving=overzicht&evenement_id=' . $id) . '">Er zijn ' . $current . ' inschrijvingen</a>';
 }
 ?>
 <div class="card">
-
     <h4 class="card-header">
         <?= $titel ?>
         <div class='pull-right control-group'>
@@ -135,41 +153,66 @@ if ($current == 0) {
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
-<div class="card">
-    <h4 class="card-header">Waar en Wanneer</h4>
-    <div class="card-body">
-        <div class="card-text">
-            <table>
-                <tr>
-                    <td>Begindatum:</td>
-                    <td><?= date('d-M-Y', strtotime($begindatum)) ?></td>
-                </tr>
-                <tr>
-                    <td>Einddatum:</td>
-                    <td><?= date('d-M-Y', strtotime($einddatum)) ?></td>
-                </tr>
-                <tr>
-                    <td>Adres:</td>
-                    <td><?= "$adres" ?></td>
-                </tr>
-                <tr>
-                    <td>Lokaal:</td>
-                    <td><?= "$lokaal" ?></td>
-                </tr>
-            </table>
+    <div class="col-4">
+        <div class="card">
+            <h4 class="card-header">Waar en Wanneer</h4>
+            <div class="card-body">
+                <div class="card-text">
+                    <table>
+                        <tr>
+                            <td>Begindatum:</td>
+                            <td><?= date('d-M-Y', strtotime($begindatum)) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Einddatum:</td>
+                            <td><?= date('d-M-Y', strtotime($einddatum)) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Adres:</td>
+                            <td><?= "$adres" ?></td>
+                        </tr>
+                        <tr>
+                            <td>Lokaal:</td>
+                            <td><?= "$lokaal" ?></td>
+                        </tr>
+                        <tr>
+                            <td>Tijd:</td>
+                            <td><?= date('H:i', $begintijd) ?> - <?= date('H:i', $eindtijd) ?></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="col-4">
+        <div class="card">
+            <h4 class="card-header">Overig</h4>
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <td>Soort:</td>
+                        <td><?=$soort ?></td>
+                    </tr>
+                    <tr>
+                        <td>Vervoer:</td>
+                        <td><?=$vervoer ?></td>
+                    </tr>
+                    <tr>
+                        <td>Contactnummer:</td>
+                        <td><?=$contactnr ?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-    <div class="col-6">
-<div class="card">
-    <h4 class=" card-header">Actief?</h4>
-    <div class="card-body">
-        <h5>Op dit moment: <?= $activatiemessage ?></h5><?= $activatieknop ?>
+    <div class="col-4">
+        <div class="card">
+            <h4 class=" card-header">Actief?</h4>
+            <div class="card-body">
+                <h5>Op dit moment: <?= $activatiemessage ?></h5><?= $activatieknop ?>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 
 

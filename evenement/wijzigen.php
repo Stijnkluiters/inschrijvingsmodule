@@ -108,7 +108,6 @@ if (isset($_POST['titel'])) {
         $error['Max_leerlingen'] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
     }
 
-
     /** Lokaalnummer */
     $lokaalnummer = filter_input(INPUT_POST, 'lokaalnummer', FILTER_SANITIZE_STRING);
     if ($lokaalnummer === false) {
@@ -120,7 +119,7 @@ if (isset($_POST['titel'])) {
     if(strlen($contactnr) > 11){
         $error['contactnummer'] = ' het contactnummer mag niet langer zijn dan 11 karakters';
     }
-    if ($contactnr === false) {
+    if ($contactnr === false || empty($contactnr)) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
     if (count($error) === 0) {
@@ -136,7 +135,7 @@ if (isset($_POST['titel'])) {
         `min_leerlingen`=?,
         `max_leerlingen`=?,
         `lokaalnummer`=?,
-        `soort`=?,
+        `soort_id`=?,
         `contactnr`=?
         WHERE 
         `evenement_id`=?');
@@ -168,9 +167,9 @@ if (isset($_POST['titel'])) {
 //load info from database using the id
 
 $stmt = $db->prepare("
-SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, e.soort, contactnr
+SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, s.soort, contactnr
 FROM evenement e 
-JOIN soort s ON s.soort = e.soort
+JOIN soort s ON s.soort_id = e.soort_id
 WHERE evenement_id = $id");
 $stmt->execute();
 
@@ -277,7 +276,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                             if (!empty($soort['soort'])) {
 
                                 echo '<option value="' .
-                                    $soort['soort'] .
+                                    $soort['soort_id'] .
                                     '">' .
                                     $soort['soort'] .
                                     '</option>';
