@@ -81,41 +81,53 @@ if(count($evenemten)===0) {
             </div>
                 <form action="<?= route('/student/index.php') ?>" method="post">
                     <?php
-                        if(isset($_POST['submit'])){
-                            $user = get_user_info();
-                            $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
-                            $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
-                            $rowcount = $stmt->rowCount();
-                            if(empty($rowcount)){
-                                $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-                                $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
+                    $user = get_user_info();
+                    $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
+                    $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
+                    $inschrijving = $stmt->fetch();
+                    if(isset($_POST['submit'])){
+                        if(empty($inschrijving['aangemeld_op'])){
+                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+                            $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
-                                // create mail functionality
-                                $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-                                //Server settings
-                                //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                                //$mail->isSMTP();                                      // Set mailer to use SMTP
-                                $mail->Host = mailhost;                                 // Specify main and backup SMTP servers
-                                $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
-                                $mail->Username = mailuser;                              // SMTP username
-                                $mail->Password = mailpassword;                           // SMTP password
-                                $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
-                                $mail->Port = mailPort;                                    // TCP port to connect to
-                                $mail->setFrom(mailFromEmail, mailFromUser);
-                                $mail->addReplyTo(mailFromEmail, mailFromUser);
-                                $mail->addBCC(mailFromEmail);
-                                $mail->addAddress($user['leerlingnummer'].'@edu.rocmn.nl');
-                                $mail->Subject = 'HI';
-                                $mail->Body = 'HOI!';
-                                $mail->send();
+                            // create mail functionality
+                            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                            //Server settings
+                            //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
+                            //$mail->isSMTP();                                      // Set mailer to use SMTP
+                            $mail->Host = mailhost;                                 // Specify main and backup SMTP servers
+                            $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
+                            $mail->Username = mailuser;                              // SMTP username
+                            $mail->Password = mailpassword;                           // SMTP password
+                            $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
+                            $mail->Port = mailPort;                                    // TCP port to connect to
+                            $mail->setFrom(mailFromEmail, mailFromUser);
+                            $mail->addReplyTo(mailFromEmail, mailFromUser);
+                            $mail->addBCC(mailFromEmail);
+                            $mail->addAddress($user['leerlingnummer'].'@edu.rocmn.nl');
+                            $mail->Subject = 'Bevestiging inschrijving' . $evenemnt['onderwerp'];
+                            $mail->Body = $user['leerlingnummer'] . ' wil zich inschrijven voor ' . $evenemnt['onderwerp'] . '. 
+                                Bevestig dit op de website.';
+                            $mail->send();
+                            $inschrijving['aangemeld_op'] = 'X';
 
-                                success('Je hebt je ingeschreven!');
-                            }else{
-                                error('Je kan je niet inschrijven!');
-                            }
+                            success('Je hebt je ingeschreven!');
+                        }else{
+                            success('Je hebt je uitgeschreven!');
+                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+                            $stmt->execute(array(NULL, $evenemnt['evenement_id'], $user['leerlingnummer']));
+                            $inschrijving['aangemeld_op'] = NULL;
                         }
+                    }
                     ?>
-                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">Inschrijven</button>
+                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">
+                        <?php
+                            if(!empty($inschrijving['aangemeld_op'])){
+                                print('Uitschrijven');
+                            }else{
+                                print('Inschrijven');
+                            }
+                        ?></button>
                 </form>
             </div>
             </div>
