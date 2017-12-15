@@ -169,7 +169,7 @@ if (isset($_POST['titel'])) {
 }
 
 
-$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL');
+$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 if(count($soorten) === 0) {

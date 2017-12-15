@@ -176,7 +176,7 @@ $stmt->execute();
 //put the results in $row
 $row = $stmt->fetch();
 
-$soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
+$soorten = $db->query('select * from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
