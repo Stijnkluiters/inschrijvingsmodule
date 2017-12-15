@@ -10,9 +10,42 @@ require_once 'config.php';
 
 const passwordAlgo = PASSWORD_BCRYPT;
 
-const options = [ 'cost' => 15 ];
+const options = [ 'cost' => 11 ];
 
-const authenticationSessionName = 'User';
+const authenticationSessionName = 'account';
+
+function check_logged_in_user()
+{
+    startsession();
+    // check if user is still logged in; check if user that is logged in is still in database.
+    if(!isset($_SESSION[ authenticationSessionName ])) {
+        logout();
+        redirect('/login.php', 'U bent uitgelogd.');
+    }
+    // check if current user still exists in database.
+    $db = db();
+    $stmt = $db->prepare('select * from account where account_id = :account_id');
+    $stmt->bindParam('account_id',$_SESSION[authenticationSessionName],PDO::PARAM_INT);
+    $stmt->execute();
+    if(!$stmt->rowCount()) {
+        logout();
+        redirect('/login.php','U bent uitgelogd');
+    }
+
+    $fingerprint = 'ROCMNROCKS';
+    // this doesn't work behind loadbalancing.
+    $encryptedfingerprint = md5($_SERVER['REMOTE_ADDR'] . $fingerprint . $_SERVER['HTTP_USER_AGENT']);
+
+    if(!isset($_SESSION['fingerprint'])) {
+        $_SESSION['fingerprint'] = $encryptedfingerprint;
+    }
+    // check if fingerprint is equal to the older fingerprint, this way we can ensure it's the same user
+    if($_SESSION['fingerprint'] != $encryptedfingerprint) {
+        logout();
+        redirect('/login.php', 'u bent uigelogd');
+    }
+
+}
 
 function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
@@ -29,9 +62,8 @@ function checkPassword($hashedOriginalPassword, $input, $originalID)
             $newHash = generatePassword($input);
 
             $dbh = db();
-            // TODO: correct query with correct details
-            $stmt = $dbh->prepare('UPDATE user SET password = :password WHERE id = :ID');
-            $stmt->bindParam('password', $newHash, PDO::PARAM_STR);
+            $stmt = $dbh->prepare('UPDATE account SET wachtwoord = :wachtwoord WHERE account_id = :id');
+            $stmt->bindParam('wachtwoord', $newHash, PDO::PARAM_STR);
             $stmt->bindParam('id', $originalID, PDO::PARAM_INT);
 
             return $stmt->execute();
@@ -55,23 +87,24 @@ function login($username, $password)
 {
 
     $dbh = db();
-    // TODO: correct query with correct details
-    $stmt = $dbh->prepare('SELECT id, password FROM user WHERE username = :username');
+    $stmt = $dbh->prepare('SELECT account_id, wachtwoord FROM account WHERE gebruikersnaam = :username');
     $stmt->bindParam('username', $username, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if( count($result) > 0 )
     {
-        if( checkPassword($result['password'], $password, intval($result[ 'id' ])) )
+        if( checkPassword($result['wachtwoord'], $password, intval($result[ 'account_id' ])) )
         {
             startsession();
-            $_SESSION[ authenticationSessionName ] = $result[ 'id' ];
+            session_regenerate_id(true);
+            $_SESSION[ authenticationSessionName ] = $result[ 'account_id' ];
 
-            return redirect('/login');
+            return $_SESSION[ authenticationSessionName ];
         }
         else
         {
+
             return 'INVALIDPASSWORD';
         }
     }
@@ -81,40 +114,58 @@ function login($username, $password)
     }
 
 }
-
-function register($username, $password, $naam, $studentnummer, $docentnummer)
-{
-    try
-    {
-
-        $dbh = db();
-
-        $dbh->beginTransaction();
-        // TODO: correct query with correct details
-        $stmt = $dbh->prepare('INSERT INTO user (username,password,naam,studentnummer,docentnummer,actief) VALUES (:username,:password,:naam,:studentnummer,:docentnummer,0)');
-        $stmt->bindParam('username', $username, PDO::PARAM_STR);
-        $stmt->bindParam('password', $password, PDO::PARAM_STR);
-        $stmt->bindParam('naam', $naam, PDO::PARAM_STR);
-        $stmt->bindParam('studentnummer', $studentnummer, PDO::PARAM_INT);
-        $stmt->bindParam('docentnummer', $docentnummer, PDO::PARAM_INT);
-        $stmt->execute();
-        $dbh->commit();
-        return $dbh->lastInsertId();
-    } catch ( PDOException $e )
-    {
-        $dbh->rollback();
-        print "Error!: " . $e->getMessage() . "</br>";
-    }
-
-}
-
 function logout ()
 {
     startsession();
+    session_regenerate_id(true);
     unset($_SESSION[authenticationSessionName]);
     return true;
 }
 
+function check_if_role_exists($rolnaam)
+{
+    $db = db();
+    $stmt = $db->prepare('SELECT rolid as id FROM rolnaam WHERE rolnaam = ?');
+    $stmt->execute(array($rolnaam));
+    $id = $stmt->fetch();
+    if($id === false || empty($id)) {
+        $stmt = $db->prepare('INSERT INTO rolnaam (rolnaam) VALUES (?)');
+        $stmt->execute(array($rolnaam));
+        return $db->lastInsertId();
+    }
+    $id = $id['id'];
+    return $id;
+}
 
+
+function get_account_his_role($account_id)
+{
+    $db = db();
+
+    $stmt = $db->prepare('
+        select * from rolnaam WHERE rolid = (select rol_id from account where account_id = :account_id)
+    ');
+    $stmt->bindParam(':account_id', $account_id);
+    $stmt->execute();
+    return $stmt->fetch();
+}
+
+
+function formatusername($account = null) {
+    if($account === null) {
+        $account = get_user_info();
+    }
+    $gebruikernaam = '';
+    if(!empty($account['roepnaam'])) {
+        $gebruikernaam = ucfirst($account['roepnaam']) . ' ';
+    }
+    if(!empty($account['tussenvoegsel'])) {
+        $gebruikernaam .= $account['tussenvoegsel']  . ' ';
+    }
+    if(!empty($account['achternaam'])) {
+    $gebruikernaam .= ucfirst($account['achternaam']);
+    }
+    return $gebruikernaam;
+}
 
 

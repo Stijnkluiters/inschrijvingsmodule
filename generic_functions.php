@@ -9,16 +9,22 @@
  */
 
 
-function redirect($url)
+function redirect($url, $message = null)
 {
-    if( !is_string($url) )
-    {
+    if (isset($message)) {
+
+        startsession();
+        $_SESSION['message'] = $message;
+
+    }
+    if (!is_string($url)) {
         throw new Exception($url . ' is not an String you silly');
     }
-
-    $url = filter_url($url);
-
-    return header(sprintf('Location: %s',  $url));
+    if(headers_sent()) {
+        echo '<script> location.replace("'.Projectroot . $url.'"); </script>';
+    } else {
+        return header(sprintf('Location: %s', Projectroot . $url));
+    }
 }
 
 function filter_url($url)
@@ -38,17 +44,319 @@ function filter_url($url)
 
     return $url;
 }
+
 // return correct url for <ahref tags or stylesheet links
 function route($url)
 {
-    return Projectroot.$url;
+
+    return htmlspecialchars(Projectroot . $url);
+}
+
+/*
+ * Create a random string
+ * @param $length the length of the string to create
+ * @return $str the string
+ */
+function randomString($length = 6)
+{
+
+    $str = "";
+    $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+    $max = count($characters) - 1;
+    for ($i = 0; $i < $length; $i++)
+    {
+        $rand = mt_rand(0, $max);
+        $str .= $characters[ $rand ];
+    }
+
+    return $str;
+}
+/**
+ * @param $rolename
+ *
+ * @return integer account_id from table account
+ */
+function generateRandomAccountForRole($username, $rolename)
+{
+
+    $rol_id = check_if_role_exists($rolename);
+
+    $password = randomString(8);
+
+    $randompassword = generatePassword(
+        $password
+    );
+
+    $db = db();
+    $stmt = $db->prepare('insert into account (gebruikersnaam, wachtwoord, rol_id) VALUES (
+              ?,?,?
+            )');
+    $stmt->execute(array(
+        $username,
+        $randompassword,
+        $rol_id
+    ));
+
+
+    // create mail functionality
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    //Server settings
+    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+    $mail->isSMTP();                                      // Set mailer to use SMTP
+    $mail->Host = mailhost;  // Specify main and backup SMTP servers
+    $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
+    $mail->Username = mailuser;                 // SMTP username
+    $mail->Password = mailpassword;                           // SMTP password
+    $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = mailPort;                                    // TCP port to connect to
+    $mail->setFrom(mailFromEmail, mailFromUser);
+    $mail->addReplyTo(mailFromEmail, mailFromUser);
+    $mail->addBCC(mailFromEmail);
+
+    //Recipients
+    $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
+    $mail->addAddress('ellen@example.com');               // Name is optional
+
+    //Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'Het ROC midden Nederland inschrijvingsmodule';
+    $mail->Body = '
+ <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <title></title>  <!--[if !mso]><!-- -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!--<![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        #outlook a {
+            padding: 0;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass * {
+            line-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table, td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+
+        p {
+            display: block;
+            margin: 13px 0;
+        }</style><!--[if !mso]><!-->
+    <style type="text/css">  @media only screen and (max-width: 480px) {
+        @-ms-viewport {
+            width: 320px;
+        }    @viewport {
+            width: 320px;
+        }
+    }
+    </style>
+    <!--<![endif]-->
+    <!--[if mso]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml><![endif]--><!--[if lte mso 11]>
+    <style type="text/css">  .outlook-group-fix {
+        width: 100% !important;
+    }</style><![endif]--><!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet" type="text/css">
+    <style type="text/css">        @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);    </style>
+    <!--<![endif]-->
+    <style type="text/css">  @media only screen and (min-width: 480px) {
+        .mj-column-per-40 {
+            width: 40% !important;
+        }
+
+        .mj-column-per-60 {
+            width: 60% !important;
+        }
+
+        .mj-column-per-100 {
+            width: 100% !important;
+        }
+    }</style>
+</head>
+<body style="background: #FFFFFF;">
+<div class="mj-container" style="background-color:#FFFFFF;"><!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center"
+           style="width:600px;">
+        <tr>
+            <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">      <![endif]-->
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" border="0">
+        <tbody>
+        <tr>
+            <td>
+                <div style="margin:0px auto;max-width:600px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;"
+                           align="center" border="0">
+                        <tbody>
+                        <tr>
+                            <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:9px 0px 9px 0px;">
+                                <!--[if mso | IE]>
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td style="vertical-align:top;width:240px;">      <![endif]-->
+                                <div class="mj-column-per-40 outlook-group-fix"
+                                     style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
+                                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                        <tr>
+                                            <td style="word-wrap:break-word;font-size:0px;padding:33px 33px 33px 33px;"
+                                                align="center">
+                                                <table role="presentation" cellpadding="0" cellspacing="0"
+                                                       style="border-collapse:collapse;border-spacing:0px;"
+                                                       align="center" border="0">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="width:174px;"><img alt="Roc midden Nederland"
+                                                                                      title="" height="auto"
+                                                                                      src="https://topolio.s3-eu-west-1.amazonaws.com/uploads/5a2e5baa87c70/1512987615.jpg"
+                                                                                      style="border:none;border-radius:0px;display:block;font-size:13px;outline:none;text-decoration:none;width:100%;height:auto;"
+                                                                                      width="174"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--[if mso | IE]>      </td>
+                            <td style="vertical-align:top;width:360px;">      <![endif]-->
+                                <div class="mj-column-per-60 outlook-group-fix"
+                                     style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
+                                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                        <tbody>
+                                        <tr>
+                                            <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;"
+                                                align="left">
+                                                <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
+                                                    <p>Beste student,<br><br>Hierbij de uitnodiging voor de
+                                                        inschrijfmodule voor evenementen.<br><br>jouw gebruikersnaam en
+                                                        wachtwoord:<br>&#xA0;</p>
+                                                    <table border="1" cellpadding="1" cellspacing="1"
+                                                           style="width:100%;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>Gebruikersnaam:</td>
+                                                            <td>'.$username.'</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Wachtwoord</td>
+                                                            <td>'.$password.'</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p>Met vriendelijke groet,<br><br>ROC midden Nederland</p></div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--[if mso | IE]>      </td></tr></table>      <![endif]--></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--[if mso | IE]>      </td></tr></table>      <![endif]-->      <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center"
+           style="width:600px;">
+        <tr>
+            <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" align="center"
+               border="0">
+            <tbody>
+            <tr>
+                <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:9px 0px 9px 0px;">
+                    <!--[if mso | IE]>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td style="vertical-align:top;width:600px;">      <![endif]-->
+                    <div class="mj-column-per-100 outlook-group-fix"
+                         style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <!--[if mso | IE]>      </td></tr></table>      <![endif]--></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--[if mso | IE]>      </td></tr></table>      <![endif]--></div>
+</body>
+</html>
+
+';
+    $mail->AltBody = 'Beste student, hierbij jou wachtwoord en gebruikersnaam: ' . $username . ' ' . $password;
+
+    $mail->send();
+
+    return $db->lastInsertId();
+
+
 }
 
 function startsession()
 {
 
-    if( session_status() == PHP_SESSION_NONE )
-    {
-        session_start();
+    if(!isset($_SESSION)) {
+       session_start();
     }
+}
+
+function dump($variable)
+{
+    echo "<pre>";
+    var_dump($variable);
+    echo "</pre>";
+}
+function success($msg) {
+    return print(
+        '<div class="alert alert-success" role="alert">
+          <strong>Success!</strong> '.$msg.'
+        </div>'
+    );
+}
+function error($msg) {
+    return print('<div class="alert alert-danger" role="alert">
+  <strong>Error!</strong> '.$msg.'
+</div>');
 }

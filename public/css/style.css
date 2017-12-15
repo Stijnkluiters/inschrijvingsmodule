@@ -7450,7 +7450,7 @@ base-chart.chart {
 
 .input-group-addon,
 .input-group-btn {
-    min-width: 40px;
+    /*min-width: 40px;*/
     white-space: nowrap;
     vertical-align: middle; }
 
@@ -7645,7 +7645,7 @@ base-chart.chart {
     padding: 0.5rem 1rem;
     margin-right: 0;
     background-color: #fff;
-    background-image: url("../img/logo.png");
+    background-image: url("../img/roclogo.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 70px auto;
