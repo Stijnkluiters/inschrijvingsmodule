@@ -224,6 +224,11 @@ $user = get_user_info();
                         include 'evenement/soort/soort_aanpassen.php';
                     }
                 }
+                if(isset($_GET['bedrijfsinfo'])) {
+                    if($_GET['bedrijfsinfo'] === 'wijzigen') {
+                        include 'beheerder/gebruikers/contactpersoon/bedrijf/bedrijfwijzigen.php';
+                    }
+                }
 
 
             }
