@@ -64,44 +64,56 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
     }
     else
     {
-        $adres = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
+        $aantal_gastcolleges = filter_input(INPUT_POST, 'aantal_gastcolleges', FILTER_SANITIZE_STRING);
     }
 
     /**
-     * Postcode
+     * voorkeur_dag
      */
-    if( !isset($_POST[ 'postcode' ]) )
+    if( !isset($_POST[ 'voorkeur_dag' ]) )
     {
-        $error[ 'postcode' ] = 'Postcode is verplicht';
+        $error[ 'voorkeur_dag' ] = 'voorkeur_dag is verplicht';
     }
     else
     {
-        $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
+        $voorkeur_dag = filter_input(INPUT_POST, 'voorkeur_dag', FILTER_SANITIZE_STRING);
     }
 
 
     /**
-     * Plaatsnaam
+     * voorkeur_dagdeel
      */
-    if( !isset($_POST[ 'plaatsnaam' ]) )
+    if( !isset($_POST[ 'voorkeur_dagdeel' ]) )
     {
-        $error[ 'plaatsnaam' ] = 'plaatsnaam is verplicht';
+        $error[ 'voorkeur_dagdeel' ] = 'voorkeur dagdeel is verplicht';
     }
     else
     {
-        $plaatsnaam = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
+        $voorkeur_dagdeel = filter_input(INPUT_POST, 'voorkeur_dagdeel', FILTER_SANITIZE_STRING);
     }
 
     /**
-     * contactnr
+     * hulpmiddel
      */
-    if( !isset($_POST[ 'contactnr' ]) )
+    if( !isset($_POST[ 'hulpmiddel' ]) )
     {
-        $error[ 'contactnr' ] = 'contactnr is verplicht';
+        $error[ 'hulpmiddel' ] = 'hulpmiddel is verplicht';
     }
     else
     {
-        $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_STRING);
+        $hulpmiddel = filter_input(INPUT_POST, 'hulpmiddel', FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * Verwachting
+     */
+    if( !isset($_POST[ 'verwachting' ]) )
+    {
+        $error[ 'verwachting' ] = 'Verwachting is verplicht';
+    }
+    else
+    {
+        $verwachting = filter_input(INPUT_POST, 'verwachting', FILTER_SANITIZE_STRING);
     }
 
 
@@ -116,7 +128,6 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
           voorkeur_dag = ?,
           voorkeur_dagdeel = ?,
           hulpmiddel = ?,
-          doelstelling = ?,
           verwachting = ?,       
           WHERE inventarisatie_id = ?
         ');
@@ -127,7 +138,6 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
             $voorkeur_dag,
             $voorkeur_dagdeel,
             $hulpmiddel,
-            $doelstelling,
             $verwachting,
             $inventarisatie_id
         ));
