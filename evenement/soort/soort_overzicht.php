@@ -66,7 +66,7 @@ WHERE actief = 1");
                         <td><?= '<a href="' . route('/index.php?soorten=aanpassen&soort=' . $row['soort_id']) . '" class="btn btn-primary">Wijzig \'' . $row['soort'] . '\'</a>' ?></td>
                         <td>
                             <form name="evenementActivatie" method="post">
-                                <input type="hidden" name="deactiveren"value="2">
+                                <input type="hidden" name="deactiveren" value="2">
                                 <input type="hidden" name="soortid" value="<?= $row['soort_id'] ?>">
                                 <button class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
                             </form>

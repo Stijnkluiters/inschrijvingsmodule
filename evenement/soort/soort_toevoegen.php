@@ -64,7 +64,7 @@ if (isset($_POST)) {
         </h4>
     </div>
     <form name="evenementWijzigen" method="post"
-          action="<?php echo filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
+          action="<?= filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING); ?>">
         <div class="col-sm-12">
             <div class="card-body">
                 <div class="form-group">
