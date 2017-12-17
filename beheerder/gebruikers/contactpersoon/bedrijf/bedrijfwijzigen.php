@@ -27,6 +27,227 @@ $stmt = $db->prepare('select *
 $stmt->execute(array( $contact_id ));
 $companyInfo = $stmt->fetch();
 // show branches.
+$error = [];
+if( isset($_POST[ 'inventarisatie_submit' ]) )
+{
+
+    /**
+     * check all required fields
+     */
+    /**
+     * branche
+     */
+    if( !isset($_POST[ 'branche' ]) )
+    {
+        $error[ 'branche' ] = 'branche is verplicht';
+    }
+    else
+    {
+        $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
+    }
+    /**
+     * Webadres
+     */
+    $webadres = filter_input(INPUT_POST, 'webadres', FILTER_SANITIZE_STRING);
+
+    /**
+     * Adres
+     */
+    if( !isset($_POST[ 'adres' ]) )
+    {
+        $error[ 'adrse' ] = 'adres is verplicht';
+    }
+    else
+    {
+        $adres = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * Postcode
+     */
+    if( !isset($_POST[ 'postcode' ]) )
+    {
+        $error[ 'postcode' ] = 'Postcode is verplicht';
+    }
+    else
+    {
+        $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
+    }
+
+
+    /**
+     * Plaatsnaam
+     */
+    if( !isset($_POST[ 'plaatsnaam' ]) )
+    {
+        $error[ 'plaatsnaam' ] = 'plaatsnaam is verplicht';
+    }
+    else
+    {
+        $plaatsnaam = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * contactnr
+     */
+    if( !isset($_POST[ 'contactnr' ]) )
+    {
+        $error[ 'contactnr' ] = 'contactnr is verplicht';
+    }
+    else
+    {
+        $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_STRING);
+    }
+
+
+    if( count($error) === 0 )
+    {
+
+
+        $db->prepare('update inventarisatie SET
+          vakbebied = ?,
+          onderwerp = ?,
+          aantal_gastcolleges = ?,
+          voorkeur_dag = ?,
+          voorkeur_dagdeel = ?,
+          hulpmiddel = ?,
+          doelstelling = ?,
+          verwachting = ?,       
+          WHERE inventarisatie_id = ?
+        ');
+        $r = $stmt->execute(array(
+            $vakgebied,
+            $onderwerp,
+            $aantal_gastcolleges,
+            $voorkeur_dag,
+            $voorkeur_dagdeel,
+            $hulpmiddel,
+            $doelstelling,
+            $verwachting,
+            $inventarisatie_id
+        ));
+
+        if( $r )
+        {
+            redirect('index.php?gebruiker=overzichtcontactpersonen', 'Inventarisatie formulier geüpdate!');
+        }
+        else
+        {
+            $error[ 'vakgebied' ] = 'er ging iets mis met het Updaten van het inventarisatie formulier ';
+        }
+    }
+
+
+}
+if( isset($_POST[ 'branche_submit' ]) )
+{
+    /**
+     * check all required fields
+     */
+    /**
+     * branche
+     */
+    if( !isset($_POST[ 'branche' ]) )
+    {
+        $error[ 'branche' ] = 'branche is verplicht';
+    }
+    else
+    {
+        $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
+    }
+    /**
+     * Webadres
+     */
+    $webadres = filter_input(INPUT_POST, 'webadres', FILTER_SANITIZE_STRING);
+
+    /**
+     * Adres
+     */
+    if( !isset($_POST[ 'adres' ]) )
+    {
+        $error[ 'adrse' ] = 'adres is verplicht';
+    }
+    else
+    {
+        $adres = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * Postcode
+     */
+    if( !isset($_POST[ 'postcode' ]) )
+    {
+        $error[ 'postcode' ] = 'Postcode is verplicht';
+    }
+    else
+    {
+        $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
+    }
+
+
+    /**
+     * Plaatsnaam
+     */
+    if( !isset($_POST[ 'plaatsnaam' ]) )
+    {
+        $error[ 'plaatsnaam' ] = 'plaatsnaam is verplicht';
+    }
+    else
+    {
+        $plaatsnaam = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * contactnr
+     */
+    if( !isset($_POST[ 'contactnr' ]) )
+    {
+        $error[ 'contactnr' ] = 'contactnr is verplicht';
+    }
+    else
+    {
+        $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_STRING);
+    }
+
+
+    if( count($error) === 0 )
+    {
+
+
+        $db->prepare('update branche SET
+            branche = ?,
+            webadres = ?,
+            adres = ?,
+            postcode = ?,
+            plaatsnaam = ?,
+            contactnr = ?,
+            deleted = ?,
+            where branche_id = ?
+        ');
+        $r = $stmt->execute(array(
+            $branche,
+            $webadres,
+            $adres,
+            $postcode,
+            $plaatsnaam,
+            $contactnr,
+            0,
+            $branche_id
+        ));
+
+        if( $r )
+        {
+            redirect('index.php?gebruiker=overzichtcontactpersonen', 'Branche geüpdate!');
+        }
+        else
+        {
+            $error[ 'branche' ] = 'er ging iets mis met het opslaan van de branche';
+        }
+    }
+
+
+}
+
 
 if( empty($companyInfo) )
 {
@@ -47,6 +268,7 @@ else
 
         <div class="col-sm-6">
             <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+                <input type="hidden" name="inventarisatie_id" value="<?= $companyInfo[ 'i.inventarisatie_id' ]; ?>">
                 <div class="card">
                     <div class="card-header">
                         <strong>Inventarisatie formulier</strong>
@@ -139,7 +361,7 @@ else
                         <!--/.row-->
                     </div>
                     <div class="card-footer">
-                        <button type="submit" name="submit" class="btn btn-sm btn-primary"><i
+                        <button type="submit" name="inventarisatie_submit" class="btn btn-sm btn-primary"><i
                                     class="fa fa-dot-circle-o"></i> Inventarisatie wijzigen
                         </button>
                     </div>
@@ -150,6 +372,7 @@ else
 
         <div class="col-sm-6">
             <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+                <input type="hidden" name="branche_id" value="<?= $companyInfo[ 'b.branche_id' ]; ?>">
                 <div class="card">
                     <div class="card-header">
                         <strong>Branche info</strong>
@@ -222,6 +445,12 @@ else
                                        placeholder="Uw contactnummer">
                             </div>
                         </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="branche_submit" class="btn btn-sm btn-primary"><i
+                                    class="fa fa-dot-circle-o"></i> branche wijzigen
+                        </button>
                     </div>
                 </div>
             </form>
