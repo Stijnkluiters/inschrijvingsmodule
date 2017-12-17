@@ -11,18 +11,18 @@ $db = db();
 
 //create a variable to catch errors
 $error = [];
-$soort = $_GET[ 'soort' ];
+$soortID = $_GET[ 'soortid' ];
 
 
 // check if soort exists in database, else redirect to different page.
 $stmt = $db->prepare('select * from soort where soort = ?');
-$stmt->execute($soort);
+$stmt->execute($soortID);
 if( $stmt->rowCount() === 0 )
 {
     redirect('/index.php?soorten=overzicht', 'Er bestaat geen soort met dat id.');
 }
 
-if(!filter_var($soort,FILTER_VALIDATE_INT)) {
+if(!filter_var($soortID,FILTER_VALIDATE_INT)) {
     redirect('/index.php?soorten=overzicht', 'Soort moet een ID zijn.');
 }
 
@@ -51,13 +51,13 @@ if( isset($_POST[ 'submit' ]) )
     soort         = ?,
     benodigdheid  = ?
     WHERE 
-    soort         = ?');
+    soort_id         = ?');
         //connect the variables to the information in the query
         $stmt->execute(array(
             $soortnaam,
             $benodigdheid,
             $soortnaam,
-            $soort
+            $soortID
         ));
     }
 }
@@ -66,9 +66,9 @@ if( isset($_POST[ 'submit' ]) )
 $stmt2 = $db->prepare('
 SELECT soort, benodigdheid
 FROM soort
-WHERE soort = ?');
+WHERE soort_id = ?');
 
-$stmt2->execute(array( $soort ));
+$stmt2->execute(array( $soortID ));
 
 $prevalue = $stmt2->fetch();
 ?>
