@@ -23,7 +23,7 @@ if( $stmt->rowCount() === 0 )
 }
 
 if(!filter_var($soortID,FILTER_VALIDATE_INT)) {
-    redirect('/index.php?soorten=overzicht', 'Soort moet een ID zijn.');
+    redirect('/index.php?soorten=overzicht', 'Soortid moet een ID zijn.');
 }
 
 if( isset($_POST[ 'submit' ]) )
