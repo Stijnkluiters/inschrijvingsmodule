@@ -28,192 +28,208 @@ $stmt->execute(array( $contact_id ));
 $companyInfo = $stmt->fetch();
 // show branches.
 
+if( empty($companyInfo) )
+{
+    print '<h2>er is niet genoeg bedrijfsinformatie opgeslagen?</h2>';
 
-?>
-<div class="row">
+}
+else
+{
+    ?>
+    <div class="row">
 
-    <div class="col-sm-6">
-        <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
-            <div class="card">
-                <div class="card-header">
-                    <strong>Inventarisatie formulier</strong>
-                    <small>wijzigen</small>
+        <h6>Uw bedrijfsnaam
+            <small><?= $companyInfo[ 'bedrijfsnaam' ]; ?>
+                <code>.btn-sm</code>
+            </small>
+        </h6>
+
+
+        <div class="col-sm-6">
+            <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Inventarisatie formulier</strong>
+                        <small>wijzigen</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="vakgebied">Welk vakgebied?</label>
+                                    <textarea id="vakgebied"
+                                              name="vakgebied"><?= $companyInfo[ 'vakgebied' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="onderwerp">Welk onderwerp gaat het over?</label>
+                                    <textarea id="onderwerp"
+                                              name="onderwerp"><?= $companyInfo[ 'onderwerp' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="aantal_gastcolleges">aantal gast colleges?</label>
+                                    <textarea id="aantal_gastcolleges"
+                                              name="aantal_gastcolleges"><?= $companyInfo[ 'aantal_gastcolleges' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="voorkeur_dag">Welke dag heeft het als voorkeur?</label>
+                                    <textarea id="voorkeur_dag"
+                                              name="voorkeur_dag"><?= $companyInfo[ 'voorkeur_dag' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="voorkeur_dagdeel">Welke voorkeur dagdeel?</label>
+                                    <textarea id="voorkeur_dagdeel"
+                                              name="voorkeur_dagdeel"><?= $companyInfo[ 'voorkeur_dagdeel' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="hulpmiddel">Welke hulpmiddelen?</label>
+                                    <textarea id="hulpmiddel"
+                                              name="hulpmiddel"><?= $companyInfo[ 'hulpmiddel' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="doelstelling">Wat is de doelstelling?</label>
+                                    <textarea id="doelstelling"
+                                              name="doelstelling"><?= $companyInfo[ 'doelstelling' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="verwachting">Wat is het verwachte resultaat?</label>
+                                    <textarea id="verwachting"
+                                              name="verwachting"><?= $companyInfo[ 'verwachting' ]; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="submit" class="btn btn-sm btn-primary"><i
+                                    class="fa fa-dot-circle-o"></i> Inventarisatie wijzigen
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="vakgebied">Welk vakgebied?</label>
-                                <textarea id="vakgebied" name="vakgebied"><?= $companyInfo[ 'vakgebied' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
+            </form>
+        </div>
+        <!--/.col-->
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="onderwerp">Welk onderwerp gaat het over?</label>
-                                <textarea id="onderwerp" name="onderwerp"><?= $companyInfo[ 'onderwerp' ]; ?></textarea>
-                            </div>
-                        </div>
+        <div class="col-sm-6">
+            <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Branche info</strong>
+                        <small>Wijzigen</small>
                     </div>
-                    <!--/.row-->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="aantal_gastcolleges">aantal gast colleges?</label>
-                                <textarea id="aantal_gastcolleges"
-                                          name="aantal_gastcolleges"><?= $companyInfo[ 'aantal_gastcolleges' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="voorkeur_dag">Welke dag heeft het als voorkeur?</label>
-                                <textarea id="voorkeur_dag"
-                                          name="voorkeur_dag"><?= $companyInfo[ 'voorkeur_dag' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="voorkeur_dagdeel">Welke voorkeur dagdeel?</label>
-                                <textarea id="voorkeur_dagdeel"
-                                          name="voorkeur_dagdeel"><?= $companyInfo[ 'voorkeur_dagdeel' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="hulpmiddel">Welke hulpmiddelen?</label>
-                                <textarea id="hulpmiddel"
-                                          name="hulpmiddel"><?= $companyInfo[ 'hulpmiddel' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="doelstelling">Wat is de doelstelling?</label>
-                                <textarea id="doelstelling"
-                                          name="doelstelling"><?= $companyInfo[ 'doelstelling' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="verwachting">Wat is het verwachte resultaat?</label>
-                                <textarea id="verwachting"
-                                          name="verwachting"><?= $companyInfo[ 'verwachting' ]; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row-->
-                </div>
-                <div class="card-footer">
-                    <button type="submit" name="submit" class="btn btn-sm btn-primary"><i
-                                class="fa fa-dot-circle-o"></i> Inventarisatie wijzigen
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!--/.col-->
-
-    <div class="col-sm-6">
-        <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
-            <div class="card">
-                <div class="card-header">
-                    <strong>Branche info</strong>
-                    <small>Wijzigen</small>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="branche">Uw Branche*</label>
-                        <input type="text"
-                               required="required"
-                               class="form-control"
-                               id="branche"
-                               name="branche"
-                               placeholder="Uw branche naam"
-                               value="<?= $companyInfo[ 'branche' ]; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="website">Uw Website</label>
-                        <input type="text"
-                               class="form-control"
-                               id="website"
-                               name="website"
-                               value="<?= $companyInfo[ 'webadres' ]; ?>"
-                               placeholder="Uw websiteadres">
-                    </div>
-
-
-                    <div class="row">
-
-                        <div class="form-group col-sm-8">
-                            <label for="adres">Uw adres</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="adres"
-                                   name="adres"
-                                   value="<?= $companyInfo[ 'adres' ]; ?>"
-                                   placeholder="Uw adres">
-                        </div>
-
-                        <div class="form-group col-sm-4">
-                            <label for="postcode">Uw postcode</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="postcode"
-                                   name="postcode"
-                                   value="<?= $companyInfo[ 'postcode' ]; ?>"
-                                   placeholder="Uw postcode">
-                        </div>
-
-                    </div>
-                    <!--/.row-->
-                    <div class="form-group">
-                        <label for="plaatsnaam">Uw Plaatsnaam</label>
-                        <input type="text"
-                               class="form-control"
-                               id="plaatsnaam"
-                               name="plaatsnaam"
-                               value="<?= $companyInfo[ 'plaatsnaam' ]; ?>"
-                               placeholder="Uw plaatsnaam">
-                    </div>
-
-                    <div class="form-group">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="contractnr">Uw branche telefoonnummer</label>
+                            <label for="branche">Uw Branche*</label>
+                            <input type="text"
+                                   required="required"
+                                   class="form-control"
+                                   id="branche"
+                                   name="branche"
+                                   placeholder="Uw branche naam"
+                                   value="<?= $companyInfo[ 'branche' ]; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="website">Uw Website</label>
                             <input type="text"
                                    class="form-control"
-                                   id="contactnr"
-                                   name="contactnr"
-                                   value="<?= $companyInfo[ 'contactnr' ]; ?>"
-                                   placeholder="Uw contactnummer">
+                                   id="website"
+                                   name="website"
+                                   value="<?= $companyInfo[ 'webadres' ]; ?>"
+                                   placeholder="Uw websiteadres">
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="form-group col-sm-8">
+                                <label for="adres">Uw adres</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="adres"
+                                       name="adres"
+                                       value="<?= $companyInfo[ 'adres' ]; ?>"
+                                       placeholder="Uw adres">
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <label for="postcode">Uw postcode</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="postcode"
+                                       name="postcode"
+                                       value="<?= $companyInfo[ 'postcode' ]; ?>"
+                                       placeholder="Uw postcode">
+                            </div>
+
+                        </div>
+                        <!--/.row-->
+                        <div class="form-group">
+                            <label for="plaatsnaam">Uw Plaatsnaam</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="plaatsnaam"
+                                   name="plaatsnaam"
+                                   value="<?= $companyInfo[ 'plaatsnaam' ]; ?>"
+                                   placeholder="Uw plaatsnaam">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="contractnr">Uw branche telefoonnummer</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="contactnr"
+                                       name="contactnr"
+                                       value="<?= $companyInfo[ 'contactnr' ]; ?>"
+                                       placeholder="Uw contactnummer">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-    <!--/.col-->
+            </form>
+        </div>
+        <!--/.col-->
 
-</div>
+    </div>
+<?php } ?>
 
 
 
