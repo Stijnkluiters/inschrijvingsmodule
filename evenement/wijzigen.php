@@ -191,7 +191,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 <small>Wijzigen</small>
                 <div class='pull-right control-group'>
                     <a href="<?= route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>"
-                       class="btn btn-primary">Terug naar evenementen</a>
+                       class="btn btn-primary">Terug naar evenement</a>
                 </div>
             </div>
             <div class="card-body">

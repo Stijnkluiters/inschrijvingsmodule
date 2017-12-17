@@ -30,8 +30,6 @@ check_logged_in_user();
 
 $user = get_user_info();
 
-
-
 //9bcratj86fvn52ov5lsrvtlv2u
 //
 ?>
