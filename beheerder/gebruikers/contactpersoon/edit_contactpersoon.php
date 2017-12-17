@@ -107,7 +107,7 @@ var_dump($_GET);
         $stmt->bindParam('email', $email, PDO::PARAM_STR);
         $stmt->bindParam('contact_id', $contact_id,PDO::PARAM_STR);
         $stmt->execute();
-        redirect('/index.php?gebruiker=overzichtcontactpersonen');
+        redirect('/index.php?gebruiker=overzichtcontactpersonen', $roepnaam.' is aangepast.');
     }
 }
 

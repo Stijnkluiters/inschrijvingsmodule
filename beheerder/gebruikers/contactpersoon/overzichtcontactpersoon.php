@@ -20,11 +20,10 @@ $contactenQuery = $db->prepare('SELECT * FROM contactpersoon');
 $contactenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
 $contacten = $contactenQuery->fetchAll();
+    ?>
 
-?>
-
-</div>
-<table class="table">
+    </div>
+    <table class="table">
     <thead class="thead-dark">
     <tr>
         <th>Roepnaam</th>
@@ -51,35 +50,43 @@ $contacten = $contactenQuery->fetchAll();
     </tfoot>
 
     <?php
-    /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
-    foreach ($contacten as $contact)
+    if (empty($contacten))
     {
+        print("<h2>Geen contactpersonen gevonden</h2>");
+    }else{
+
+        /** hier word door middel van een foreach de gemaakte array met de waardes uit de query geprint in tabel vorm */
+        foreach ($contacten as $contact) {
+            ?>
+            <tr>
+                <td><?= ucfirst($contact['roepnaam']) ?></td>
+                <td><?= $contact['tussenvoegsel'] ?></td>
+                <td><?= ucfirst($contact['achternaam']) ?></td>
+                <td><?= $contact['functie'] ?></td>
+                <td><?= $contact['email'] ?></td>
+                <td><?= $contact['telefoonnummer'] ?></td>
+                <td>
+                    <a href="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id=' . $contact['contact_id']); ?>"><i
+                                class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                <td>
+                    <?php
+                    if ($contact['deleted'] == true) {
+                        ?>
+                        <a href="<?= route('/index.php?gebruiker=activatiecontactpersoon&contact_id=' . $contact['contact_id']); ?>">
+                            <i class="fa fa-times" aria-hidden="true"></i></a>
+                        <?php
+                    } else {
+                        ?>
+                        <a href="<?= route('/index.php?gebruiker=deletecontactpersoon&contact_id=' . $contact['contact_id']); ?>">
+                            <i class="fa fa-check" aria-hidden="false"></i></a>
+                        <?php
+                    }
+                    ?>
+                </td>
+            </tr>
+            <?php
+        }
+        }
         ?>
-        <tr>
-            <td><?= ucfirst($contact['roepnaam']) ?></td>
-            <td><?= $contact['tussenvoegsel'] ?></td>
-            <td><?= ucfirst($contact['achternaam']) ?></td>
-            <td><?= $contact['functie'] ?></td>
-            <td><?= $contact['email'] ?></td>
-            <td><?= $contact['telefoonnummer'] ?></td>
-            <td><a href="<?= route('/index.php?gebruiker=editcontactpersoon&contact_id='.$contact['contact_id']); ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-            <td>
-                <?php
-                if($contact['deleted'] == true){
-                    ?>
-                    <a href="<?= route('/index.php?gebruiker=activatiecontactpersoon&contact_id='.$contact['contact_id']); ?>">
-                        <i class="fa fa-times" aria-hidden="true"></i></a>
-                    <?php
-                }else{
-                    ?>
-                    <a href="<?= route('/index.php?gebruiker=deletecontactpersoon&contact_id='.$contact['contact_id']); ?>">
-                        <i class="fa fa-check" aria-hidden="false"></i></a>
-                    <?php
-                }
-                ?>
-            </td>
-        </tr>
-        <?php
-    }
-    ?>
-</table>
+    </table>
+<?php

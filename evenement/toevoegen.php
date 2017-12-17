@@ -76,7 +76,7 @@ if (isset($_POST['titel'])) {
     if (!isset($_POST['soort']) || empty($_POST['soort'])) {
         $error['soort'] = ' soort is verplicht';
     }
-    $soort = filter_input(INPUT_POST, 'soort', FILTER_SANITIZE_STRING);
+    $soort = filter_input(INPUT_POST, 'soort', FILTER_SANITIZE_NUMBER_INT);
     if (empty($soort)) {
         $error['soort'] = ' het filteren van soort ging verkeerd';
     }
@@ -127,7 +127,7 @@ if (isset($_POST['titel'])) {
         min_leerlingen,
         max_leerlingen,
         lokaalnummer,
-        soort,
+        soort_id,
         contactnr,
         account_id
         ) VALUES(
@@ -161,18 +161,20 @@ if (isset($_POST['titel'])) {
             $contactnummer,
             $_SESSION[authenticationSessionName]
             ));
+
+        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
+
     }
 
 }
 
 
-?>
-
-<?php
-
-
-$soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
+$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
+
+if(count($soorten) === 0) {
+    redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+}
 
 ?>
 <form name="evenementToevoegen" method="post"
@@ -263,7 +265,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                             if (!empty($soort['soort'])) {
 
                                 echo '<option value="' .
-                                    $soort['soort'] .
+                                    $soort['soort_id'] .
                                     '">' .
                                     $soort['soort'] .
                                     '</option>';
