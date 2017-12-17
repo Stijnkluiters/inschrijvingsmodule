@@ -30,32 +30,37 @@ $companyInfo = $stmt->fetch();
 $error = [];
 if( isset($_POST[ 'inventarisatie_submit' ]) )
 {
-
     /**
-     * check all required fields
+     * Check all required fields
+     * Vakgebied
      */
-    /**
-     * branche
-     */
-    if( !isset($_POST[ 'branche' ]) )
+    if( !isset($_POST[ 'vakgebied' ]) )
     {
-        $error[ 'branche' ] = 'branche is verplicht';
+        $error[ 'vakgebied' ] = 'Vakgebied is verplicht';
     }
     else
     {
-        $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
+        $vakgebied = filter_input(INPUT_POST, 'vakgebied', FILTER_SANITIZE_STRING);
     }
     /**
-     * Webadres
+     * Onderwerp
      */
-    $webadres = filter_input(INPUT_POST, 'webadres', FILTER_SANITIZE_STRING);
+    if( !isset($_POST[ 'onderwerp' ]) )
+    {
+        $error[ 'onderwerp' ] = 'onderwerp is verplicht';
+    }
+    else
+    {
+        $onderwerp = filter_input(INPUT_POST, 'onderwerp', FILTER_SANITIZE_STRING);
+    }
+
 
     /**
-     * Adres
+     * aantal_gastcolleges
      */
-    if( !isset($_POST[ 'adres' ]) )
+    if( !isset($_POST[ 'aantal_gastcolleges' ]) )
     {
-        $error[ 'adrse' ] = 'adres is verplicht';
+        $error[ 'aantal_gastcolleges' ] = 'aantal_gastcolleges is verplicht';
     }
     else
     {
@@ -165,7 +170,7 @@ if( isset($_POST[ 'branche_submit' ]) )
      */
     if( !isset($_POST[ 'adres' ]) )
     {
-        $error[ 'adrse' ] = 'adres is verplicht';
+        $error[ 'adres' ] = 'adres is verplicht';
     }
     else
     {
