@@ -41,6 +41,7 @@ $contacten = $contactenQuery->fetchAll();
         <th>Roepnaam</th>
         <th>Tussenvoegsel</th>
         <th>Achternaam</th>
+        <th>bedrijfinfo</th>
         <th>functie</th>
         <th>Email</th>
         <th>telefoon</th>
@@ -62,6 +63,7 @@ $contacten = $contactenQuery->fetchAll();
                 <td><?= ucfirst($contact['roepnaam']) ?></td>
                 <td><?= $contact['tussenvoegsel'] ?></td>
                 <td><?= ucfirst($contact['achternaam']) ?></td>
+                <td><a href="<?= route('/index.php?bedrijfsinfo=wijzigen&contactpersoon='.$contact['contact_id']); ?>)">Klik hier</a>om de bedrijfsgegevens te bekijken </td>
                 <td><?= $contact['functie'] ?></td>
                 <td><?= $contact['email'] ?></td>
                 <td><?= $contact['telefoonnummer'] ?></td>
