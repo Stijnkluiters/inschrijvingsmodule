@@ -27,13 +27,11 @@ function read_csv($file)
     if( !is_csv($file[ 'type' ]) )
     {
         throw new \Exception('Het bestandstype moet verplicht: .csv zijn.');
-        exit;
+
     }
     // maximaal 10 MB (1000 * (1000 * 10'mb'))
     if($file['size'] > 10000000) {
         throw new \Exception('Bestandsgrote overschreven. maximaal 10MB');
-        exit;
-
     }
 
     $firstrow = null;
