@@ -3,7 +3,8 @@
 include_once '../config.php';
 
 $db = db();
-$stmt = $db->prepare('select * from evenement WHERE status = 1 AND eindtijd > ?');
+$stmt = $db->prepare('SELECT * FROM evenement e JOIN inschrijving i ON e.evenement_id = i.evenement_id
+WHERE i.gewhitelist = 1 AND e.status = 1 AND e.eindtijd > ?');
 $stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
 
@@ -47,6 +48,14 @@ if(count($evenemten)===0) {
     </div>
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
+        <?php
+        $db = db();
+        $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
+        $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
+        $leerlingQuery->execute();
+        $leerlingen = $leerlingQuery->fetch();
+        ?>
+        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
     </div>
 </div>
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
