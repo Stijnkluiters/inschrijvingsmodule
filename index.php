@@ -214,6 +214,7 @@ $user = get_user_info();
                         }
                     }
                 }
+
                 // soorten evenementen
                 if (isset($_GET['soorten'])) {
                     if ($_GET['soorten'] === 'overzicht') {
