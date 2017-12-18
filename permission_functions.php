@@ -17,13 +17,16 @@ function PermissionBaseQuery()
     return $sql;
 }
 
-function has_permission($permissionString)
+function has_permission($compareRole)
 {
-    $dbh = db();
-    $stmt = $dbh->prepare(PermissionBaseQuery());
-    $stmt->bindParam('user_id', $_SESSION[authenticationSessionName], PDO::PARAM_STR);
-    $stmt->bindParam('name',$permissionString,PDO::PARAM_STR);
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return count( $results ) > 0;
+    startsession();
+    $role = get_account_his_role($_SESSION[authenticationSessionName]);
+    if(is_array($compareRole)) {
+        // returns true or false
+        return in_array($role,$compareRole);
+    } else {
+        // returns true or false
+        return $role == $compareRole;
+    }
+    // still here?
 }
