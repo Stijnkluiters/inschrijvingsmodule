@@ -20,8 +20,9 @@ function PermissionBaseQuery()
 function has_permission($compareRole)
 {
     startsession();
-    $role = get_account_his_role($_SESSION[authenticationSessionName]);
+    $role = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
     if(is_array($compareRole)) {
+
         // returns true or false
         return in_array($role,$compareRole);
     } else {
@@ -29,4 +30,23 @@ function has_permission($compareRole)
         return $role == $compareRole;
     }
     // still here?
+}
+
+function handleUnauthenticatedRole($compareRol) {
+    if(!has_permission($compareRol)) {
+        //logout();
+        //redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+        dump('derp? uitgelogd');
+        exit;
+    }
+}
+
+function viewEvent($event)
+{
+    if($event['account_id'] != $_SESSION[authenticationSessionName]) {
+//        logout();
+//        redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+        dump('derp? uitgelogd');
+        exit;
+    }
 }

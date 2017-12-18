@@ -26,18 +26,31 @@ SET comment = ?, status = ?
 WHERE evenement_id = ?;
 ");
     $stmt->execute(array(
-            $comment,
+        $comment,
         $_POST['activeren'],
         $id
     ));
 
 }
-$stmt = $db->prepare("
+
+$sql = "
 SELECT evenement_id, gebruikersnaam, titel, begintijd, eindtijd, onderwerp, omschrijving, vervoer, min_leerlingen, max_leerlingen, status, locatie, lokaalnummer, s.soort, contactnr, comment
 FROM evenement e
 JOIN soort s ON e.soort_id=s.soort_id
 JOIN account a ON e.account_id = a.account_id
-WHERE evenement_id = $id");
+WHERE e.evenement_id = :evenement_id";
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externcontact') {
+    $sql .= ' AND e.account_id = :account_id';
+}
+
+
+$stmt = $db->prepare($sql);
+$stmt->bindParam('evenement_id',$id);
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externcontact') {
+    $stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
+}
 
 $stmt->execute();
 

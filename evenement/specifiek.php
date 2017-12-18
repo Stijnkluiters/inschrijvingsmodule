@@ -25,6 +25,11 @@ $stmt->execute();
 //put the info in $row
 $row = $stmt->fetch();
 
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externbedrijf') {
+    viewEvent($row);
+}
+
 //get the info out of $row into variables
 $titel = $row["titel"];
 $onderwerp = $row["onderwerp"];
@@ -73,12 +78,18 @@ if ($row["lokaalnummer"] != "") {
 
 //actief of niet
 $activatie = $row['status'];
+
+$activatieknop = '';
 if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
+    if($rol === 'beheerder') {
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+    }
 } elseif ($activatie == 0) {
     $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
+    if($rol === 'beheerder') {
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
+    }
 }
 
 //progressbar berekeningen

@@ -14,9 +14,21 @@
 
 $db = db();
 
+$sql = 'SELECT * FROM contactpersoon';
+if($rol === 'externbedrijf') {
+    $sql .= ' WHERE account_id = :account_id';
+}
+
+
 /** hier wordt de query voorbereid. in $docentenQuery word een array gemaakt van de query */
-$contactenQuery = $db->prepare('SELECT * FROM contactpersoon');
+$contactenQuery = $db->prepare($sql);
 /** pas hier word de query uitgevoer op de achtergrond, een "commit" als het ware */
+
+if($rol === 'externbedrijf') {
+    $contactenQuery->bindParam('account_id', $_SESSION[authenticationSessionName]);
+}
+
+
 $contactenQuery->execute();
 /** pas hier word de query opgehaald, een "push" */
 $contacten = $contactenQuery->fetchAll();

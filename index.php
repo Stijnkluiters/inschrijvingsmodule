@@ -26,8 +26,7 @@ if(isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 session_regenerate_id();
-check_logged_in_user();
-
+handleUnauthenticatedRole(array('beheerder','externbedrijf','docent'));
 $user = get_user_info();
 
 
@@ -151,37 +150,98 @@ $user = get_user_info();
             } else {
                 // gebruikers
 
+                $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
                 if (isset($_GET['gebruiker'])) {
+
+
                     if ($_GET['gebruiker'] === 'alles') {
+
+
                         //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     } elseif ($_GET['gebruiker'] == 'invoerenmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/insertdocent.php';
                     } elseif ($_GET['gebruiker'] == 'invoerenleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','docent'));
+
                         require 'beheerder/gebruikers/insertstudent.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','docent'));
+
                         require 'beheerder/gebruikers/overzicht_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
                     } elseif ($_GET['gebruiker'] == 'editleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','docent'));
+
                         require 'beheerder/gebruikers/edit_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'activatieleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/activatie_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'deleteLeerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','docent'));
+
                         require 'beheerder/gebruikers/delete_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'editmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     } elseif ($_GET['gebruiker'] == 'activatie-deactivatie-medewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/activeer_deactivieer_docent.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtcontactpersonen') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','externbedrijf'));
+
                         require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'editcontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder','externbedrijf'));
+
                         require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'deletecontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'activatiecontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'roltoewijzen') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/roltoewijzing.php';
                     } else {
                         exit;
@@ -191,7 +251,6 @@ $user = get_user_info();
 
                 // evenementen
                 if (isset($_GET['evenementen'])) {
-
 
                     if ($_GET['evenementen'] === 'alles') {
                         include 'evenement/bekijken.php';
@@ -227,6 +286,7 @@ $user = get_user_info();
                     if ($_GET['soorten'] === 'aanpassen') {
                         include 'evenement/soort/soort_aanpassen.php';
                     }
+                    handleUnauthenticatedRole(array('beheerder'));
                 }
                 if(isset($_GET['bedrijfsinfo'])) {
                     if($_GET['bedrijfsinfo'] === 'wijzigen') {
