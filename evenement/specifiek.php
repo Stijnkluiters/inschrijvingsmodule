@@ -64,7 +64,7 @@ if ($row["locatie"] != "") {
     $adres = "n.v.t.";
 }
 //*check if the user has a certain user_id (admin or the corresponding builder_id)
-if (0 == 'a') {
+if (in_array($rol,array('beheerder','externbedrijf'))) {
     $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"class="pull-right control-group btn btn-primary">Evenement wijzigen</a>';
 } else {
     $wijzigknop = '';
@@ -82,7 +82,7 @@ $activatie = $row['status'];
 $activatieknop = '';
 if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
-    if($rol === 'beheerder') {
+    if(in_array($rol,array('beheerder'))) {
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
     }
 } elseif ($activatie == 0) {

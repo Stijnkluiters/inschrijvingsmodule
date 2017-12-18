@@ -13,11 +13,13 @@ if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
 $db = db();
 $stmt = $db->prepare('select * from inschrijfmodule.inschrijving i
   JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
-  WHERE i.evenement_id = :evenement_id
-   AND aangemeld_op IS NOT NULL');
+  WHERE i.evenement_id = :evenement_id');
 $stmt->bindParam('evenement_id',$evenement_id,PDO::PARAM_INT);
 $stmt->execute();
 $inschrijvingen = $stmt->fetchAll();
+
+
+
 ?>
 
     <table id="dataTable" class="table table-striped table-bordered">
@@ -44,7 +46,7 @@ $inschrijvingen = $stmt->fetchAll();
             <tr>
                 <td><?= $inschrijving['leerlingnummer'] ?></td>
                 <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) ?></td>
+                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '<i class="fa fa-times" aria-hidden="true"></i>' ?></td>
                 <td><?= ($inschrijving['gewhitelist'] == 1) ? '<i class="fa fa-check" aria-hidden="true"></i>' : '<i class="fa fa-times" aria-hidden="true"></i>'; ?></td>
                 <td><?= ($inschrijving['toestemming'] == 1) ? '<i class="fa fa-check" aria-hidden="true"></i>' : '<i class="fa fa-times" aria-hidden="true"></i>'; ?></td>
             </tr>
