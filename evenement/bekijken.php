@@ -97,8 +97,9 @@ if ($countrow > 0) {
             //if there is no content, print following
             print("Er zijn geen evenementen op dit moment");
         }
+        if(in_array($rol,array('beheerder','externbedrijf'))) {
         print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
-
+        }
         if ($rol === 'beheerder') {
             print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
         }

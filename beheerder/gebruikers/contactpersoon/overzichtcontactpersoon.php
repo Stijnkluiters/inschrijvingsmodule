@@ -41,6 +41,7 @@ $contacten = $contactenQuery->fetchAll();
         <th>Roepnaam</th>
         <th>Tussenvoegsel</th>
         <th>Achternaam</th>
+        <th>bedrijfinfo</th>
         <th>functie</th>
         <th>Email</th>
         <th>telefoon</th>
