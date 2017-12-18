@@ -46,7 +46,7 @@ if ($countrow > 0) {
                 $locatie = "n.v.t.";
                 filter_var($row["titel"], FILTER_SANITIZE_STRING);
                 $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
-                $starttijd = filter_var($row["begintijd"], FILTER_SANITIZE_STRING);
+                $starttijd = date('d-M-y H:i',strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
                 if ($row['status'] == false) {
                     $actief = "<td class='bg-danger'><span>Nee</span></td>";
                 }elseif($row['status'] == true){
@@ -59,7 +59,7 @@ if ($countrow > 0) {
                     $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
                 }
                 if ($row['eindtijd'] != 0) {
-                    $eindtijd = filter_var($row["eindtijd"], FILTER_SANITIZE_STRING);
+                    $eindtijd = date('d-M-y H:i',strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
                 }
 
                 //print all VISIBLE variables in the table
