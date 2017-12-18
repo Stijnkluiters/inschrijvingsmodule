@@ -11,6 +11,7 @@ if(count($evenemten)===0) {
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
 
+$user = get_user_info();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,13 +52,8 @@ if(count($evenemten)===0) {
 </div>
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
-        <?php
-            $user = get_user_info();
-            $stmt = $db->prepare('select roepnaam FROM leerling WHERE roepnaam = ?');
-            $stmt->execute(array($user['roepnaam']));
-        ?>
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
-        <p class="lead text-muted">Evenementen overzicht van <?php print($user['roepnaam']) ; ?></p>
+        <p class="lead text-muted">Evenementen overzicht van <?= $user['roepnaam'] ; ?></p>
     </div>
 </section>
 <div class="album text-muted">
