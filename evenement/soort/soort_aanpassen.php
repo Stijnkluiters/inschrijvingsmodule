@@ -11,12 +11,12 @@ $db = db();
 
 //create a variable to catch errors
 $error = [];
-$soortID = $_GET[ 'soortid' ];
+$soortID = $_GET['soortid'];
 
 
 // check if soort exists in database, else redirect to different page.
-$stmt = $db->prepare('select * from soort where soort = ?');
-$stmt->execute($soortID);
+$stmt = $db->prepare('select * from soort where soort_id = ?');
+$stmt->execute(array($soortID));
 if( $stmt->rowCount() === 0 )
 {
     redirect('/index.php?soorten=overzicht', 'Er bestaat geen soort met dat id.');
@@ -26,7 +26,7 @@ if(!filter_var($soortID,FILTER_VALIDATE_INT)) {
     redirect('/index.php?soorten=overzicht', 'Soortid moet een ID zijn.');
 }
 
-if( isset($_POST[ 'submit' ]) )
+if( isset($_POST['submit']) )
 {
 //filter and check the content in the post variable
     /**soortnaam*/
@@ -56,7 +56,6 @@ if( isset($_POST[ 'submit' ]) )
         $stmt->execute(array(
             $soortnaam,
             $benodigdheid,
-            $soortnaam,
             $soortID
         ));
     }
@@ -85,17 +84,16 @@ $prevalue = $stmt2->fetch();
     <form name="evenementWijzigen" method="post"
           action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
         <div class="col-sm-12">
-
             <div class="card-body">
                 <div class="form-group">
                     <label for="company">Soortnaam*</label>
                     <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
-                           value="<?= $prevalue[ 'soort' ]; ?>"/>
+                           value="<?= $prevalue['soort']; ?>"/>
                 </div>
                 <div class="form-group">
                     <label for="omschrijving">Omschrijving</label>
                     <textarea class="form-control" id="omschrijving" name="omschrijving"
-                              placeholder="Omschrijving voor het evenement"><?= $prevalue[ 'benodigdheid' ]; ?></textarea>
+                              placeholder="Omschrijving voor het evenement"><?= $prevalue['benodigdheid']; ?></textarea>
                 </div>
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Wijzigen
             </div>

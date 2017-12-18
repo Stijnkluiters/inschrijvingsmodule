@@ -9,14 +9,15 @@
 $db = db();
 if (isset($_POST['soortid'])) {
 
-    $soortid = filter_input(INPUT_GET, 'soortid', FILTER_SANITIZE_STRING);
+    $soortid = filter_input(INPUT_POST, 'soortid', FILTER_SANITIZE_STRING);
 
-    if(!filter_var($soortid,FILTER_VALIDATE_INT)) {
-        redirect('index.php','SoortID is geen nummeriek getal');
+    if (!filter_var($soortid, FILTER_VALIDATE_INT)) {
+        redirect('/index.php', 'SoortID is geen nummeriek getal');
     }
-    $stmt = $db->prepare('select * from soort where soortID = ?');
-    if($stmt->rowCount() === 0) {
-        redirect('index.php','SoortID bestaat niet in de database');
+    $stmt = $db->prepare('select * from soort where soort_id = ?');
+    $stmt->execute(array($soortid));
+    if ($stmt->rowCount() === 0) {
+        redirect('/index.php', 'SoortID bestaat niet in de database');
     }
 
 
@@ -24,6 +25,7 @@ if (isset($_POST['soortid'])) {
     if (isset($_POST['deactiveren'])) {
         if ($_POST['deactiveren'] == '2') {
             //if (date('Y-m-d') > date('Y-m-d', strtotime($begintijd))) {
+
             $stmt2 = $db->prepare("
             UPDATE soort
             SET actief = 0
@@ -41,8 +43,6 @@ $stmt->execute();
 
 $soorten = $stmt->fetchAll();
 ?>
-
-
 <div class="card">
     <div class="card-header">
         <div class="pull-right">
@@ -66,7 +66,7 @@ $soorten = $stmt->fetchAll();
                 </thead>
                 <?php
                 foreach ($soorten as $soort) {
-                    if (strlen($row['soort']) > 25) {
+                    if (strlen($soort['soort']) > 25) {
                         $displaySoort = substr($soort['soort'], 0, 26) . "...";
                     } else {
                         $displaySoort = $soort['soort'];
@@ -78,8 +78,10 @@ $soorten = $stmt->fetchAll();
                         <td><?= $soort['benodigdheid'] ?></td>
                         <td><?= '<a href="' . route('/index.php?soorten=aanpassen&soortid=' . $soort['soort_id']) . '" class="btn btn-primary">Wijzig \'' . $soort['soort'] . '\'</a>' ?></td>
                         <td>
-                            <form name="evenementActivatie" method="post">
+                            <form name="evenementActivatie" method="post"
+                                action="<?= route("/index.php?soorten=overzicht"); ?>">
                                 <input type="hidden" name="deactiveren" value="2">
+                                <input type="hidden" name="soortid" value="<?= $soort['soort_id'] ?>">
                                 <button class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
                             </form>
                         </td>
