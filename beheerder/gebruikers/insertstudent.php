@@ -17,6 +17,11 @@ if( isset($_POST[ 'invoeren' ]) )
 
         $error = sprintf('er is iets fout gegaan tijdens het uploaden: %s' . $_FILES[ 'csv' ][ 'error' ]);
 
+        // 1000 * (1000 * 10) =  10000000 maxmimaal 10 MB
+    } elseif($_FILES['csv']['size'] > 10000000) {
+
+        $error = 'Maximaal bestandgrote is 10MB';
+
     }
     else
     {

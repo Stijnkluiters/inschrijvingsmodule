@@ -52,6 +52,9 @@ if( isset($_POST[ 'submit' ]) )
             if( $output === 'NOUSER' || $output === 'INVALIDPASSWORD' )
             {
                 $error = 'incorrecte gegevens, probeer het opnieuw.';
+            } elseif( $output === 'USERDELETED')
+            {
+                $error = 'Account is geblokkeerd';
             }
             else
             {

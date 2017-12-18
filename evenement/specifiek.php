@@ -109,11 +109,11 @@ if ($max > 0 && $max > $min) {
 
     $bar = "<div class='progress' style='height: 20px'><div class='progress-bar bg-$barcolor' role='progressbar' style='width: $inschrijvingspercentage%' aria-valuenow='$currentbar' aria-valuemin='0' aria-valuemax='$max'></div></div> ";
     if ($beschikbaar == 0) {
-        $beschikbaar = ', dus er zijn geen plekken beschikbaar!';
+        $beschikbaar = ', er zijn geen plekken beschikbaar!';
     } elseif ($beschikbaar == 1) {
-        $beschikbaar = ', dus er is nog één plek beschikbaar!';
+        $beschikbaar = ', er is nog één plek beschikbaar!';
     } else {
-        $beschikbaar = ", dus er zijn nog $beschikbaar plekken beschikbaar!";
+        $beschikbaar = ", er zijn nog $beschikbaar plekken beschikbaar!";
     }
 } else {
     $bar = '';

@@ -191,6 +191,8 @@ $user = get_user_info();
 
                 // evenementen
                 if (isset($_GET['evenementen'])) {
+
+
                     if ($_GET['evenementen'] === 'alles') {
                         include 'evenement/bekijken.php';
                     } elseif ($_GET['evenementen'] === 'specifiek') {
@@ -224,6 +226,11 @@ $user = get_user_info();
                     }
                     if ($_GET['soorten'] === 'aanpassen') {
                         include 'evenement/soort/soort_aanpassen.php';
+                    }
+                }
+                if(isset($_GET['bedrijfsinfo'])) {
+                    if($_GET['bedrijfsinfo'] === 'wijzigen') {
+                        include 'beheerder/gebruikers/contactpersoon/bedrijf/bedrijfwijzigen.php';
                     }
                 }
 
