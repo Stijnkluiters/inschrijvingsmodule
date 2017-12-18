@@ -191,6 +191,8 @@ $user = get_user_info();
 
                 // evenementen
                 if (isset($_GET['evenementen'])) {
+
+
                     if ($_GET['evenementen'] === 'alles') {
                         include 'evenement/bekijken.php';
                     } elseif ($_GET['evenementen'] === 'specifiek') {
