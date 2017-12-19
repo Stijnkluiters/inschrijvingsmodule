@@ -48,8 +48,10 @@ if (count($leerlingen)) { ?>
             <th>Opleiding</th>
             <th>Opleiding Begin</th>
             <th>Opleiding Eind</th>
-            <th>Wijzigen</th>
-            <th>Activeren / Deactiveren</th>
+            <?php if($rol == 'beheerder') { ?>
+                <th>Wijzigen</th>
+                <th>Activeren / Deactiveren</th>
+            <?php } ?>
         </tr>
         </thead>
         <tfoot>
@@ -63,8 +65,10 @@ if (count($leerlingen)) { ?>
             <th>Opleiding</th>
             <th>Opleiding Begin</th>
             <th>Opleiding Eind</th>
+            <?php if($rol == 'beheerder') { ?>
             <th>Wijzigen</th>
             <th>Activeren / Deactiveren</th>
+            <?php } ?>
         </tr>
         </tfoot>
 
@@ -82,6 +86,7 @@ if (count($leerlingen)) { ?>
             <td><?= $leerling['opleiding'] ?></td>
             <td><?= date('d-M-Y',strtotime($leerling['begindatum'])); ?></td>
             <td><?= date('d-M-Y',strtotime($leerling['einddatum'])); ?></td>
+            <?php if($rol == 'beheerder') { ?>
             <td><a href="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerling['leerlingnummer']); ?>"><i
                             class="fa fa-pencil" aria-hidden="true"></i></a></td>
             <td>
@@ -99,6 +104,7 @@ if (count($leerlingen)) { ?>
                         }
                     ?>
             </td>
+            <?php } ?>
         </tr>
         <?php } ?>
         </tbody>

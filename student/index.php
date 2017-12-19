@@ -3,7 +3,8 @@
 include_once '../config.php';
 
 $db = db();
-$stmt = $db->prepare('select * from evenement WHERE status = 1 AND eindtijd > ?');
+$stmt = $db->prepare('SELECT * FROM evenement e JOIN inschrijving i ON e.evenement_id = i.evenement_id
+WHERE i.gewhitelist = 1 AND e.status = 1 AND e.eindtijd > ?');
 $stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
 
@@ -11,6 +12,7 @@ if(count($evenemten)===0) {
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
 
+$user = get_user_info();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,17 +49,20 @@ if(count($evenemten)===0) {
     </div>
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
+        <?php
+        $db = db();
+        $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
+        $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
+        $leerlingQuery->execute();
+        $leerlingen = $leerlingQuery->fetch();
+        ?>
+        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
     </div>
 </div>
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
-        <?php
-            $user = get_user_info();
-            $stmt = $db->prepare('select roepnaam FROM leerling WHERE roepnaam = ?');
-            $stmt->execute(array($user['roepnaam']));
-        ?>
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
-        <p class="lead text-muted">Evenementen overzicht van <?php print($user['roepnaam']) ; ?></p>
+        <p class="lead text-muted">Evenementen overzicht van <?= $user['roepnaam'] ; ?></p>
     </div>
 </section>
 <div class="album text-muted">
@@ -90,25 +95,11 @@ if(count($evenemten)===0) {
                             $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
                             $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
-                            // create mail functionality
-                            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-                            //Server settings
-                            //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                            //$mail->isSMTP();                                      // Set mailer to use SMTP
-                            $mail->Host = mailhost;                                 // Specify main and backup SMTP servers
-                            $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
-                            $mail->Username = mailuser;                              // SMTP username
-                            $mail->Password = mailpassword;                           // SMTP password
-                            $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
-                            $mail->Port = mailPort;                                    // TCP port to connect to
-                            $mail->setFrom(mailFromEmail, mailFromUser);
-                            $mail->addReplyTo(mailFromEmail, mailFromUser);
-                            $mail->addBCC(mailFromEmail);
-                            $mail->addAddress($user['leerlingnummer'].'@edu.rocmn.nl');
-                            $mail->Subject = 'Bevestiging inschrijving' . $evenemnt['onderwerp'];
-                            $mail->Body = $user['leerlingnummer'] . ' wil zich inschrijven voor ' . $evenemnt['onderwerp'] . '. 
+                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
+                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
+                            $message = $user['leerlingnummer'] . ' wil zich inschrijven voor ' . $evenemnt['onderwerp'] . '. 
                                 Bevestig dit op de website.';
-                            $mail->send();
+                            sendMail($receiver,$subject,$message);
                             $inschrijving['aangemeld_op'] = 'X';
 
                             success('Je hebt je ingeschreven!');

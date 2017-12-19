@@ -169,11 +169,15 @@ if (isset($_POST['titel'])) {
 }
 
 
-$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL');
+$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 if(count($soorten) === 0) {
-    redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+    if($rol === 'beheerder') {
+        redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+    } else {
+        redirect('/index.php?evenementen=alles','Er bestaan nog geen soorten, neem contact op met de beheerder');
+    }
 }
 
 ?>

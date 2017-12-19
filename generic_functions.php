@@ -342,10 +342,13 @@ function startsession()
     }
 }
 
-function dump($variable)
+function dump()
 {
+    $arr = func_get_args();
     echo "<pre>";
-    var_dump($variable);
+    foreach ($arr as $value) {
+        var_dump($value);
+    }
     echo "</pre>";
 }
 function success($msg) {
