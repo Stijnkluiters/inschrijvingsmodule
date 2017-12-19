@@ -18,7 +18,7 @@ function sendMail($reciever,$subject,$message)
     $mail->setFrom(mailFromEmail, mailFromUser);
     $mail->addReplyTo(mailFromEmail, mailFromUser);
     $mail->addBCC(mailFromEmail);
-
+    $mail->isHTML();
     $mail->Subject = $subject;
     $mail->Body = $message;
     // check if receiver is array.
