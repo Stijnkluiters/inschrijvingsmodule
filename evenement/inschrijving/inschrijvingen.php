@@ -21,23 +21,20 @@ $inschrijvingen = $stmt->fetchAll();
 
 if (isset($_POST["toestemming"])){
     $value = $_POST["toestemming"];
+    $leerlingnummer = $_POST["leerlingnummer"];
+    $toestemming = 0;
 
-    if($value = "ja"){
-    $db = db("inschrijfmodule")
-        $db->prepare("UPDATE inschrijving SET toestemming = 1 WHERE ?   ");
-        $stmt->execute()
-
+    if($value == "ja"){
+        $toestemming = 1;
+    } elseif($value == "nee") {
+        $toestemming = 0;
     }
-    if($value = "nee"){
-        $db = db("inschrijfmodule")
-            $db->prepare("UPDATE inschrijving SET toestemming = 0 WHERE ?   ");
-            $stmt->execute()
-    }
-
+        $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
+        $stmt->execute(array($toestemming,$leerlingnummer, $evenement_id));
 }
 ?>
 
-<form method = "POST" action = '<?= route("/index.php?inschrijving=overzicht&evenement_id=1"); ?>'>
+<form method = "POST" action = '<?= route("/index.php?inschrijving=overzicht&evenement_id=".$evenement_id); ?>'>
 
     <table id="dataTable" class="table table-striped table-bordered">
         <thead>
@@ -61,7 +58,7 @@ if (isset($_POST["toestemming"])){
         <tbody>
         <?php foreach ($inschrijvingen as $inschrijving) { ?>
                <tr>
-                   <input type = "hidden" name = "leerlingid" value = "<?= $inschrijving['leerlingnummer']; ?>"/>
+                   <input type = "hidden" name = "leerlingnummer" value = "<?= $inschrijving['leerlingnummer']; ?>"/>
 
                    <td><?= $inschrijving['leerlingnummer'] ?></td>
                 <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
