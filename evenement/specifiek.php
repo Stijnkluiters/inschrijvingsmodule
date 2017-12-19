@@ -14,7 +14,7 @@ $id = ($_GET['evenement_id']);
 $db = db();
 $stmt = $db->prepare("
 SELECT e.evenement_id, titel, e.begintijd, TIME(e.begintijd) starttijd, e.eindtijd, TIME(eindtijd) latertijd, e.onderwerp, e.omschrijving, e.vervoer, 
-e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, s.soort, e.contactnr, e.account_id, e.status
+e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, s.soort, e.contactnr, e.account_id, e.status, e.publiek
 FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
 LEFT JOIN inschrijving i ON e.evenement_id = i.evenement_id
@@ -75,10 +75,16 @@ if ($row["lokaalnummer"] != "") {
 $activatie = $row['status'];
 if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-danger">Deactiveren</a></div>';
 } elseif ($activatie == 0) {
     $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
+    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-success">Activeren</a></div>';
+}
+
+if ($row['publiek'] == 1) {
+    $whitelist = '<span class="bg-success">Publiek</span>';
+} else {
+    $whitelist = '<span class="bg-danger">Privaat</span>';
 }
 
 //progressbar berekeningen
@@ -153,7 +159,7 @@ if ($current == 0) {
     </div>
 </div>
 <div class="row">
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <h4 class="card-header">Waar en Wanneer</h4>
             <div class="card-body">
@@ -184,32 +190,40 @@ if ($current == 0) {
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <h4 class="card-header">Overig</h4>
             <div class="card-body">
                 <table>
                     <tr>
                         <td>Soort:</td>
-                        <td><?=$soort ?></td>
+                        <td><?= $soort ?></td>
                     </tr>
                     <tr>
                         <td>Vervoer:</td>
-                        <td><?=$vervoer ?></td>
+                        <td><?= $vervoer ?></td>
                     </tr>
                     <tr>
                         <td>Contactnummer:</td>
-                        <td><?=$contactnr ?></td>
+                        <td><?= $contactnr ?></td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <h4 class=" card-header">Actief?</h4>
             <div class="card-body">
                 <h5>Op dit moment: <?= $activatiemessage ?></h5><?= $activatieknop ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card">
+            <h4 class="card-header">Whitelist</h4>
+            <div class="card-body">
+                <h5><?= $whitelist ?></h5>
             </div>
         </div>
     </div>

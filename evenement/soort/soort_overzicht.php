@@ -76,7 +76,9 @@ $soorten = $stmt->fetchAll();
                     <tr>
                         <td><?= $displaySoort ?></td>
                         <td><?= $soort['benodigdheid'] ?></td>
-                        <td><?= '<a href="' . route('/index.php?soorten=aanpassen&soortid=' . $soort['soort_id']) . '" class="btn btn-primary">Wijzig \'' . $soort['soort'] . '\'</a>' ?></td>
+                        <td><?= '
+                            <a href="' . route('/index.php?soorten=aanpassen&soortid=' . $soort['soort_id']) . '" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        ' ?></td>
                         <td>
                             <form name="evenementActivatie" method="post"
                                 action="<?= route("/index.php?soorten=overzicht"); ?>">
