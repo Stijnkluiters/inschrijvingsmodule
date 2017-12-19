@@ -83,12 +83,28 @@ if (isset($_POST['submit'])) {
     <!-- Custom styles for this template -->
     <link href="<?= route('/public/css/student.css'); ?>" rel="stylesheet">
 </head>
+<div class="navbar navbar-inverse bg-inverse">
+    <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand">Roc midden Nederland</a>
+    </div>
+    <div clas="nav-link dropdown-toggle">
+        <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
+        <?php
+        $db = db();
+        $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
+        $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
+        $leerlingQuery->execute();
+        $leerlingen = $leerlingQuery->fetch();
+        ?>
+        <a class="dropdown-item" href="<?= route('/student/index.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i>Terug</a>
+    </div>
+</div>
 <body>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-12">
             <form method="post" action="<?= route('/student/wijzigen_wachtwoord.php'); ?>" class="container" id="register-form">
-                <div class="card">
+                <div class="card-body">
                     <div class="container-fluid">
                         <h2>Wijzig je wachtwoord</h2>
                         <!-- Wachtwoord Form -->
