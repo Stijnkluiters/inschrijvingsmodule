@@ -46,7 +46,7 @@ function read_csv($file)
     if( ($handle = fopen($file[ 'tmp_name' ], 'r')) !== false )
     {
         // gebruik de handle om het csv bestand te openen
-        while ( ($row = fgetcsv($handle, 1000, ';')) !== false )
+        while ( ($row = fgetcsv($handle, filesize($file['tmp_name']), ';')) !== false )
         {
             // de eerste rij in een CSV bestand zijn de sleutels die overeen komen in de database.
             if( !$firstrow )
