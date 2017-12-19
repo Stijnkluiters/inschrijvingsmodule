@@ -15,6 +15,11 @@ function is_csv($file)
 
     // $filetype = $_FILES[ 'file' ][ 'type' ]
     $allowedExtensions = array( 'csv' );
+    /** @var SplFileInfo $file
+     * gather fileinformation by a class.
+     */
+
+
 
     $file = new SplFileInfo($file['tmp_name']);
     $fileExtension = $file->getExtension();
