@@ -25,7 +25,7 @@ if (isset($_POST["toestemming"])) {
     $toestemming = 0;
 
     // evenementen ophalen afhankelijk van de primary key, evenement_id
-    $stmt = $db->prepare('select * from evenementen WHERE evenement_id = ?');
+    $stmt = $db->prepare('select * from evenement WHERE evenement_id = ?');
     $stmt->execute(array($evenement_id));
     $evenement = $stmt->fetch();
 
@@ -33,10 +33,11 @@ if (isset($_POST["toestemming"])) {
         $error = 'Evenement bestaat niet? wtf?';
     }
     // leerlingen ophalen afhankelijk van de primary key, leerlingnummer
-    $stmt = $db->prepare('select * from leerlingen WHERE leerlingnummer = ?');
+    $stmt = $db->prepare('select * from leerling WHERE leerlingnummer = ?');
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
 
+    $subject = 'asdf';
 
     if ($value == "ja") {
         $toestemming = 1;
@@ -259,8 +260,8 @@ if (isset($_POST["toestemming"])) {
     } elseif ($value == "nee") {
         // hier moet mnr. van dalen even de $message template aanmaken.
         $toestemming = 0;
-        $subject = '';
-        $message = '';
+        $subject = 'asdfasfd';
+        $message = 'sadfasdf';
 
     }
     $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
@@ -308,7 +309,6 @@ if (isset($_POST["toestemming"])) {
                 <td>
                     <button type="submit" name = "toestemming" value = "ja" class="btn btn-success">Ja</button>
                     <button type="submit" name = "toestemming" value = "nee" class="btn btn-danger">Nee</button>
-                    <textarea name="reden_van_afwijzing"></textarea>
                 </td>
             </tr>
         <?php } ?>
