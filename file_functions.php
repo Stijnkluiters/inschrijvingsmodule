@@ -6,25 +6,26 @@
  * Time: 16:25
  */
 
-function is_csv($filetype)
+function is_csv($file)
 {
 
-    // $filetype = $_FILES[ 'file' ][ 'type' ]
-    $mimes = array( 'application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv' );
-    if( !in_array($filetype, $mimes) )
-    {
-        return false;
-
+    if(empty($file)) {
+        throw new \Exception('No file provided...');
     }
 
-    return true;
+    // $filetype = $_FILES[ 'file' ][ 'type' ]
+    $allowedExtensions = array( 'csv' );
+
+    $file = new SplFileInfo($file['tmp_name']);
+    $fileExtension = $file->getExtension();
+    return in_array($fileExtension, $allowedExtensions);
 }
 
 function read_csv($file)
 {
 
     // hier controleren we voor de laatste keer of het daadwerkelijk een CSV bestand is.
-    if( !is_csv($file[ 'type' ]) )
+    if( !is_csv($file) )
     {
         throw new \Exception('Het bestandstype moet verplicht: .csv zijn.');
 
