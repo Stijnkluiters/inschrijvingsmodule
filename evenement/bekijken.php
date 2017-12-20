@@ -1,33 +1,31 @@
 <?php
 //load database
 $db = db();
-//$sql = '';
-/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
-//if ($rol === 'externbedrijf') {
-    //$sql .= ' AND account_id = :account_id';
-//}
-//take info from database/evenement
-$stmt = $db->prepare("
-SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, locatie, s.soort, status, publiek
+
+$sql = "
+SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, s.soort, locatie, status, publiek
 FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
-WHERE s.actief = 1");
+WHERE s.actief = 1";
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+
+if ($rol === 'externbedrijf') {
+    $sql .= ' AND e.account_id = :account_id';
+}
 
 //take info from database/evenement
-
+$stmt = $db->prepare($sql);
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
-//if ($rol === 'externbedrijf') {
-    //$stmt->bindParam($sql);
-//$stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
-//}
+if ($rol === 'externbedrijf') {
+    $stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
+}
 $stmt->execute();
 
 //get results from query
 $rows = $stmt->fetchAll();
 
 //check for content in results
-$countrow = count($rows);
-if ($countrow > 0) {
+if (count($rows) > 0) {
 
 //set up base for table
 ?>
@@ -119,4 +117,3 @@ if ($countrow > 0) {
 
     </div>
 </div>
-<?php

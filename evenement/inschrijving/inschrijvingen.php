@@ -6,7 +6,7 @@
  * Time: 10:18
  */
 
-$evenement_id = intval(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING));
+$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }

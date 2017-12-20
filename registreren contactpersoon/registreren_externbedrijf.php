@@ -7,7 +7,7 @@
  */
 
 
-include 'config.php';
+include '../config.php';
 
 if (isset($_POST['submit'])) {
     /**
@@ -273,7 +273,7 @@ if (isset($_POST['submit'])) {
         $stmt = $db->prepare('select account_id from account where gebruikersnaam = :gebruikersnaam');
         $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
         $stmt->execute();
-        $account_id = $stmt->fetchAll()[0]['account_id'];
+        $account_id = $stmt->fetch()['account_id'];
 
         $stmt = $db->prepare('
                 insert into bedrijf 

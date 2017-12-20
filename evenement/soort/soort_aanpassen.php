@@ -11,7 +11,7 @@ $db = db();
 
 //create a variable to catch errors
 $error = [];
-$soortID = $_GET['soortid'];
+$soortID = filter_var(filter_input(INPUT_GET,'soortid',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
 
 // check if soort exists in database, else redirect to different page.
@@ -26,7 +26,7 @@ if(!filter_var($soortID,FILTER_VALIDATE_INT)) {
     redirect('/index.php?soorten=overzicht', 'Soortid moet een ID zijn.');
 }
 
-if( isset($_POST['submit']) )
+if( isset($_POST[ 'submit' ]) )
 {
 //filter and check the content in the post variable
     /**soortnaam*/
@@ -88,12 +88,12 @@ $prevalue = $stmt2->fetch();
                 <div class="form-group">
                     <label for="company">Soortnaam*</label>
                     <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
-                           value="<?= $prevalue['soort']; ?>"/>
+                           value="<?= $prevalue[ 'soort' ]; ?>"/>
                 </div>
                 <div class="form-group">
                     <label for="omschrijving">Omschrijving</label>
                     <textarea class="form-control" id="omschrijving" name="omschrijving"
-                              placeholder="Omschrijving voor het evenement"><?= $prevalue['benodigdheid']; ?></textarea>
+                              placeholder="Omschrijving voor het evenement"><?= $prevalue[ 'benodigdheid' ]; ?></textarea>
                 </div>
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Wijzigen
             </div>
