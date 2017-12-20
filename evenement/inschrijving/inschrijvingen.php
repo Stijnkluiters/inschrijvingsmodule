@@ -6,11 +6,30 @@
  * Time: 10:18
  */
 
-$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+if(1==2){
+    ?>
+<p>hoi</p>
+<?php
+}
+
+$evenement_id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
 if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
 $db = db();
+
+if (isset($_POST["whitelist"])) {
+    $leerlingnummer = $_POST['leerlingnummer'];
+    $updatewhitelist = filter_input(INPUT_POST, 'whitelistt', FILTER_SANITIZE_NUMBER_INT);
+    var_dump($_POST);
+    if ($updatewhitelist == '0' || $updatewhitelist == '1') {
+
+        $upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
+        $upwhite->execute(array(
+            $updatewhitelist, $evenement_id,));
+    }
+}
+
 $stmt = $db->prepare('select * from inschrijfmodule.inschrijving i
   JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
   WHERE i.evenement_id = :evenement_id');
@@ -37,24 +56,16 @@ if (isset($_POST["toestemming"])) {
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
 
-    //if (isset($_POST["whitelist"])){
-        //$updatewhitelist = filter_input(INPUT_POST,'whitelistt',FILTER_SANITIZE_NUMBER_INT);
-        //if($updatewhitelist === '0' || $updatewhitelist === '1'){
 
-            //$upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
-            //$upwhite->execute(array(
-                    //$updatewhitelist,
 
-        //}
-    //}
-    $subject = 'asdf';
+$subject = 'asdf';
 
-    if ($value == "ja") {
-        $toestemming = 1;
+if ($value == "ja") {
+    $toestemming = 1;
 
-        // onderwerp
-        $subject = 'Bevestiging inschrijving';
-        $message = '<!DOCTYPE html>
+    // onderwerp
+    $subject = 'Bevestiging inschrijving';
+    $message = '<!DOCTYPE html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
               xmlns:o="urn:schemas-microsoft-com:office:office">
         <head><title></title>  <!--[if !mso]><!-- -->
@@ -267,33 +278,32 @@ if (isset($_POST["toestemming"])) {
 </body>
 </html>';
 
-    } elseif ($value == "nee") {
-        // hier moet mnr. van dalen even de $message template aanmaken.
-        $toestemming = 0;
-        $subject = 'asdfasfd';
-        $message = 'sadfasdf';
+} elseif ($value == "nee") {
+    // hier moet mnr. van dalen even de $message template aanmaken.
+    $toestemming = 0;
+    $subject = 'asdfasfd';
+    $message = 'sadfasdf';
 
-    }
-    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
-    $r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
-    if ($r) {
-        sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
-    } else {
-        $error = 'Opslaan niet gelukt! probeer het opnieuw';
-    }
+}
+$stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
+$r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
+if ($r) {
+    sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
+} else {
+    $error = 'Opslaan niet gelukt! probeer het opnieuw';
+}
 
 
 }
+
 ?>
-
 <form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
-
     <table id="dataTable" class="table table-striped table-bordered">
         <thead>
-        <tr>
-            <th>Leerlingnummer</th>
-            <th>Naam</th>
-            <th>Aangemeld op</th>
+            <tr>
+                <th>Leerlingnummer</th>
+                <th>Naam</th>
+                <th>Aangemeld op</th>
             <th>Gewhitelist</th>
             <th>Toestemming</th>
         </tr>
@@ -309,24 +319,32 @@ if (isset($_POST["toestemming"])) {
         </tfoot>
         <tbody>
         <?php foreach ($inschrijvingen as $inschrijving) {
-            if($inschrijving['gewhitelist'] === '1')
-            {
-                $whitelist = '<span class="text-success"><i class="fa fa-check" aria-hidden="true"></i><button class="btn btn-danger pull-right" type="submit" name="whitelist" value="0"><i class="fa fa-times" aria-hidden="true"></i> Blacklisten</button></span>';
-            }elseif($inschrijving['gewhitelist'] === '0'){
-                $whitelist = '<span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i><button class="btn btn-success pull-right" type="submit" name="whitelist" value="1"><i class="fa fa-check" aria-hidden="true"></i> Whitelisten</button></span>';
-            }?>
-            <tr>
-                <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
+        if ($inschrijving['gewhitelist'] === '1')
+        {
+        $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $inschrijving['leerlingnummer'] . '">
+                <span class="text-success">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <button class="btn btn-danger pull-right" type="submit" name="whitelist" value="0">
+                <i class="fa fa-times" aria-hidden="true">
+                </i> Blacklisten
+                </button>
+                </span>';
+        }elseif ($inschrijving['gewhitelist'] === '0'){
+        $whitelist = '<span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i><button class="btn btn-success pull-right" type="submit" name="whitelist" value="1"><i class="fa fa-check" aria-hidden="true"></i> Whitelisten</button></span>';
+        } ?>
 
-                <td><?= $inschrijving['leerlingnummer'] ?></td>
-                <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
-                <td><?=$whitelist ?></td>
-                <td>
-                    <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
-                    <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
-                </td>
-            </tr>
+        <tr>
+            <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
+
+            <td><?= $inschrijving['leerlingnummer'] ?></td>
+            <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
+            <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
+            <td><?= $whitelist ?></td>
+            <td>
+                <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
+                <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
+            </td>
+        </tr>
         <?php } ?>
         </tbody>
     </table>
