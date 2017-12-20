@@ -4,7 +4,7 @@ $db = db();
 //$sql = '';
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
 //if ($rol === 'externbedrijf') {
-//    $sql .= ' AND account_id = :account_id';
+    //$sql .= ' AND account_id = :account_id';
 //}
 //take info from database/evenement
 $stmt = $db->prepare("
@@ -13,12 +13,11 @@ FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
 WHERE s.actief = 1");
 
-
-
 //take info from database/evenement
 
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
 //if ($rol === 'externbedrijf') {
+    //$stmt->bindParam($sql);
 //$stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
 //}
 $stmt->execute();
@@ -56,7 +55,7 @@ if ($countrow > 0) {
                     //put all data in variables
                     $id = filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
                     $titel = filter_var($row["titel"], FILTER_SANITIZE_STRING);
-                    $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
+                    $onderwerp = ucfirst(filter_var($row["onderwerp"], FILTER_SANITIZE_STRING));
                     $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
 
                     $eindtijd = "n.v.t.";
@@ -69,7 +68,7 @@ if ($countrow > 0) {
                         $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
                     }
 
-                    $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
+                    $soort = ucfirst(filter_var($row["soort"], FILTER_SANITIZE_STRING));
 
 
                     if ($row['status'] == false) {
@@ -79,9 +78,9 @@ if ($countrow > 0) {
                     }
 
                     if ($row['publiek'] == 1) {
-                        $publiek = '<td class="bg-success">publiek</td>';
+                        $publiek = '<td class="bg-success">Publiek</td>';
                     } else {
-                        $publiek = '<td class="bg-danger">privaat</td>';
+                        $publiek = '<td class="bg-danger">Privaat</td>';
                     }
 
                     //print all VISIBLE variables in the table
