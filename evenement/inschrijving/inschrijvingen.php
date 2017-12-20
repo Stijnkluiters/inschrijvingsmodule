@@ -6,7 +6,7 @@
  * Time: 10:18
  */
 
-$evenement_id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
+$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
@@ -37,6 +37,16 @@ if (isset($_POST["toestemming"])) {
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
 
+    //if (isset($_POST["whitelist"])){
+        //$updatewhitelist = filter_input(INPUT_POST,'whitelistt',FILTER_SANITIZE_NUMBER_INT);
+        //if($updatewhitelist === '0' || $updatewhitelist === '1'){
+
+            //$upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
+            //$upwhite->execute(array(
+                    //$updatewhitelist,
+
+        //}
+    //}
     $subject = 'asdf';
 
     if ($value == "ja") {
@@ -182,9 +192,9 @@ if (isset($_POST["toestemming"])) {
                                             <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;"
                                                 align="left">
                                                 <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
-                                                    <p>Beste ' . formatusername($leerling) . ',<br><br>Je aanvraag op ' . date("d-M-y H:i", strtotime($inschrijving['created_at'])) . ' voor
+                                                    <p>Beste '.formatusername($leerling).',<br><br>Je aanvraag op '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
                                                         het evenement&#xA0;is goedgekeurd, je mag nu bij het
-                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op ' . date("d-M-y H:i", strtotime($inschrijving['aangemeld_op'])) . ' ben je op
+                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y H:i",strtotime($inschrijving['aangemeld_op'])).' ben je op
                                                         <strong>ingeschreven voor</strong>:</p>
                                                     <table align="center" border="2" cellpadding="1" cellspacing="2"
                                                            style="width:100%;"
@@ -192,21 +202,21 @@ if (isset($_POST["toestemming"])) {
                                                         <thead>
                                                         <tr>
                                                             <th scope="col">Nummer voor het geplande activiteit</th>
-                                                            <th scope="col">' . md5($leerlingnummer . $evenement_id) . '</th>
+                                                            <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         <tr>
                                                             <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: ' . date('d-M-Y H:i', strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i", strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>
-                                                            <td>' . ucfirst($evenement['titel']) . '</td>
+                                                            <td>'.ucfirst($evenement['titel']).'</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Omschrijving</b></td>
-                                                            <td>' . ucfirst($evenement['omschrijving']) . '</td>
+                                                            <td>'.ucfirst($evenement['omschrijving']).'</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -298,14 +308,20 @@ if (isset($_POST["toestemming"])) {
         </tr>
         </tfoot>
         <tbody>
-        <?php foreach ($inschrijvingen as $inschrijving) { ?>
+        <?php foreach ($inschrijvingen as $inschrijving) {
+            if($inschrijving['gewhitelist'] === '1')
+            {
+                $whitelist = '<span class="text-success"><i class="fa fa-check" aria-hidden="true"></i><button class="btn btn-danger pull-right" type="submit" name="whitelist" value="0"><i class="fa fa-times" aria-hidden="true"></i> Blacklisten</button></span>';
+            }elseif($inschrijving['gewhitelist'] === '0'){
+                $whitelist = '<span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i><button class="btn btn-success pull-right" type="submit" name="whitelist" value="1"><i class="fa fa-check" aria-hidden="true"></i> Whitelisten</button></span>';
+            }?>
             <tr>
                 <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
 
                 <td><?= $inschrijving['leerlingnummer'] ?></td>
                 <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '<i class="fa fa-times" aria-hidden="true"></i>' ?></td>
-                <td><?= ($inschrijving['gewhitelist'] == 1) ? '<i class="fa fa-check" aria-hidden="true"></i>' : '<i class="fa fa-times" aria-hidden="true"></i>'; ?></td>
+                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
+                <td><?=$whitelist ?></td>
                 <td>
                     <?php if (!$inschrijving['toestemming']) { ?>
                         <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
@@ -320,7 +336,6 @@ if (isset($_POST["toestemming"])) {
             </tr>
         <?php } ?>
         </tbody>
-
     </table>
 </form>
 

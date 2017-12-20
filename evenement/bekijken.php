@@ -53,7 +53,7 @@ if (count($rows) > 0) {
                     //put all data in variables
                     $id = filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
                     $titel = filter_var($row["titel"], FILTER_SANITIZE_STRING);
-                    $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
+                    $onderwerp = ucfirst(filter_var($row["onderwerp"], FILTER_SANITIZE_STRING));
                     $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
 
                     $eindtijd = "n.v.t.";
@@ -66,7 +66,7 @@ if (count($rows) > 0) {
                         $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
                     }
 
-                    $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
+                    $soort = ucfirst(filter_var($row["soort"], FILTER_SANITIZE_STRING));
 
 
                     if ($row['status'] == false) {
@@ -76,9 +76,9 @@ if (count($rows) > 0) {
                     }
 
                     if ($row['publiek'] == 1) {
-                        $publiek = '<td class="bg-success">publiek</td>';
+                        $publiek = '<td class="bg-success">Publiek</td>';
                     } else {
-                        $publiek = '<td class="bg-danger">privaat</td>';
+                        $publiek = '<td class="bg-danger">Privaat</td>';
                     }
 
                     //print all VISIBLE variables in the table
