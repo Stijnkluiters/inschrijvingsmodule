@@ -7,7 +7,7 @@
  */
 
 
-$leerlingnummer = ($_GET['leerlingnummer']);
+$leerlingnummer = filter_var(filter_input(INPUT_GET,'leerlingnummer',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
 $db = db();
 $leerlingQuery = $db->prepare("SELECT * FROM leerling WHERE leerlingnummer = :leerlingnummer");
