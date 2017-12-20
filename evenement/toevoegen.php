@@ -177,7 +177,7 @@ FROM leerling l
 WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
         $stmt3->bindParam('evenement_id',$evenement_id);
         $stmt3->bindParam('gewhitelist', $_POST['whitelist']);
-
+        $stmt3->execute();
         //redirect('/index.php?evenementen=alles','Evenement toegevoegd');
 
     }
@@ -301,12 +301,12 @@ if(count($soorten) === 0) {
                 </div>
                 <div class="form-group">
                     <label for="whitelist">whitelist</label>
-                <select class="form-control" id="whitelist" name="whitelist" required="required">
-                    <option value="">Selecteer soort whitelist</option>
-                    <option value="1">Publiek</option>
-                    <option value="0">Privaat</option>
-                </select>
-            </div>
+                    <select class="form-control" id="whitelist" name="whitelist" required="required">
+                        <option value="">Selecteer soort whitelist</option>
+                        <option value="1">Publiek</option>
+                        <option value="0">Privaat</option>
+                    </select>
+                </div>
             </div>
 
             <?php

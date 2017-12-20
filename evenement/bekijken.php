@@ -1,25 +1,26 @@
 <?php
 //load database
 $db = db();
-
+//$sql = '';
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+//if ($rol === 'externbedrijf') {
+//    $sql .= ' AND account_id = :account_id';
+//}
 //take info from database/evenement
 $stmt = $db->prepare("
-SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, s.soort, locatie, status, publiek
+SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, locatie, s.soort, status, publiek
 FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
-WHERE s.actief = 1";
-/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+WHERE s.actief = 1");
 
-if ($rol === 'externbedrijf') {
-    $sql .= ' AND e.account_id = :account_id';
-}
+
 
 //take info from database/evenement
-$stmt = $db->prepare($sql);
+
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
-if ($rol === 'externbedrijf') {
-    $stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
-}
+//if ($rol === 'externbedrijf') {
+//$stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
+//}
 $stmt->execute();
 
 //get results from query
@@ -49,68 +50,45 @@ if ($countrow > 0) {
                 </tr>
                 </thead>
                 <?php
-                //create a loop to get the needed info per part
 
+                //create a loop to get the needed info per part
                 foreach ($rows as $row) {
                     //put all data in variables
-                    filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
-                    $eindtijd = "n.v.t.";
-                    $adres = "n.v.t.";
-                    $locatie = "n.v.t.";
-                    filter_var($row["titel"], FILTER_SANITIZE_STRING);
+                    $id = filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
+                    $titel = filter_var($row["titel"], FILTER_SANITIZE_STRING);
                     $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
                     $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
+
+                    $eindtijd = "n.v.t.";
+                    if ($row['eindtijd'] != 0) {
+                        $eindtijd = date('d-M-y H:i', strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
+                    }
+
+                    $locatie = "n.v.t.";
+                    if ($row["locatie"] != "") {
+                        $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
+                    }
+
+                    $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
+
+
                     if ($row['status'] == false) {
                         $actief = "<td class='bg-danger'><span>Nee</span></td>";
                     } elseif ($row['status'] == true) {
                         $actief = "<td class='bg-success'><span>Ja</span></td>";
                     }
-                    if ($row["locatie"] != "") {
-                        $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
-                    }
-                    if ($row["soort"] != "") {
-                        $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
-                        if (strlen($soort) > 25) {
-                            $soort = substr($soort, 0, 26) . "...";
-                        }
-                    }
-                    if ($row['eindtijd'] != 0) {
-                        $eindtijd = date('d-M-y H:i', strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
-                    }
-                    if ($row['publiek']== 1){
+
+                    if ($row['publiek'] == 1) {
                         $publiek = '<td class="bg-success">publiek</td>';
-                    }else{
+                    } else {
                         $publiek = '<td class="bg-danger">privaat</td>';
-                    }
-                foreach ($rows as $row) {
-                    //put all data in variables
-                    filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
-                    $eindtijd = "n.v.t.";
-                    $adres = "n.v.t.";
-                    $locatie = "n.v.t.";
-                    filter_var($row["titel"], FILTER_SANITIZE_STRING);
-                    $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
-                    $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
-                    if ($row['status'] == false) {
-                        $actief = "<td class='bg-danger'><span>Nee</span></td>";
-                    } elseif ($row['status'] == true) {
-                        $actief = "<td class='bg-success'><span>Ja</span></td>";
-                    }
-                    if ($row["locatie"] != "") {
-                        $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
-                    }
-                    if ($row["soort"] != "") {
-                        $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
-                    }
-                    if ($row['eindtijd'] != 0) {
-                        $eindtijd = date('d-M-y H:i', strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
                     }
 
                     //print all VISIBLE variables in the table
                     ?>
                     <tr>
                         <td>
-                            <a href=" <?= route('/index.php?evenementen=specifiek&evenement_id=' . $row['evenement_id']) ?> "> <?= $row['titel'] ?> </a>
+                            <a href=" <?= route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?> "> <?= $titel ?> </a>
                         </td>
                         <td> <?= $onderwerp ?></td>
                         <td> <?= $starttijd ?> </td>
@@ -121,22 +99,25 @@ if ($countrow > 0) {
                         <?= $publiek ?>
                     </tr>
                     <?php
-                } ?>
+                }
+                } else {
+                    //if there is no content, print following
+                    print("Er zijn geen evenementen op dit moment");
+                }
+                ?>
             </table>
         </div>
 
-        <?php
+                <?php
+                if (in_array($rol, array('beheerder', 'externbedrijf'))) {
+                    print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
+                }
+                if ($rol === 'beheerder') {
+                    print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
+                }
+                ?>
 
-        } else {
-            //if there is no content, print following
-            print("Er zijn geen evenementen op dit moment");
-        }
-        if(in_array($rol,array('beheerder','externbedrijf'))) {
-        print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
-        }
-        if ($rol === 'beheerder') {
-            print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
-        }
-        ?>
+
     </div>
 </div>
+<?php

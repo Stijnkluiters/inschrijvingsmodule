@@ -6,7 +6,6 @@
  * Time: 13:39
  */
 
-//
 //Get the id that's been given from bekijken.php
 $id = ($_GET['evenement_id']);
 
@@ -14,7 +13,7 @@ $id = ($_GET['evenement_id']);
 $db = db();
 $stmt = $db->prepare("
 SELECT e.evenement_id, titel, e.begintijd, TIME(e.begintijd) starttijd, e.eindtijd, TIME(eindtijd) latertijd, e.onderwerp, e.omschrijving, e.vervoer, 
-e.min_leerlingen, e.max_leerlingen, COUNT(i.leerlingnummer) aantal_inschrijvingen, e.locatie, e.lokaalnummer, s.soort, e.contactnr, e.account_id, e.status, e.publiek
+e.min_leerlingen, e.max_leerlingen, COUNT(i.gewhitelist)whitelisted, COUNT(i.aangemeld_op) aantal_inschrijvingen, e.locatie, e.lokaalnummer, s.soort, e.contactnr, e.account_id, e.status, e.publiek
 FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
 LEFT JOIN inschrijving i ON e.evenement_id = i.evenement_id
@@ -26,7 +25,7 @@ $stmt->execute();
 $row = $stmt->fetch();
 
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
-if($rol === 'externbedrijf') {
+if ($rol === 'externbedrijf') {
     viewEvent($row);
 }
 
@@ -34,6 +33,10 @@ if($rol === 'externbedrijf') {
 $titel = $row["titel"];
 $onderwerp = $row["onderwerp"];
 $begindatum = $row["begintijd"];
+$soort = $row["soort"];
+$omschrijving = $row["omschrijving"];
+$vervoer = $row["vervoer"];
+$contactnr = $row["contactnr"];
 
 $begintijd = $row["starttijd"];
 $begintijd = strtotime($begintijd);
@@ -41,16 +44,11 @@ $begintijd = strtotime($begintijd);
 $eindtijd = $row["latertijd"];
 $eindtijd = strtotime($eindtijd);
 
-$omschrijving = $row["omschrijving"];
-
-$soort = $row["soort"];
 if (strlen($soort) > 25) {
     $soort = substr($soort, 0, 26) . "...";
 } else {
     $soort = $soort;
 }
-$vervoer = $row["vervoer"];
-$contactnr = $row["contactnr"];
 
 if (!empty($row['eindtijd'])) {
     $einddatum = $row['eindtijd'];
@@ -58,22 +56,20 @@ if (!empty($row['eindtijd'])) {
     $einddatum = 'n.v.t.';
 }
 
+$adres = "n.v.t.";
 if ($row["locatie"] != "") {
     $adres = $row["locatie"];
-} else {
-    $adres = "n.v.t.";
 }
+
 //*check if the user has a certain user_id (admin or the corresponding builder_id)
-if (in_array($rol,array('beheerder','externbedrijf'))) {
+if (in_array($rol, array('beheerder', 'externbedrijf'))) {
     $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"class="pull-right control-group btn btn-primary">Evenement wijzigen</a>';
 } else {
     $wijzigknop = '';
 }
-
+$lokaal = "n.v.t.";
 if ($row["lokaalnummer"] != "") {
     $lokaal = $row["lokaalnummer"];
-} else {
-    $lokaal = "n.v.t.";
 }
 
 //actief of niet
@@ -83,20 +79,21 @@ $activatieknop = '';
 if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-danger">Deactiveren</a></div>';
-    if(in_array($rol,array('beheerder'))) {
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+    if (in_array($rol, array('beheerder'))) {
+        $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
     }
 } elseif ($activatie == 0) {
     $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
-    if($rol === 'beheerder') {
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
+    if ($rol === 'beheerder') {
+        $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
     }
 }
 
 if ($row['publiek'] == 1) {
     $whitelist = '<span class="bg-success">Publiek</span>';
 } else {
-$whitelist = '<span class="bg-danger">Privaat</span>';
+    $whitelist = '<span class="bg-danger">Privaat</span>';
+}
 
 //progressbar berekeningen
 $max = $row['max_leerlingen'];
@@ -150,7 +147,8 @@ if ($current == 0) {
     <h4 class="card-header">
         <?= $titel ?>
         <div class='pull-right control-group'>
-            <a href="<?= route('/index.php?evenementen=alles') ?>" class="btn btn-primary">Terug naar evenementen</a>
+            <a href="<?= route('/index.php?evenementen=alles') ?>" class="btn btn-primary">Terug naar
+                evenementen</a>
         </div>
     </h4>
     <div class="card-body">
@@ -159,15 +157,22 @@ if ($current == 0) {
         <?= "$wijzigknop" ?>
     </div>
 </div>
-
 <div class="card">
-    <h4 class="card-header">Inschrijvingen</h4>
+    <h4 class="card-header">Inschrijvingen
+        <?php if ($rol === 'beheerder') { ?>
+            <div class="pull-right">
+                <a href="<?= route('/index.php?inschrijving=overzicht&evenement_id=' . $id) ?>" class="btn btn-primary">inschrijvingen
+                    beheren</a>
+            </div>
+        <?php } ?>
+    </h4>
     <div class="card-body">
         <p class="card-text"><?= $inschrijvingen, $beschikbaar ?></p>
         <div>
             <?= $bar ?>
         </div>
     </div>
+
 </div>
 <div class="row">
     <div class="col-3">
@@ -239,5 +244,4 @@ if ($current == 0) {
         </div>
     </div>
 </div>
-
 
