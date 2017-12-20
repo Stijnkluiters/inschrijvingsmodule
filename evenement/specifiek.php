@@ -7,7 +7,7 @@
  */
 
 //Get the id that's been given from bekijken.php
-$id = filter_var(filter_input(INPUT_GET,'contact_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+$id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
 //load info from database using the id
 $db = db();
