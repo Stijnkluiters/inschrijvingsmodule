@@ -133,6 +133,12 @@ $user = get_user_info();
                         Roltoewijzing
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= route('/index.php?gebruiker=registreren_externbedrijf'); ?>">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Registreren externbedrijf
+                    </a>
+                </li>
 
             </ul>
         </nav>
@@ -183,6 +189,8 @@ $user = get_user_info();
                         require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'roltoewijzen') {
                         require 'beheerder/gebruikers/roltoewijzing.php';
+                    } elseif ($_GET['gebruiker'] == 'registreren_externbedrijf') {
+                        require 'registreren_contactpersoon/registreren_externbedrijf.php';
                     } else {
                         exit;
                         // specifieke gebruiker

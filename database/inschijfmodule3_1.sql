@@ -202,9 +202,9 @@ CREATE INDEX `fk_medewerker_account1_idx` ON `inschrijfmodule`.`medewerker` (`ac
 -- -----------------------------------------------------
 -- Table `inschrijfmodule`.`invertarisatie`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `inschrijfmodule`.`invertarisatie` ;
+DROP TABLE IF EXISTS `inschrijfmodule`.`inventarisatie` ;
 
-CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`invertarisatie` (
+CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`inventarisatie` (
   `invertarisatie_id` INT NOT NULL AUTO_INCREMENT,
   `vakgebied` LONGTEXT NULL,
   `onderwerp` LONGTEXT NULL,
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`invertarisatie` (
   `hulpmiddel` MEDIUMTEXT NULL,
   `doelstelling` MEDIUMTEXT NULL,
   `verwachting` MEDIUMTEXT NULL,
-  PRIMARY KEY (`invertarisatie_id`))
+  PRIMARY KEY (`inventarisatie_id`))
 ENGINE = InnoDB;
 
 

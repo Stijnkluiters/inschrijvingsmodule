@@ -7,12 +7,20 @@
  */
 
 
-include 'config.php';
 
 if (isset($_POST['submit'])) {
     /**
      * Filter input from user, which is required in order to continue the request->post.
      */
+    //secret recaptcha key:
+    $secret_key = '6LcffjsUAAAAAMqC6IpdiCP7x1nWmJB-CDGnEia3';
+    $response = post_request('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => $secret_key,
+        'response' => $_POST[ 'g-recaptcha-response' ]
+    ]);
+    $response = json_decode($response,true);
+
+
     /** gebruikersnaam */
     $error = array();
     if (!isset($_POST['gebruikersnaam']) || empty($_POST['gebruikersnaam'])) {
@@ -76,7 +84,7 @@ if (isset($_POST['submit'])) {
     if (!isset($_POST['branche']) || empty($_POST['branche'])) {
         $error['branche'] = ' branche is verplicht';
     }
-    $branche = filter_input(INPUT_POST, 'bedrijfnaam', FILTER_SANITIZE_STRING);
+    $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
     if (empty($branche)) {
         $error['branche'] = ' Het filteren van branche ging verkeerd';
     }
@@ -90,17 +98,17 @@ if (isset($_POST['submit'])) {
     $webadres = strtolower($webadres);
 
     /** adres */
-    if (!isset($_POST['adres ']) || empty($_POST['adres '])) {
-        $error['adres '] = ' adres  is verplicht';
+    if (!isset($_POST['adres']) || empty($_POST['adres'])) {
+        $error['adres'] = ' adres  is verplicht';
     }
-    $adres  = filter_input(INPUT_POST, 'adres ', FILTER_SANITIZE_STRING);
+    $adres  = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
     if (empty($adres )) {
-        $adres ['adres '] = ' Het filteren van adres  ging verkeerd';
+        $adres ['adres'] = ' Het filteren van adres ging verkeerd';
     }
     $adres  = strtolower($adres );
 
     /** postcode */
-    if (!isset($_POST['postcode ']) || empty($_POST['postcode'])) {
+    if (!isset($_POST['postcode']) || empty($_POST['postcode'])) {
         $error['postcode'] = ' postcode  is verplicht';
     }
     $postcode  = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
@@ -109,15 +117,15 @@ if (isset($_POST['submit'])) {
     }
     $postcode  = strtolower($postcode);
 
-    /** plaats */
-    if (!isset($_POST['plaats']) || empty($_POST['plaats'])) {
-        $error['plaats'] = ' plaats is verplicht';
+    /** plaatsnaam */
+    if (!isset($_POST['plaatsnaam']) || empty($_POST['plaatsnaam'])) {
+        $error['plaatsnaam'] = ' plaatsnaam is verplicht';
     }
-    $plaats  = filter_input(INPUT_POST, 'plaats', FILTER_SANITIZE_STRING);
-    if (empty($plaats)) {
-        $plaats ['plaats'] = ' Het filteren van adres  ging verkeerd';
+    $plaatsnaam  = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
+    if (empty($plaatsnaam)) {
+        $plaatsnaam ['plaatsnaam'] = ' Het filteren van plaatsnaam  ging verkeerd';
     }
-    $plaats  = strtolower($plaats);
+    $plaatsnaam = strtolower($plaatsnaam);
 
 
     /** Persoonsgegevens */
@@ -180,16 +188,14 @@ if (isset($_POST['submit'])) {
         $error['email'] = ' het filteren van email ging verkeerd';
     }
     $email = strtolower($email);
-    /**
-     * TODO: check if actual phonenumber; strip - signs.
-     */
+
 
 
     /** inventarisatie formulier */
 
     /** vakgebied */
     $vakgebied = filter_input(INPUT_POST, 'vakgebied', FILTER_SANITIZE_STRING);
-    if ($vakgebieds === false) {
+    if ($vakgebied === false) {
         $error['vakgebied'] = ' het filteren van vakgebied ging verkeerd';
     }
     $vakgebied = strtolower($vakgebied);
@@ -251,6 +257,11 @@ if (isset($_POST['submit'])) {
      * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
      */
     if (count($error) === 0) {
+
+
+        try {
+
+
         $generatedPassword = generatePassword($wachtwoord);
         // gather rol_id
 
@@ -258,6 +269,8 @@ if (isset($_POST['submit'])) {
         $rolnaam = 'contactpersoon';
 
         $rol_id = check_if_role_exists($rolnaam);
+
+        $db->beginTransaction();
 
         $stmt = $db->prepare('
                 insert into account 
@@ -274,58 +287,6 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
         $stmt->execute();
         $account_id = $stmt->fetchAll()[0]['account_id'];
-
-        $stmt = $db->prepare('
-                insert into bedrijf 
-               (bedrijfsnaam,
-                branche,
-                webadres,
-                adres,
-                postcode,
-                plaatsnaam)
-                VALUES 
-                (:bedrijfsnaam,
-                :branche,
-                :webadres,
-                :adres,
-                :postcode,
-                :plaatsnaam)
-            ');
-        $stmt->bindParam('bedrijfsnaam',$bedrijfsnaam, PDO::PARAM_STR);
-        $stmt->bindParam('branche', $brance, PDO::PARAM_STR);
-        $stmt->bindParam('webadres', $webadres, PDO::PARAM_STR);
-        $stmt->bindParam('adres', $adres, PDO::PARAM_STR);
-        $stmt->bindParam('postcode', $postcode, PDO::PARAM_STR);
-        $stmt->bindParam('plaatsnaam', $plaatsnaam, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $stmt = $db->prepare('
-                insert into contactpersoon
-               (
-                account_id,
-                roepnaam,
-                tussenvoegsel,
-                achternaam,
-                functie,
-                email,
-                telefoon)
-                VALUES 
-                (:account_id,
-                  :roepnaam,
-                  :tussenvoegsel,
-                  :achternaam,
-                  :functie,
-                  :telefoon,
-                  :email)
-            ');
-        $stmt->bindParam('account_id',$account_id);
-        $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
-        $stmt->bindParam('tussenvoegsel', $voorvoegsel, PDO::PARAM_STR);
-        $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
-        $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
-        $stmt->bindParam('telefoon', $telefoonummer, PDO::PARAM_STR);
-        $stmt->bindParam('email', $email, PDO::PARAM_STR);
-        $stmt->execute();
 
         $stmt = $db->prepare('
                 insert into inventarisatie 
@@ -356,14 +317,96 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('doelstelling', $doelstelling, PDO::PARAM_LOB);
         $stmt->bindParam('verwachting', $verwachting, PDO::PARAM_LOB);
         $stmt->execute();
+        $inventarisatie_id = $db->lastInsertId();
 
 
-        login($gebruikersnaam,$wachtwoord);
+        $stmt = $db->prepare('insert into bedrijf
+                (bedrijfsnaam)
+                VALUE
+                (:bedrijfsnaam)
+                ');
+            $stmt->bindParam('bedrijfsnaam', $bedrijfsnaam, PDO::PARAM_STR);
+            $stmt->execute();
+            $bedrijf_id = $db->lastInsertId();
 
-        redirect('/index.php');
+
+            $stmt = $db->prepare('
+                insert into branche 
+               (bedrijf_id,
+                inventarisatie_id,
+                branche,
+                webadres,
+                adres,
+                postcode,
+                plaatsnaam)
+                VALUES 
+                (:bedrijf_id,
+                :inventarisatie_id,
+                :branche,
+                :webadres,
+                :adres,
+                :postcode,
+                :plaatsnaam)
+            ');
+            $stmt->bindParam('bedrijf_id', $bedrijf_id, PDO::PARAM_STR);
+            $stmt->bindParam('inventarisatie_id', $inventarisatie_id, PDO::PARAM_STR);
+            $stmt->bindParam('branche', $branche, PDO::PARAM_STR);
+            $stmt->bindParam('webadres', $webadres, PDO::PARAM_STR);
+            $stmt->bindParam('adres', $adres, PDO::PARAM_STR);
+            $stmt->bindParam('postcode', $postcode, PDO::PARAM_STR);
+            $stmt->bindParam('plaatsnaam', $plaatsnaam, PDO::PARAM_STR);
+            $stmt->execute();
+            $branche_id = $db->lastInsertId();
+
+            $stmt = $db->prepare('
+                insert into contactpersoon
+               (
+                account_id,
+                branche_id,
+                roepnaam,
+                tussenvoegsel,
+                achternaam,
+                functie,
+                telefoonnummer,
+                email,
+                deleted)
+                VALUES 
+                (:account_id,
+                  :branche_id,
+                  :roepnaam,
+                  :tussenvoegsel,
+                  :achternaam,
+                  :functie,
+                  :telefoonnummer,
+                  :email,
+                  :1)
+            ');
+            $stmt->bindParam('account_id', $account_id);
+            $stmt->bindParam('branche_id', $branche_id);
+            $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
+            $stmt->bindParam('tussenvoegsel', $voorvoegsel, PDO::PARAM_STR);
+            $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
+            $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
+            $stmt->bindParam('telefoonnummer', $telefoonummer, PDO::PARAM_STR);
+            $stmt->bindParam('email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $db->commit();
+//            login($gebruikersnaam,$wachtwoord);
+//
+//            redirect('/index.php');
+            var_dump($branche_id,$inventarisatie_id,$bedrijf_id);
+
+        } catch (Exception $exception) {
+            $db->rollBack();
+            throw new Exception('something went terribly wrong ' . $exception->getMessage());
+        }
+
     }
 }
 
+
+?>
 
 ?>
 <html>
@@ -390,7 +433,7 @@ if (isset($_POST['submit'])) {
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form method="post" action="<?= route('/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
+            <form method="post" action="<?= route('/index.php?gebruiker=registreren_externbedrijf'); ?>" class="container" id="register-form">
                 <div class="card">
                     <div class="container-fluid">
                         <h1>Registreer
@@ -454,19 +497,19 @@ if (isset($_POST['submit'])) {
                             <span id="helpbedrijfsnaam"
                                   class="form-text bg-danger text-white"><?= $error['bedrijfsnaam']; ?></span>
                         <?php } ?>
-                        <!-- brance Form -->
+                        <!-- branche Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-building"></i></span>
-                            <input id="brance" name="brance" type="text"
-                                   class="form-control<?= (isset($error['brance'])) ? ' is-invalid' : '' ?>"
-                                   value="<?= (isset($brance)) ? $brance : ''; ?>"
-                                   placeholder="Uw brance"
-                                   aria-describedby="helpbrance"/>
+                            <input id="branche" name="branche" type="text"
+                                   class="form-control<?= (isset($error['branche'])) ? ' is-invalid' : '' ?>"
+                                   value="<?= (isset($branche)) ? $branche : ''; ?>"
+                                   placeholder="Uw branche"
+                                   aria-describedby="helpbranche"/>
                         </div>
-                        <?php if (isset($error['brance'])) { ?>
+                        <?php if (isset($error['branche'])) { ?>
                             <!-- Voervoegsel Helper -->
-                            <span id="helpbrance"
-                                  class="form-text bg-danger text-white"><?= $error['brance']; ?></span>
+                            <span id="helpbranche"
+                                  class="form-text bg-danger text-white"><?= $error['branche']; ?></span>
                         <?php } ?>
 
                         <!-- webadres Form -->
@@ -502,7 +545,7 @@ if (isset($_POST['submit'])) {
                         <!-- postcode Form -->
                         <div class="input-group mt-3">
                             <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-                            <input id="postcode" name="postcode" type="date"
+                            <input id="postcode" name="postcode" type="text"
                                    class="form-control<?= (isset($error['postcode'])) ? ' is-invalid' : '' ?>"
                                    value="<?= (isset($postcode)) ? $postcode : ''; ?>"
                                    placeholder="Uw postcode"
@@ -647,7 +690,7 @@ if (isset($_POST['submit'])) {
                             <input id="onderwerp" name="onderwerp" type="text"
                                    class="form-control input-lg<?= (isset($error['onderwerp'])) ? ' is-invalid' : '' ?>"
                                    value="<?= (isset($onderwerp)) ? $onderwerp : ''; ?>"
-                                   placeholder="Uw vakgebied en een omschrijving ervan"
+                                   placeholder="Het onderwerp(en) van uw gastcollege"
                                    aria-describedby="helponderwerp"/>
                         </div>
                         <?php if (isset($error['onderwerp'])) { ?>
@@ -745,6 +788,10 @@ if (isset($_POST['submit'])) {
                             <span id="helpdverwachting"
                                   class="form-text bg-danger text-white"><?= $error['verwachting']; ?></span>
                         <?php } ?>
+                        <hr/>
+                        <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
+                            aanmaken
+                        </button>
                     </div>
                 </div>
             </form>
