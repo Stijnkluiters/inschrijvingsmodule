@@ -26,12 +26,16 @@ function sendMail($reciever, $subject, $message)
         foreach ($reciever as $value) {
             if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
                 $mail->addAddress($value);
+            } else {
+                throw new Exception('E-mail adres mag niet verzonden worden omdat het geen emailadres is ' . $reciever);
             }
         }
     } else {
         if (filter_var($reciever, FILTER_VALIDATE_EMAIL)) {
 
             $mail->addAddress($reciever);
+        } else {
+            throw new Exception('E-mail adres mag niet verzonden worden omdat het geen emailadres is ' . $reciever);
         }
     }
     $mail->send();
