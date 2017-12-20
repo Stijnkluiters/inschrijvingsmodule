@@ -1,14 +1,13 @@
 <?php
 
 $db = db();
-$contact_id = intval($_GET[ 'contact_id' ]);
+$contact_id = intval($_GET[ 'contactpersoon' ]);
 
 // controlleer of het contact id wel een nummeriek getal is. anders doorverwijzen naar een andere pagina.
 if( !filter_var($contact_id, FILTER_VALIDATE_INT) )
 {
-    redirect('/index.php?contactpersoon=overzicht', 'contactID moet een nummeriek getal zijn');
+    redirect('/index.php?gebruiker=overzichtcontactpersonen', 'contactID moet een nummeriek getal zijn');
 }
-
 
 // controleren of het id wel in de database bestaat
 $stmt = $db->prepare('select contact_id from contactpersoon where contact_id = ?');
@@ -18,9 +17,9 @@ if( $stmt->rowCount() === 0 )
     redirect('/index.php?contactpersoon=overzicht', 'contact persoon niet gevonden in de database');
 }
 $stmt = $db->prepare('select * 
-    from brance b
+    from branche b
     join contactpersoon c ON c.branche_id = b.branche_id  
-    join inventarisatie i ON b.inventarisatie_id = i.inventarisatie_id
+    join inventarisatie i ON b.inventarisatie_id = i.invertarisatie_id
     join bedrijf be ON b.bedrijf_id = be.bedrijf_id
     where c.contact_id = ?
 ');
@@ -117,19 +116,36 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
     }
 
 
+    /**
+     * Inventarisatie_id
+     */
+    if( !isset($_POST[ 'inventarisatie_id' ]) )
+    {
+        $error[ 'inventarisatie_id' ] = 'inventarisatie_id is verplicht';
+    }
+    else
+    {
+        $inventarisatie_id = filter_input(INPUT_POST, 'inventarisatie_id', FILTER_SANITIZE_STRING);
+    }
+
+
+
+
+
     if( count($error) === 0 )
     {
 
+        dump($vakgebied,$onderwerp,$aantal_gastcolleges,$voorkeur_dag,$voorkeur_dagdeel,$hulpmiddel,$verwachting,$inventarisatie_id);
 
-        $db->prepare('update inventarisatie SET
-          vakbebied = ?,
+        $stmt = $db->prepare('update inventarisatie SET
+          vakgebied = ?,
           onderwerp = ?,
           aantal_gastcolleges = ?,
           voorkeur_dag = ?,
           voorkeur_dagdeel = ?,
           hulpmiddel = ?,
-          verwachting = ?,       
-          WHERE inventarisatie_id = ?
+          verwachting = ?       
+          WHERE invertarisatie_id = ?
         ');
         $r = $stmt->execute(array(
             $vakgebied,
@@ -144,7 +160,7 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
 
         if( $r )
         {
-            redirect('index.php?gebruiker=overzichtcontactpersonen', 'Inventarisatie formulier geüpdate!');
+            redirect('/index.php?gebruiker=overzichtcontactpersonen', 'Inventarisatie formulier geüpdate!');
         }
         else
         {
@@ -271,19 +287,16 @@ if( empty($companyInfo) )
 }
 else
 {
+
     ?>
+    <h6>Uw bedrijfsnaam
+        <small>
+        </small>
+    </h6>
     <div class="row">
-
-        <h6>Uw bedrijfsnaam
-            <small><?= $companyInfo[ 'bedrijfsnaam' ]; ?>
-                <code>.btn-sm</code>
-            </small>
-        </h6>
-
-
         <div class="col-sm-6">
-            <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
-                <input type="hidden" name="inventarisatie_id" value="<?= $companyInfo[ 'i.inventarisatie_id' ]; ?>">
+            <form action="<?= route('/index.php?bedrijfsinfo=wijzigen&contactpersoon='.$contact_id) ?>" method="post">
+                <input type="hidden" name="inventarisatie_id" value="<?= $companyInfo[ 'inventarisatie_id' ]; ?>">
                 <div class="card">
                     <div class="card-header">
                         <strong>Inventarisatie formulier</strong>
@@ -386,7 +399,7 @@ else
         <!--/.col-->
 
         <div class="col-sm-6">
-            <form action="<?= $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+            <form action="<?= route('/index.php?bedrijfsinfo=wijzigen&contactpersoon='.$contact_id) ?>" method="post">
                 <input type="hidden" name="branche_id" value="<?= $companyInfo[ 'b.branche_id' ]; ?>">
                 <div class="card">
                     <div class="card-header">

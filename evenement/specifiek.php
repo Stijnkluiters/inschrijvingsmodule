@@ -25,6 +25,11 @@ $stmt->execute();
 //put the info in $row
 $row = $stmt->fetch();
 
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externbedrijf') {
+    viewEvent($row);
+}
+
 //get the info out of $row into variables
 $titel = $row["titel"];
 $onderwerp = $row["onderwerp"];
@@ -59,7 +64,7 @@ if ($row["locatie"] != "") {
     $adres = "n.v.t.";
 }
 //*check if the user has a certain user_id (admin or the corresponding builder_id)
-if (0 == 'a') {
+if (in_array($rol,array('beheerder','externbedrijf'))) {
     $wijzigknop = '<a href="' . route('/index.php?evenementen=wijzigen&evenement_id=' . $id) . '"class="pull-right control-group btn btn-primary">Evenement wijzigen</a>';
 } else {
     $wijzigknop = '';
@@ -73,19 +78,25 @@ if ($row["lokaalnummer"] != "") {
 
 //actief of niet
 $activatie = $row['status'];
+
+$activatieknop = '';
 if ($activatie == 1) {
     $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
     $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-danger">Deactiveren</a></div>';
+    if(in_array($rol,array('beheerder'))) {
+    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+    }
 } elseif ($activatie == 0) {
     $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-success">Activeren</a></div>';
+    if($rol === 'beheerder') {
+    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
+    }
 }
 
 if ($row['publiek'] == 1) {
     $whitelist = '<span class="bg-success">Publiek</span>';
 } else {
-    $whitelist = '<span class="bg-danger">Privaat</span>';
-}
+$whitelist = '<span class="bg-danger">Privaat</span>';
 
 //progressbar berekeningen
 $max = $row['max_leerlingen'];
@@ -115,11 +126,11 @@ if ($max > 0 && $max > $min) {
 
     $bar = "<div class='progress' style='height: 20px'><div class='progress-bar bg-$barcolor' role='progressbar' style='width: $inschrijvingspercentage%' aria-valuenow='$currentbar' aria-valuemin='0' aria-valuemax='$max'></div></div> ";
     if ($beschikbaar == 0) {
-        $beschikbaar = ', dus er zijn geen plekken beschikbaar!';
+        $beschikbaar = ', er zijn geen plekken beschikbaar!';
     } elseif ($beschikbaar == 1) {
-        $beschikbaar = ', dus er is nog één plek beschikbaar!';
+        $beschikbaar = ', er is nog één plek beschikbaar!';
     } else {
-        $beschikbaar = ", dus er zijn nog $beschikbaar plekken beschikbaar!";
+        $beschikbaar = ", er zijn nog $beschikbaar plekken beschikbaar!";
     }
 } else {
     $bar = '';

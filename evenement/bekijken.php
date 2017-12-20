@@ -7,7 +7,19 @@ $stmt = $db->prepare("
 SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, s.soort, locatie, status, publiek
 FROM evenement e
 JOIN soort s ON e.soort_id = s.soort_id
-WHERE s.actief = 1");
+WHERE s.actief = 1";
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+
+if ($rol === 'externbedrijf') {
+    $sql .= ' AND e.account_id = :account_id';
+}
+
+//take info from database/evenement
+$stmt = $db->prepare($sql);
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if ($rol === 'externbedrijf') {
+    $stmt->bindParam('account_id', $_SESSION[authenticationSessionName]);
+}
 $stmt->execute();
 
 //get results from query
@@ -47,7 +59,7 @@ if ($countrow > 0) {
                     $locatie = "n.v.t.";
                     filter_var($row["titel"], FILTER_SANITIZE_STRING);
                     $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
-                    $starttijd = filter_var($row["begintijd"], FILTER_SANITIZE_STRING);
+                    $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
                     if ($row['status'] == false) {
                         $actief = "<td class='bg-danger'><span>Nee</span></td>";
                     } elseif ($row['status'] == true) {
@@ -63,12 +75,35 @@ if ($countrow > 0) {
                         }
                     }
                     if ($row['eindtijd'] != 0) {
-                        $eindtijd = filter_var($row["eindtijd"], FILTER_SANITIZE_STRING);
+                        $eindtijd = date('d-M-y H:i', strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
                     }
                     if ($row['publiek']== 1){
                         $publiek = '<td class="bg-success">publiek</td>';
                     }else{
                         $publiek = '<td class="bg-danger">privaat</td>';
+                    }
+                foreach ($rows as $row) {
+                    //put all data in variables
+                    filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
+                    $eindtijd = "n.v.t.";
+                    $adres = "n.v.t.";
+                    $locatie = "n.v.t.";
+                    filter_var($row["titel"], FILTER_SANITIZE_STRING);
+                    $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
+                    $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
+                    if ($row['status'] == false) {
+                        $actief = "<td class='bg-danger'><span>Nee</span></td>";
+                    } elseif ($row['status'] == true) {
+                        $actief = "<td class='bg-success'><span>Ja</span></td>";
+                    }
+                    if ($row["locatie"] != "") {
+                        $locatie = filter_var($row["locatie"], FILTER_SANITIZE_STRING);
+                    }
+                    if ($row["soort"] != "") {
+                        $soort = filter_var($row["soort"], FILTER_SANITIZE_STRING);
+                    }
+                    if ($row['eindtijd'] != 0) {
+                        $eindtijd = date('d-M-y H:i', strtotime(filter_var($row["eindtijd"], FILTER_SANITIZE_STRING)));
                     }
 
                     //print all VISIBLE variables in the table
@@ -96,8 +131,10 @@ if ($countrow > 0) {
             //if there is no content, print following
             print("Er zijn geen evenementen op dit moment");
         }
-        if (1 == 1) {
-            print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
+        if(in_array($rol,array('beheerder','externbedrijf'))) {
+        print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
+        }
+        if ($rol === 'beheerder') {
             print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
         }
         ?>

@@ -14,6 +14,20 @@ if (!filter_var($id, FILTER_VALIDATE_INT)) {
     exit;
 }
 
+$stmt = $db->prepare('select * from evenement where evenement_id = :evenement_id');
+$stmt->bindParam('evenement_id', $id);
+$stmt->execute();
+if($stmt->rowCount() == 0) {
+    redirect('/index.php','evenement niet gevonden in de database');
+}
+
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externbedrijf') {
+    viewEvent($stmt->fetch());
+}
+
+
+
 if (isset($_POST['titel'])) {
     $error = [];
 
