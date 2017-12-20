@@ -286,6 +286,7 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
                         }
                     }
                 }
+
                 // soorten evenementen
                 if (isset($_GET['soorten'])) {
                     if ($_GET['soorten'] === 'overzicht') {

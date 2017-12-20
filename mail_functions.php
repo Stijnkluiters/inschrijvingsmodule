@@ -2,7 +2,7 @@
 
 
 /** this function is used to send a mail without configuration, so it's easy to call whenever needed. */
-function sendMail($reciever,$subject,$message)
+function sendMail($reciever, $subject, $message)
 {
     // create mail functionality
     $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
@@ -18,16 +18,25 @@ function sendMail($reciever,$subject,$message)
     $mail->setFrom(mailFromEmail, mailFromUser);
     $mail->addReplyTo(mailFromEmail, mailFromUser);
     $mail->addBCC(mailFromEmail);
-
+    $mail->isHTML();
     $mail->Subject = $subject;
     $mail->Body = $message;
     // check if receiver is array.
-    if(is_array($reciever)) {
+    if (is_array($reciever)) {
         foreach ($reciever as $value) {
-            $mail->addAddress($value);
+            if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                $mail->addAddress($value);
+            } else {
+                throw new Exception('E-mail adres mag niet verzonden worden omdat het geen emailadres is ' . $reciever);
+            }
         }
     } else {
-        $mail->addAddress($reciever);
+        if (filter_var($reciever, FILTER_VALIDATE_EMAIL)) {
+
+            $mail->addAddress($reciever);
+        } else {
+            throw new Exception('E-mail adres mag niet verzonden worden omdat het geen emailadres is ' . $reciever);
+        }
     }
     $mail->send();
 }

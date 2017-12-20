@@ -1,50 +1,14 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: stijn
- * Date: 13-12-2017
- * Time: 10:18
+ * User: Johan Vd Wetering
+ * Date: 19-12-2017
+ * Time: 14:12
  */
 
-$evenement_id = intval(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING));
-if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
-    redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
-}
-$db = db();
-$stmt = $db->prepare('select * from inschrijfmodule.inschrijving i
-  JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
-  WHERE i.evenement_id = :evenement_id');
-$stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
-$stmt->execute();
-$inschrijvingen = $stmt->fetchAll();
-
-
-if (isset($_POST["toestemming"])) {
-    $value = $_POST["toestemming"];
-    $leerlingnummer = $_POST["leerlingnummer"];
-    $toestemming = 0;
-
-    // evenementen ophalen afhankelijk van de primary key, evenement_id
-    $stmt = $db->prepare('select * from evenement WHERE evenement_id = ?');
-    $stmt->execute(array($evenement_id));
-    $evenement = $stmt->fetch();
-
-    if (empty($evenement)) {
-        $error = 'Evenement bestaat niet? wtf?';
-    }
-    // leerlingen ophalen afhankelijk van de primary key, leerlingnummer
-    $stmt = $db->prepare('select * from leerling WHERE leerlingnummer = ?');
-    $stmt->execute(array($leerlingnummer));
-    $leerling = $stmt->fetch();
-
-    $subject = 'asdf';
-
-    if ($value == "ja") {
-        $toestemming = 1;
-
-        // onderwerp
-        $subject= 'Bevestiging inschrijving';
-        $message = '<!DOCTYPE html>
+// onderwerp
+$subject= 'Bevestiging inschrijving';
+$message = '<!DOCTYPE html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
               xmlns:o="urn:schemas-microsoft-com:office:office">
         <head><title></title>  <!--[if !mso]><!-- -->
@@ -191,14 +155,18 @@ if (isset($_POST["toestemming"])) {
                                                            summary="Het ongedaan maken van je inschrijving kan op de website waar je je hebt ingeschreven voor het evenement">
                                                         <thead>
                                                         <tr>
-                                                            <th scope="col">Nummer voor het geplande activiteit</th>
-                                                            <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
+                                                            <th scope="col">Toegangscode</th>
+                                                            <th scope="col">'.md5($leerling['leerlingnummer'].$evenement['evenement_id']).'</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         <tr>
-                                                            <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td><strong>Datum</strong></td>                                                            
+                                                            <td>'. date('d-M-Y',strtotime($evenement['begintijd'])) . ' tot ' . date("d-M-Y",strtotime($evenement['eindtijd'])) . '</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Tijd</strong></td>                                                            
+                                                            <td>'. date('H:i',strtotime($evenement['begintijd'])) . ' tot ' . date("H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>
@@ -256,64 +224,3 @@ if (isset($_POST["toestemming"])) {
     <!--[if mso | IE]>      </td></tr></table>      <![endif]--></div>
 </body>
 </html>';
-
-    } elseif ($value == "nee") {
-        // hier moet mnr. van dalen even de $message template aanmaken.
-        $toestemming = 0;
-        $subject = 'asdfasfd';
-        $message = 'sadfasdf';
-
-    }
-    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
-    $r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
-    if($r) {
-        sendMail($leerlingnummer.'@edu.rocmn.nl',$subject,$message);
-    } else {
-        $error = 'Opslaan niet gelukt! probeer het opnieuw';
-    }
-
-
-}
-?>
-
-<form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
-
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Leerlingnummer</th>
-            <th>Naam</th>
-            <th>Aangemeld op</th>
-            <th>Gewhitelist</th>
-            <th>Toestemming</th>
-        </tr>
-        </thead>
-        <tfoot>
-        <tr>
-            <th>Leerlingnummer</th>
-            <th>Naam</th>
-            <th>Aangemeld op</th>
-            <th>Gewhitelist</th>
-            <th>Toestemming</th>
-        </tr>
-        </tfoot>
-        <tbody>
-        <?php foreach ($inschrijvingen as $inschrijving) { ?>
-            <tr>
-                <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
-
-                <td><?= $inschrijving['leerlingnummer'] ?></td>
-                <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '<i class="fa fa-times" aria-hidden="true"></i>' ?></td>
-                <td><?= ($inschrijving['gewhitelist'] == 1) ? '<i class="fa fa-check" aria-hidden="true"></i>' : '<i class="fa fa-times" aria-hidden="true"></i>'; ?></td>
-                <td>
-                    <button type="submit" name = "toestemming" value = "ja" class="btn btn-success">Ja</button>
-                    <button type="submit" name = "toestemming" value = "nee" class="btn btn-danger">Nee</button>
-                </td>
-            </tr>
-        <?php } ?>
-        </tbody>
-
-    </table>
-</form>
-

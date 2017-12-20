@@ -3,8 +3,7 @@
 include_once '../config.php';
 
 $db = db();
-$stmt = $db->prepare('SELECT * FROM evenement e JOIN inschrijving i ON e.evenement_id = i.evenement_id
-WHERE i.gewhitelist = 1 AND e.status = 1 AND e.eindtijd > ?');
+$stmt = $db->prepare('SELECT * FROM evenement e WHERE  e.status = 1 AND e.eindtijd > ?');
 $stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
 
@@ -71,8 +70,8 @@ $user = get_user_info();
         if(isset($bericht)){
             print($bericht);
         }
-        ?>
-        <?php foreach ($evenemten as $evenemnt) { ?>
+
+        foreach ($evenemten as $evenemnt) { ?>
         <div class="row">
             <div class="card col-12">
                 <div class="card-body">
@@ -91,15 +90,24 @@ $user = get_user_info();
                     $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
                     $inschrijving = $stmt->fetch();
                     if(isset($_POST['submit'])){
-                        if(empty($inschrijving['aangemeld_op'])){
+                        if(empty($inschrijving['aangemeld_op'])) {
                             $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
                             $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
                             $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
                             $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
-                            $message = $user['leerlingnummer'] . ' wil zich inschrijven voor ' . $evenemnt['onderwerp'] . '. 
-                                Bevestig dit op de website.';
-                            sendMail($receiver,$subject,$message);
+
+                            //QUERY voor ophalen gegevens voor de mail
+                            $db = db();
+                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
+                            $stmt->execute();
+                            $evenement = $stmt->fetch();
+                            $leerling = $user;
+                            // toestemming $message
+                            include_once '../mail/bevestiging_inschrijving.php';
+                            /** @var TYPE_NAME $message */
+                            sendMail($receiver, $subject, $message);
                             $inschrijving['aangemeld_op'] = 'X';
 
                             success('Je hebt je ingeschreven!');
@@ -108,6 +116,23 @@ $user = get_user_info();
                             $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
                             $stmt->execute(array(NULL, $evenemnt['evenement_id'], $user['leerlingnummer']));
                             $inschrijving['aangemeld_op'] = NULL;
+
+                            //test
+                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
+                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
+
+                            //QUERY voor ophalen gegevens voor de mail
+                            $db = db();
+                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
+                            $stmt->execute();
+                            $evenement = $stmt->fetch();
+                            $leerling = $user;
+                            // toestemming $message
+                            include_once '../mail/bevestiging_uitschrijving.php';
+                            /** @var TYPE_NAME $message */
+                            sendMail($receiver, $subject, $message);
+                            $inschrijving['aangemeld_op'] = 'X';
                         }
                     }
                     ?>
