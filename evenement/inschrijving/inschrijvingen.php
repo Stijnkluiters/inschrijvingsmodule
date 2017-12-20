@@ -6,13 +6,7 @@
  * Time: 10:18
  */
 
-if(1==2){
-    ?>
-<p>hoi</p>
-<?php
-}
-
-$evenement_id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
+$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
@@ -56,16 +50,14 @@ if (isset($_POST["toestemming"])) {
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
 
+    $subject = 'asdf';
 
+    if ($value == "ja") {
+        $toestemming = 1;
 
-$subject = 'asdf';
-
-if ($value == "ja") {
-    $toestemming = 1;
-
-    // onderwerp
-    $subject = 'Bevestiging inschrijving';
-    $message = '<!DOCTYPE html>
+        // onderwerp
+        $subject = 'Bevestiging inschrijving';
+        $message = '<!DOCTYPE html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
               xmlns:o="urn:schemas-microsoft-com:office:office">
         <head><title></title>  <!--[if !mso]><!-- -->
@@ -203,9 +195,9 @@ if ($value == "ja") {
                                             <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;"
                                                 align="left">
                                                 <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
-                                                    <p>Beste ' . formatusername($leerling) . ',<br><br>Je aanvraag op ' . date("d-M-y H:i", strtotime($inschrijving['created_at'])) . ' voor
+                                                    <p>Beste '.formatusername($leerling).',<br><br>Je aanvraag op '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
                                                         het evenement&#xA0;is goedgekeurd, je mag nu bij het
-                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op ' . date("d-M-y H:i", strtotime($inschrijving['aangemeld_op'])) . ' ben je op
+                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y H:i",strtotime($inschrijving['aangemeld_op'])).' ben je op
                                                         <strong>ingeschreven voor</strong>:</p>
                                                     <table align="center" border="2" cellpadding="1" cellspacing="2"
                                                            style="width:100%;"
@@ -213,21 +205,21 @@ if ($value == "ja") {
                                                         <thead>
                                                         <tr>
                                                             <th scope="col">Nummer voor het geplande activiteit</th>
-                                                            <th scope="col">' . md5($leerlingnummer . $evenement_id) . '</th>
+                                                            <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         <tr>
                                                             <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: ' . date('d-M-Y H:i', strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i", strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>
-                                                            <td>' . ucfirst($evenement['titel']) . '</td>
+                                                            <td>'.ucfirst($evenement['titel']).'</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Omschrijving</b></td>
-                                                            <td>' . ucfirst($evenement['omschrijving']) . '</td>
+                                                            <td>'.ucfirst($evenement['omschrijving']).'</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -278,32 +270,32 @@ if ($value == "ja") {
 </body>
 </html>';
 
-} elseif ($value == "nee") {
-    // hier moet mnr. van dalen even de $message template aanmaken.
-    $toestemming = 0;
-    $subject = 'asdfasfd';
-    $message = 'sadfasdf';
+    } elseif ($value == "nee") {
+        // hier moet mnr. van dalen even de $message template aanmaken.
+        $toestemming = 0;
+        $subject = 'asdfasfd';
+        $message = 'sadfasdf';
+
+    }
+    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
+    $r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
+    if ($r) {
+        sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
+    } else {
+        $error = 'Opslaan niet gelukt! probeer het opnieuw';
+    }
+
 
 }
-$stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
-$r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
-if ($r) {
-    sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
-} else {
-    $error = 'Opslaan niet gelukt! probeer het opnieuw';
-}
-
-
-}
-
 ?>
+
 <form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
     <table id="dataTable" class="table table-striped table-bordered">
         <thead>
-            <tr>
-                <th>Leerlingnummer</th>
-                <th>Naam</th>
-                <th>Aangemeld op</th>
+        <tr>
+            <th>Leerlingnummer</th>
+            <th>Naam</th>
+            <th>Aangemeld op</th>
             <th>Gewhitelist</th>
             <th>Toestemming</th>
         </tr>
@@ -335,16 +327,23 @@ if ($r) {
 
         <tr>
             <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
-
-            <td><?= $inschrijving['leerlingnummer'] ?></td>
-            <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-            <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
-            <td><?= $whitelist ?></td>
-            <td>
-                <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
-                <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
-            </td>
         </tr>
+                <td><?= $inschrijving['leerlingnummer'] ?></td>
+                <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
+                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
+                <td><?=$whitelist ?></td>
+                <td>
+                    <?php if (!$inschrijving['toestemming']) { ?>
+                        <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
+                    <?php } else { ?>
+                        <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
+                        <div class="form-group">
+                            <label for="comment">Opmerking afwijzing</label>
+                            <textarea class="form-control" id="comment"></textarea>
+                        </div>
+                    <?php } ?>
+                </td>
+            </tr>
         <?php } ?>
         </tbody>
     </table>

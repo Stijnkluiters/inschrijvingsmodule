@@ -22,10 +22,8 @@ if(isset($_POST['activeer'])){
 
     $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtcontactpersonen', $contact['roepnaam'] . ' is verwijderd!');
-
+    redirect('/index.php?gebruiker=overzichtcontactpersonen', ucfirst($contact['roepnaam']) . ' is geactiveerd!');
 }
-
 
 
 ?>
