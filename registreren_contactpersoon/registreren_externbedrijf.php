@@ -6,289 +6,291 @@
  * Time: 12:27
  */
 
-
-
+include_once '../config.php';
+if(isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+//Laat het bericht maar 1x zien per request!
+    unset($_SESSION['message']);
+}
 if (isset($_POST['submit'])) {
-    /**
-     * Filter input from user, which is required in order to continue the request->post.
-     */
+
     //secret recaptcha key:
     $secret_key = '6LcffjsUAAAAAMqC6IpdiCP7x1nWmJB-CDGnEia3';
     $response = post_request('https://www.google.com/recaptcha/api/siteverify', [
-        'secret'   => $secret_key,
-        'response' => $_POST[ 'g-recaptcha-response' ]
+        'secret' => $secret_key,
+        'response' => $_POST['g-recaptcha-response']
     ]);
-    $response = json_decode($response,true);
+    $response = json_decode($response, true);
 
 
-    /** gebruikersnaam */
-    $error = array();
-    if (!isset($_POST['gebruikersnaam']) || empty($_POST['gebruikersnaam'])) {
-        $error['gebruikersnaam'] = ' Gebruikersnaam is verplicht';
-    }
-    if (strlen($_POST['gebruikersnaam']) < 4) {
-        $error['gebruikersnaam'] = ' gebruikersnaam moet langer dan 5 karakters zijn';
-    }
-    $gebruikersnaam = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
-    $gebruikersnaam = strtolower($gebruikersnaam);
-    // controleren of de gebruikersnaam al bestaat.
-    $db = db();
-    $stmt = $db->prepare('select * from account where gebruikersnaam = :gebruikernaam');
-    $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
-    $stmt->execute();
-    if ($stmt->rowCount() > 0) {
-        $error['gebruikersnaam'] = ' er bestaat al een gebruiker met de naam: ' . $gebruikersnaam;
-    }
-    /** Wachtwoord */
-    if ($gebruikersnaam === false) {
-        $error['gebruikersnaam'] = ' het filteren van gebruikersnaam ging verkeerd';
-    }
-    if (!isset($_POST['wachtwoord']) || empty($_POST['wachtwoord'])) {
-        $error['wachtwoord'] = ' Wachtwoord is verplicht';
-    }
-    // wachtwoord moet minimaal 8 karakters hebben
-    if (strlen($_POST['wachtwoord']) < 8) {
-        $error['wachtwoord'] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
-    }
-    // wachtwoord moet minimaal 1 hoofdletter hebben
-    if ($_POST['wachtwoord'] === strtolower($_POST['wachtwoord'])) {
-        $error['wachtwoord'] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
-    }
-    $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
-    if ($wachtwoord === false) {
-        $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
-    }
+    if ($response['success']) {
+        /**
+         * Filter input from user, which is required in order to continue the request->post.
+         */
+        /** gebruikersnaam */
+        $error = array();
+        if (!isset($_POST['gebruikersnaam']) || empty($_POST['gebruikersnaam'])) {
+            $error['gebruikersnaam'] = ' Gebruikersnaam is verplicht';
+        }
+        if (strlen($_POST['gebruikersnaam']) < 4) {
+            $error['gebruikersnaam'] = ' gebruikersnaam moet langer dan 5 karakters zijn';
+        }
+        $gebruikersnaam = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
+        $gebruikersnaam = strtolower($gebruikersnaam);
+        // controleren of de gebruikersnaam al bestaat.
+        $db = db();
+        $stmt = $db->prepare('select * from account where gebruikersnaam = :gebruikernaam');
+        $stmt->bindParam('gebruikernaam', $gebruikersnaam, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            $error['gebruikersnaam'] = ' er bestaat al een gebruiker met de naam: ' . $gebruikersnaam;
+        }
+        /** Wachtwoord */
+        if ($gebruikersnaam === false) {
+            $error['gebruikersnaam'] = ' het filteren van gebruikersnaam ging verkeerd';
+        }
+        if (!isset($_POST['wachtwoord']) || empty($_POST['wachtwoord'])) {
+            $error['wachtwoord'] = ' Wachtwoord is verplicht';
+        }
+        // wachtwoord moet minimaal 8 karakters hebben
+        if (strlen($_POST['wachtwoord']) < 8) {
+            $error['wachtwoord'] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
+        }
+        // wachtwoord moet minimaal 1 hoofdletter hebben
+        if ($_POST['wachtwoord'] === strtolower($_POST['wachtwoord'])) {
+            $error['wachtwoord'] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
+        }
+        $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
+        if ($wachtwoord === false) {
+            $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
+        }
 
 
-    /** Herhaaling Wachtwoord */
-    if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
-        $error['herhaal_wachtwoord'] = ' Herhalend wachtwoord is verplicht';
-    }
-    if ($_POST['wachtwoord'] !== $_POST['herhaal_wachtwoord']) {
-        $error['herhaal_wachtwoord'] = ' Wachtwoord is niet het zelfde';
-    }
+        /** Herhaaling Wachtwoord */
+        if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
+            $error['herhaal_wachtwoord'] = ' Herhalend wachtwoord is verplicht';
+        }
+        if ($_POST['wachtwoord'] !== $_POST['herhaal_wachtwoord']) {
+            $error['herhaal_wachtwoord'] = ' Wachtwoord is niet het zelfde';
+        }
 
-    /** Bedrijfsgegevens */
+        /** Bedrijfsgegevens */
 
-    /** bedrijfsnaam */
-    if (!isset($_POST['bedrijfsnaam']) || empty($_POST['bedrijfsnaam'])) {
-        $error['bedrijfsnaam'] = ' bedrijfsnaam is verplicht';
-    }
-    $bedrijfsnaam = filter_input(INPUT_POST, 'bedrijfsnaam', FILTER_SANITIZE_STRING);
-    if (empty($bedrijfsnaam)) {
-        $error['bedrijfsnaam'] = ' Het filteren van bedrijfsnaam ging verkeerd';
-    }
-    $bedrijfsnaam = strtolower($bedrijfsnaam);
+        /** bedrijfsnaam */
+        if (!isset($_POST['bedrijfsnaam']) || empty($_POST['bedrijfsnaam'])) {
+            $error['bedrijfsnaam'] = ' bedrijfsnaam is verplicht';
+        }
+        $bedrijfsnaam = filter_input(INPUT_POST, 'bedrijfsnaam', FILTER_SANITIZE_STRING);
+        if (empty($bedrijfsnaam)) {
+            $error['bedrijfsnaam'] = ' Het filteren van bedrijfsnaam ging verkeerd';
+        }
+        $bedrijfsnaam = strtolower($bedrijfsnaam);
 
-    /** branche */
-    if (!isset($_POST['branche']) || empty($_POST['branche'])) {
-        $error['branche'] = ' branche is verplicht';
-    }
-    $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
-    if (empty($branche)) {
-        $error['branche'] = ' Het filteren van branche ging verkeerd';
-    }
-    $branche = strtolower($branche);
+        /** branche */
+        if (!isset($_POST['branche']) || empty($_POST['branche'])) {
+            $error['branche'] = ' branche is verplicht';
+        }
+        $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
+        if (empty($branche)) {
+            $error['branche'] = ' Het filteren van branche ging verkeerd';
+        }
+        $branche = strtolower($branche);
 
-    /** webadres */
-    $webadres = filter_input(INPUT_POST, 'webadres', FILTER_SANITIZE_STRING);
-    if ($webadres === false) {
-        $error['webadres'] = ' het filteren van webadres ging verkeerd';
-    }
-    $webadres = strtolower($webadres);
+        /** webadres */
+        $webadres = filter_input(INPUT_POST, 'webadres', FILTER_SANITIZE_STRING);
+        if ($webadres === false) {
+            $error['webadres'] = ' het filteren van webadres ging verkeerd';
+        }
+        $webadres = strtolower($webadres);
 
-    /** adres */
-    if (!isset($_POST['adres']) || empty($_POST['adres'])) {
-        $error['adres'] = ' adres  is verplicht';
-    }
-    $adres  = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
-    if (empty($adres )) {
-        $adres ['adres'] = ' Het filteren van adres ging verkeerd';
-    }
-    $adres  = strtolower($adres );
+        /** adres */
+        if (!isset($_POST['adres']) || empty($_POST['adres'])) {
+            $error['adres'] = ' adres  is verplicht';
+        }
+        $adres = filter_input(INPUT_POST, 'adres', FILTER_SANITIZE_STRING);
+        if (empty($adres)) {
+            $adres ['adres'] = ' Het filteren van adres ging verkeerd';
+        }
+        $adres = strtolower($adres);
 
-    /** postcode */
-    if (!isset($_POST['postcode']) || empty($_POST['postcode'])) {
-        $error['postcode'] = ' postcode  is verplicht';
-    }
-    $postcode  = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
-    if (empty($postcode)) {
-        $postcode ['postcode'] = ' Het filteren van adres  ging verkeerd';
-    }
-    $postcode  = strtolower($postcode);
+        /** postcode */
+        if (!isset($_POST['postcode']) || empty($_POST['postcode'])) {
+            $error['postcode'] = ' postcode  is verplicht';
+        }
+        $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_STRING);
+        if (empty($postcode)) {
+            $postcode ['postcode'] = ' Het filteren van adres  ging verkeerd';
+        }
+        $postcode = strtolower($postcode);
 
-    /** plaatsnaam */
-    if (!isset($_POST['plaatsnaam']) || empty($_POST['plaatsnaam'])) {
-        $error['plaatsnaam'] = ' plaatsnaam is verplicht';
-    }
-    $plaatsnaam  = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
-    if (empty($plaatsnaam)) {
-        $plaatsnaam ['plaatsnaam'] = ' Het filteren van plaatsnaam  ging verkeerd';
-    }
-    $plaatsnaam = strtolower($plaatsnaam);
-
-
-    /** Persoonsgegevens */
-
-    /** roepnaam */
-    if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
-        $error['roepnaam'] = ' roepnaam is verplicht';
-    }
-    $roepnaam = filter_input(INPUT_POST, 'roepnaam', FILTER_SANITIZE_STRING);
-    if (empty($roepnaam)) {
-        $error['roepnaam'] = ' Het filteren van roepnaam ging verkeerd';
-    }
-    $roepnaam = strtolower($roepnaam);
+        /** plaatsnaam */
+        if (!isset($_POST['plaatsnaam']) || empty($_POST['plaatsnaam'])) {
+            $error['plaatsnaam'] = ' plaatsnaam is verplicht';
+        }
+        $plaatsnaam = filter_input(INPUT_POST, 'plaatsnaam', FILTER_SANITIZE_STRING);
+        if (empty($plaatsnaam)) {
+            $plaatsnaam ['plaatsnaam'] = ' Het filteren van plaatsnaam  ging verkeerd';
+        }
+        $plaatsnaam = strtolower($plaatsnaam);
 
 
-    /** Tussenoegsel */
-    $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
-    if ($tussenvoegsel === false) {
-        $error['tussenvoegsel'] = ' het filteren van tussenvoegsel ging verkeerd';
-    }
-    $tussenvoegsel = strtolower($tussenvoegsel);
+        /** Persoonsgegevens */
 
-    /** Achternaam */
-    if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
-        $error['achternaam'] = ' Achternaam is verplicht';
-    }
-    $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_STRING);
-    if (empty($achternaam)) {
-        $error['achternaam'] = ' het filteren van achternaam ging verkeerd';
-    }
-    $achternaam = strtolower($achternaam);
-
-    /** Functie */
-    if (!isset($_POST['functie']) || empty($_POST['functie'])) {
-        $error['functie'] = ' Functie is verplicht';
-    }
-    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
-    if (empty($functie)) {
-        $error['functie'] = ' het filteren van functie ging verkeerd';
-    }
-    $functie = strtolower($functie);
-
-    /** Telefoonnummer */
-    if (!isset($_POST['telefoonnummer']) || empty($_POST['telefoonnummer'])) {
-        $error['telefoonnummer'] = ' Telefoonnummer is verplicht.';
-    }
-
-    $telefoonummer = filter_input(INPUT_POST, 'telefoonnummer', FILTER_SANITIZE_STRING);
-    if (empty($telefoonummer)) {
-        $error['telefoonnummer'] = ' het filteren van telefoonnummer ging verkeerd';
-    }
-    $telefoonummer = strtolower($telefoonummer);
-
-    /** Email */
-    if (!isset($_POST['email']) || empty($_POST['email'])) {
-        $error['email'] = ' email is verplicht';
-    }
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-    if (empty($email)) {
-        $error['email'] = ' het filteren van email ging verkeerd';
-    }
-    $email = strtolower($email);
+        /** roepnaam */
+        if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
+            $error['roepnaam'] = ' roepnaam is verplicht';
+        }
+        $roepnaam = filter_input(INPUT_POST, 'roepnaam', FILTER_SANITIZE_STRING);
+        if (empty($roepnaam)) {
+            $error['roepnaam'] = ' Het filteren van roepnaam ging verkeerd';
+        }
+        $roepnaam = strtolower($roepnaam);
 
 
+        /** Tussenoegsel */
+        $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_STRING);
+        if ($tussenvoegsel === false) {
+            $error['tussenvoegsel'] = ' het filteren van tussenvoegsel ging verkeerd';
+        }
+        $tussenvoegsel = strtolower($tussenvoegsel);
 
-    /** inventarisatie formulier */
+        /** Achternaam */
+        if (!isset($_POST['achternaam']) || empty($_POST['achternaam'])) {
+            $error['achternaam'] = ' Achternaam is verplicht';
+        }
+        $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_STRING);
+        if (empty($achternaam)) {
+            $error['achternaam'] = ' het filteren van achternaam ging verkeerd';
+        }
+        $achternaam = strtolower($achternaam);
 
-    /** vakgebied */
-    $vakgebied = filter_input(INPUT_POST, 'vakgebied', FILTER_SANITIZE_STRING);
-    if ($vakgebied === false) {
-        $error['vakgebied'] = ' het filteren van vakgebied ging verkeerd';
-    }
-    $vakgebied = strtolower($vakgebied);
+        /** Functie */
+        if (!isset($_POST['functie']) || empty($_POST['functie'])) {
+            $error['functie'] = ' Functie is verplicht';
+        }
+        $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
+        if (empty($functie)) {
+            $error['functie'] = ' het filteren van functie ging verkeerd';
+        }
+        $functie = strtolower($functie);
 
-    /** onderwerp */
-    $onderwerp = filter_input(INPUT_POST, 'onderwerp', FILTER_SANITIZE_STRING);
-    if ($onderwerp === false) {
-        $error['onderwerp'] = ' het filteren van onderwerp ging verkeerd';
-    }
-    $onderwerp = strtolower($onderwerp);
+        /** Telefoonnummer */
+        if (!isset($_POST['telefoonnummer']) || empty($_POST['telefoonnummer'])) {
+            $error['telefoonnummer'] = ' Telefoonnummer is verplicht.';
+        }
 
-    /** aantal_gastcolleges */
-    $aantal_gastcolleges = filter_input(INPUT_POST, 'aantal_gastcolleges', FILTER_SANITIZE_STRING);
-    if ($aantal_gastcolleges === false) {
-        $error['aantal_gastcolleges'] = ' het filteren van aantal_gastcolleges ging verkeerd';
-    }
-    $aantal_gastcolleges = strtolower($aantal_gastcolleges);
+        $telefoonummer = filter_input(INPUT_POST, 'telefoonnummer', FILTER_SANITIZE_STRING);
+        if (empty($telefoonummer)) {
+            $error['telefoonnummer'] = ' het filteren van telefoonnummer ging verkeerd';
+        }
+        $telefoonummer = strtolower($telefoonummer);
 
-    /** voorkeur_dag */
-    $voorkeur_dag = filter_input(INPUT_POST, 'voorkeur_dag', FILTER_SANITIZE_STRING);
-    if ($voorkeur_dag === false) {
-        $error['voorkeur_dag'] = ' het filteren van voorkeur_dag ging verkeerd';
-    }
-    $voorkeur_dag = strtolower($voorkeur_dag);
-
-    /** voorkeur_dagdeel */
-    $voorkeur_dagdeel = filter_input(INPUT_POST, 'voorkeur_dagdeel', FILTER_SANITIZE_STRING);
-    if ($voorkeur_dagdeel === false) {
-        $error['voorkeur_dagdeel'] = ' het filteren van voorkeur_dagdeel ging verkeerd';
-    }
-    $voorkeur_dagdeel = strtolower($voorkeur_dagdeel);
-
-    /** hulpmiddel */
-    $hulpmiddel = filter_input(INPUT_POST, 'hulpmiddel', FILTER_SANITIZE_STRING);
-    if ($hulpmiddel === false) {
-        $error['hulpmiddel'] = ' het filteren van hulpmiddel ging verkeerd';
-    }
-    $hulpmiddel = strtolower($hulpmiddel);
-
-    /** doelstelling */
-    $doelstelling = filter_input(INPUT_POST, 'doelstelling', FILTER_SANITIZE_STRING);
-    if ($doelstelling === false) {
-        $error['doelstelling'] = ' het filteren van doelstelling ging verkeerd';
-    }
-    $doelstelling = strtolower($doelstelling);
-
-    /** verwachting */
-    $verwachting = filter_input(INPUT_POST, 'verwachting', FILTER_SANITIZE_STRING);
-    if ($verwachting === false) {
-        $error['verwachting'] = ' het filteren van verwachting ging verkeerd';
-    }
-    $dverwachting = strtolower($verwachting);
+        /** Email */
+        if (!isset($_POST['email']) || empty($_POST['email'])) {
+            $error['email'] = ' email is verplicht';
+        }
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+        if (empty($email)) {
+            $error['email'] = ' het filteren van email ging verkeerd';
+        }
+        $email = strtolower($email);
 
 
+        /** inventarisatie formulier */
+
+        /** vakgebied */
+        $vakgebied = filter_input(INPUT_POST, 'vakgebied', FILTER_SANITIZE_STRING);
+        if ($vakgebied === false) {
+            $error['vakgebied'] = ' het filteren van vakgebied ging verkeerd';
+        }
+        $vakgebied = strtolower($vakgebied);
+
+        /** onderwerp */
+        $onderwerp = filter_input(INPUT_POST, 'onderwerp', FILTER_SANITIZE_STRING);
+        if ($onderwerp === false) {
+            $error['onderwerp'] = ' het filteren van onderwerp ging verkeerd';
+        }
+        $onderwerp = strtolower($onderwerp);
+
+        /** aantal_gastcolleges */
+        $aantal_gastcolleges = filter_input(INPUT_POST, 'aantal_gastcolleges', FILTER_SANITIZE_STRING);
+        if ($aantal_gastcolleges === false) {
+            $error['aantal_gastcolleges'] = ' het filteren van aantal_gastcolleges ging verkeerd';
+        }
+        $aantal_gastcolleges = strtolower($aantal_gastcolleges);
+
+        /** voorkeur_dag */
+        $voorkeur_dag = filter_input(INPUT_POST, 'voorkeur_dag', FILTER_SANITIZE_STRING);
+        if ($voorkeur_dag === false) {
+            $error['voorkeur_dag'] = ' het filteren van voorkeur_dag ging verkeerd';
+        }
+        $voorkeur_dag = strtolower($voorkeur_dag);
+
+        /** voorkeur_dagdeel */
+        $voorkeur_dagdeel = filter_input(INPUT_POST, 'voorkeur_dagdeel', FILTER_SANITIZE_STRING);
+        if ($voorkeur_dagdeel === false) {
+            $error['voorkeur_dagdeel'] = ' het filteren van voorkeur_dagdeel ging verkeerd';
+        }
+        $voorkeur_dagdeel = strtolower($voorkeur_dagdeel);
+
+        /** hulpmiddel */
+        $hulpmiddel = filter_input(INPUT_POST, 'hulpmiddel', FILTER_SANITIZE_STRING);
+        if ($hulpmiddel === false) {
+            $error['hulpmiddel'] = ' het filteren van hulpmiddel ging verkeerd';
+        }
+        $hulpmiddel = strtolower($hulpmiddel);
+
+        /** doelstelling */
+        $doelstelling = filter_input(INPUT_POST, 'doelstelling', FILTER_SANITIZE_STRING);
+        if ($doelstelling === false) {
+            $error['doelstelling'] = ' het filteren van doelstelling ging verkeerd';
+        }
+        $doelstelling = strtolower($doelstelling);
+
+        /** verwachting */
+        $verwachting = filter_input(INPUT_POST, 'verwachting', FILTER_SANITIZE_STRING);
+        if ($verwachting === false) {
+            $error['verwachting'] = ' het filteren van verwachting ging verkeerd';
+        }
+        $dverwachting = strtolower($verwachting);
+
+
+        /**
+         * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
+         */
+        if (count($error) === 0) {
 
 
 
-    /**
-     * Filteren is gedaan, als er geen errors aanwezig zijn. voer de gegevens dan in de database.
-     */
-    if (count($error) === 0) {
 
 
-        try {
+                $generatedPassword = generatePassword($wachtwoord);
+                // gather rol_id
 
 
-        $generatedPassword = generatePassword($wachtwoord);
-        // gather rol_id
+                $rolnaam = 'contactpersoon';
 
+                $rol_id = check_if_role_exists($rolnaam);
 
-        $rolnaam = 'contactpersoon';
+                $db->beginTransaction();
 
-        $rol_id = check_if_role_exists($rolnaam);
-
-        $db->beginTransaction();
-
-        $stmt = $db->prepare('
+                $stmt = $db->prepare('
                 insert into account 
                (gebruikersnaam,wachtwoord,rol_id)
                 VALUES 
                 (:gebruikersnaam,:wachtwoord,:rol_id)
             ');
-        $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
-        $stmt->bindParam('wachtwoord', $generatedPassword);
-        $stmt->bindParam('rol_id', $rol_id);
-        $stmt->execute();
+                $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
+                $stmt->bindParam('wachtwoord', $generatedPassword);
+                $stmt->bindParam('rol_id', $rol_id);
+                $stmt->execute();
 
-        $stmt = $db->prepare('select account_id from account where gebruikersnaam = :gebruikersnaam');
-        $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
-        $stmt->execute();
-        $account_id = $stmt->fetchAll()[0]['account_id'];
+                $stmt = $db->prepare('select account_id from account where gebruikersnaam = :gebruikersnaam');
+                $stmt->bindParam('gebruikersnaam', $gebruikersnaam);
+                $stmt->execute();
+                $account_id = $stmt->fetchAll()[0]['account_id'];
 
-        $stmt = $db->prepare('
+                $stmt = $db->prepare('
                 insert into inventarisatie 
                (vakgebied,
                 onderwerp,
@@ -308,29 +310,29 @@ if (isset($_POST['submit'])) {
                 :doelstelling,
                 :verwachting)
             ');
-        $stmt->bindParam('vakgebied', $vakgebied, PDO::PARAM_LOB);
-        $stmt->bindParam('onderwerp', $onderwerp, PDO::PARAM_LOB);
-        $stmt->bindParam('aantal_gastcolleges', $aantal_gastcolleges, PDO::PARAM_LOB);
-        $stmt->bindParam('voorkeur_dag', $voorkeur_dag, PDO::PARAM_LOB);
-        $stmt->bindParam('voorkeur_dagdeel', $voorkeur_dagdeel, PDO::PARAM_LOB);
-        $stmt->bindParam('hulpmiddel', $hulpmiddel, PDO::PARAM_LOB);
-        $stmt->bindParam('doelstelling', $doelstelling, PDO::PARAM_LOB);
-        $stmt->bindParam('verwachting', $verwachting, PDO::PARAM_LOB);
-        $stmt->execute();
-        $inventarisatie_id = $db->lastInsertId();
+                $stmt->bindParam('vakgebied', $vakgebied, PDO::PARAM_LOB);
+                $stmt->bindParam('onderwerp', $onderwerp, PDO::PARAM_LOB);
+                $stmt->bindParam('aantal_gastcolleges', $aantal_gastcolleges, PDO::PARAM_LOB);
+                $stmt->bindParam('voorkeur_dag', $voorkeur_dag, PDO::PARAM_LOB);
+                $stmt->bindParam('voorkeur_dagdeel', $voorkeur_dagdeel, PDO::PARAM_LOB);
+                $stmt->bindParam('hulpmiddel', $hulpmiddel, PDO::PARAM_LOB);
+                $stmt->bindParam('doelstelling', $doelstelling, PDO::PARAM_LOB);
+                $stmt->bindParam('verwachting', $verwachting, PDO::PARAM_LOB);
+                $stmt->execute();
+                $inventarisatie_id = $db->lastInsertId();
 
 
-        $stmt = $db->prepare('insert into bedrijf
+                $stmt = $db->prepare('insert into bedrijf
                 (bedrijfsnaam)
                 VALUE
                 (:bedrijfsnaam)
                 ');
-            $stmt->bindParam('bedrijfsnaam', $bedrijfsnaam, PDO::PARAM_STR);
-            $stmt->execute();
-            $bedrijf_id = $db->lastInsertId();
+                $stmt->bindParam('bedrijfsnaam', $bedrijfsnaam, PDO::PARAM_STR);
+                $stmt->execute();
+                $bedrijf_id = $db->lastInsertId();
 
 
-            $stmt = $db->prepare('
+                $stmt = $db->prepare('
                 insert into branche 
                (bedrijf_id,
                 inventarisatie_id,
@@ -348,17 +350,18 @@ if (isset($_POST['submit'])) {
                 :postcode,
                 :plaatsnaam)
             ');
-            $stmt->bindParam('bedrijf_id', $bedrijf_id, PDO::PARAM_STR);
-            $stmt->bindParam('inventarisatie_id', $inventarisatie_id, PDO::PARAM_STR);
-            $stmt->bindParam('branche', $branche, PDO::PARAM_STR);
-            $stmt->bindParam('webadres', $webadres, PDO::PARAM_STR);
-            $stmt->bindParam('adres', $adres, PDO::PARAM_STR);
-            $stmt->bindParam('postcode', $postcode, PDO::PARAM_STR);
-            $stmt->bindParam('plaatsnaam', $plaatsnaam, PDO::PARAM_STR);
-            $stmt->execute();
-            $branche_id = $db->lastInsertId();
+                $stmt->bindParam('bedrijf_id', $bedrijf_id, PDO::PARAM_STR);
+                $stmt->bindParam('inventarisatie_id', $inventarisatie_id, PDO::PARAM_STR);
+                $stmt->bindParam('branche', $branche, PDO::PARAM_STR);
+                $stmt->bindParam('webadres', $webadres, PDO::PARAM_STR);
+                $stmt->bindParam('adres', $adres, PDO::PARAM_STR);
+                $stmt->bindParam('postcode', $postcode, PDO::PARAM_STR);
+                $stmt->bindParam('plaatsnaam', $plaatsnaam, PDO::PARAM_STR);
+                $stmt->execute();
+                $branche_id = $db->lastInsertId();
 
-            $stmt = $db->prepare('
+                $deleted = 1;
+                $stmt = $db->prepare('
                 insert into contactpersoon
                (
                 account_id,
@@ -379,32 +382,34 @@ if (isset($_POST['submit'])) {
                   :functie,
                   :telefoonnummer,
                   :email,
-                  :1)
+                  :deleted)
             ');
-            $stmt->bindParam('account_id', $account_id);
-            $stmt->bindParam('branche_id', $branche_id);
-            $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
-            $stmt->bindParam('tussenvoegsel', $voorvoegsel, PDO::PARAM_STR);
-            $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
-            $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
-            $stmt->bindParam('telefoonnummer', $telefoonummer, PDO::PARAM_STR);
-            $stmt->bindParam('email', $email, PDO::PARAM_STR);
-            $stmt->execute();
+                $stmt->bindParam('account_id', $account_id);
+                $stmt->bindParam('branche_id', $branche_id);
+                $stmt->bindParam('roepnaam', $roepnaam, PDO::PARAM_STR);
+                $stmt->bindParam('tussenvoegsel', $voorvoegsel, PDO::PARAM_STR);
+                $stmt->bindParam('achternaam', $achternaam, PDO::PARAM_STR);
+                $stmt->bindParam('functie', $functie, PDO::PARAM_STR);
+                $stmt->bindParam('telefoonnummer', $telefoonummer, PDO::PARAM_STR);
+                $stmt->bindParam('email', $email, PDO::PARAM_STR);
+                $stmt->bindParam('deleted',$deleted, PDO::PARAM_STR);
+                $stmt->execute();
 
-            $db->commit();
-//            login($gebruikersnaam,$wachtwoord);
-//
-//            redirect('/index.php');
-            var_dump($branche_id,$inventarisatie_id,$bedrijf_id);
+                $db->commit();
+                redirect('/index.php');
 
-        } catch (Exception $exception) {
-            $db->rollBack();
-            throw new Exception('something went terribly wrong ' . $exception->getMessage());
+
+
+
+        }
+    } else {
+
+        if(in_array('missing-input-response',$response['error-codes'])) {
+            $error['error-codes'] = 'Recaptcha is verplicht';
         }
 
     }
 }
-
 
 ?>
 
@@ -415,29 +420,29 @@ if (isset($_POST['submit'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="ROC-midden Nederland evenementenmodule">
-    <meta name="author" content="Stijn Kluiters, Richard Hilverts">
+    <meta name="author" content="Richard Hilverts">
     <meta name="keyword"
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>
 
     <!-- Icons -->
-    <link href="public/css/font-awesome.css" rel="stylesheet">
+    <link href="../public/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
 
     <!-- Main styles for this application -->
-    <link href="public/css/style.css" rel="stylesheet">
-    <link href="<?= route('/public/css/login.css'); ?>" rel="stylesheet"/>
+    <link href="../public/css/style.css" rel="stylesheet">
+    <link href="<?= route('../public/css/login.css'); ?>" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form method="post" action="<?= route('/index.php?gebruiker=registreren_externbedrijf'); ?>" class="container" id="register-form">
+            <form method="post" action="<?= route('../registreren_contactpersoon/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
                 <div class="card">
                     <div class="container-fluid">
                         <h1>Registreer
-                            <small class="text-muted">jouw beheerder</small>
+                            <small class="text-muted">Uw bedrijf</small>
                         </h1>
                         <!-- Gebruikersnaam Form -->
                         <div class="input-group">
@@ -789,14 +794,53 @@ if (isset($_POST['submit'])) {
                                   class="form-text bg-danger text-white"><?= $error['verwachting']; ?></span>
                         <?php } ?>
                         <hr/>
+                        <div class="g-recaptcha" data-sitekey="6LcffjsUAAAAAK_qsbG5FQm4UnceLL2O5ztC0Kp7"></div>
                         <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
                             aanmaken
                         </button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 </body>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<!-- Bootstrap and necessary plugins -->
+<script src="public/js/jquery.min.js"></script>
+<script src="public/js/propper.js"></script>
+<script src="public/js/bootstrap.js"></script>
+<script src="public/js/pace.js"></script>
+
+<!-- Plugins and scripts required by all views -->
+<script src="public/js/Chart.min.js"></script>
+
+<!-- GenesisUI main scripts -->
+
+<script src="public/js/app.js"></script>
+
+<!-- Plugins and scripts required by this views -->
+
+<!-- Custom scripts required by this view -->
+<script src="public/js/main.js"></script>
+
+<!--Script for order table leerling-->
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="public/js/notify.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+    <?php
+
+    if(isset($message)) { ?>
+    $.notify("<?= $message; ?>",{
+        className: 'info'
+    });
+    <?php } ?>
+
+
+</script>
 </html>
