@@ -25,8 +25,7 @@ $stmt->execute();
 $rows = $stmt->fetchAll();
 
 //check for content in results
-$countrow = count($rows);
-if ($countrow > 0) {
+if (count($rows) > 0) {
 
 //set up base for table
 ?>
@@ -51,11 +50,9 @@ if ($countrow > 0) {
 
                 foreach ($rows as $row) {
                     //put all data in variables
-                    filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
                     $eindtijd = "n.v.t.";
                     $adres = "n.v.t.";
                     $locatie = "n.v.t.";
-                    filter_var($row["titel"], FILTER_SANITIZE_STRING);
                     $onderwerp = filter_var($row["onderwerp"], FILTER_SANITIZE_STRING);
                     $starttijd = date('d-M-y H:i', strtotime(filter_var($row["begintijd"], FILTER_SANITIZE_STRING)));
                     if ($row['status'] == false) {

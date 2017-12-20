@@ -1,7 +1,7 @@
 <?php
 
 $db = db();
-$contact_id = intval($_GET[ 'contactpersoon' ]);
+$contact_id = intval(filter_input(INPUT_GET,'contactpersoon',FILTER_SANITIZE_STRING));
 
 // controlleer of het contact id wel een nummeriek getal is. anders doorverwijzen naar een andere pagina.
 if( !filter_var($contact_id, FILTER_VALIDATE_INT) )
@@ -135,7 +135,6 @@ if( isset($_POST[ 'inventarisatie_submit' ]) )
     if( count($error) === 0 )
     {
 
-        dump($vakgebied,$onderwerp,$aantal_gastcolleges,$voorkeur_dag,$voorkeur_dagdeel,$hulpmiddel,$verwachting,$inventarisatie_id);
 
         $stmt = $db->prepare('update inventarisatie SET
           vakgebied = ?,
@@ -282,7 +281,7 @@ if( isset($_POST[ 'branche_submit' ]) )
 
 if( empty($companyInfo) )
 {
-    print '<h2>er is niet genoeg bedrijfsinformatie opgeslagen?</h2>';
+    print '<h2>Er is geen bedrijfsinformatie opgeslagen?</h2>';
 
 }
 else

@@ -49,7 +49,6 @@ $user = get_user_info();
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
         <?php
-        $db = db();
         $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
         $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
         $leerlingQuery->execute();

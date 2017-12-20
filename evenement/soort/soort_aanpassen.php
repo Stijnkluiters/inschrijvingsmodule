@@ -11,7 +11,7 @@ $db = db();
 
 //create a variable to catch errors
 $error = [];
-$soortID = $_GET[ 'soortid' ];
+$soortID = filter_var(filter_input(INPUT_GET,'soortid',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
 
 // check if soort exists in database, else redirect to different page.

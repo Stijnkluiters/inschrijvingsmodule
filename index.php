@@ -10,15 +10,16 @@
  *
  */
 
+include_once 'config.php';
 // check if user is logged in.
-
-
+if(!isset($_SESSION[authenticationSessionName])) {
+    redirect('/login.php');
+}
 //
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
 
-include_once 'config.php';
 startsession();
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];

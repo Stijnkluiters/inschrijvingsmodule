@@ -6,7 +6,7 @@
  * Time: 14:56
  */
 
-$contact_id = ($_GET['contact_id']);
+$contact_id = filter_var(filter_input(INPUT_GET,'contact_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);;
 
 $db = db();
 $contactQuery = $db->prepare("SELECT * FROM contactpersoon WHERE contact_id = :contact_id");
