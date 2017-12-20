@@ -86,7 +86,8 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`evenement` (
   `lokaalnummer` VARCHAR(255) NULL COMMENT '',
   `soort_id` INT NOT NULL COMMENT '',
   `contactnr` INT NULL COMMENT '',
-  `status` TINYINT(1) NULL DEFAULT 1 COMMENT '',
+  `status` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  `publiek` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
   PRIMARY KEY (`evenement_id`, `soort_id`)  COMMENT '',
   CONSTRAINT `fk_evenement_account1`
   FOREIGN KEY (`account_id`)

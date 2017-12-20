@@ -15,8 +15,8 @@ $soortID = filter_var(filter_input(INPUT_GET,'soortid',FILTER_SANITIZE_STRING),F
 
 
 // check if soort exists in database, else redirect to different page.
-$stmt = $db->prepare('select * from soort where soort = ?');
-$stmt->execute($soortID);
+$stmt = $db->prepare('select * from soort where soort_id = ?');
+$stmt->execute(array($soortID));
 if( $stmt->rowCount() === 0 )
 {
     redirect('/index.php?soorten=overzicht', 'Er bestaat geen soort met dat id.');
@@ -56,7 +56,6 @@ if( isset($_POST[ 'submit' ]) )
         $stmt->execute(array(
             $soortnaam,
             $benodigdheid,
-            $soortnaam,
             $soortID
         ));
     }
@@ -85,7 +84,6 @@ $prevalue = $stmt2->fetch();
     <form name="evenementWijzigen" method="post"
           action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
         <div class="col-sm-12">
-
             <div class="card-body">
                 <div class="form-group">
                     <label for="company">Soortnaam*</label>
