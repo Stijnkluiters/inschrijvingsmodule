@@ -37,16 +37,16 @@ if (isset($_POST["toestemming"])) {
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
 
-    if (isset($_POST["whitelist"])){
-        $updatewhitelist = filter_input(INPUT_POST,'whitelistt',FILTER_SANITIZE_NUMBER_INT);
-        if($updatewhitelist === '0' || $updatewhitelist === '1'){
+    //if (isset($_POST["whitelist"])){
+        //$updatewhitelist = filter_input(INPUT_POST,'whitelistt',FILTER_SANITIZE_NUMBER_INT);
+        //if($updatewhitelist === '0' || $updatewhitelist === '1'){
 
-            $upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
-            $upwhite->execute(array(
-                    $updatewhitelist,
+            //$upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
+            //$upwhite->execute(array(
+                    //$updatewhitelist,
 
-        }
-    }
+        //}
+    //}
     $subject = 'asdf';
 
     if ($value == "ja") {
