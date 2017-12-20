@@ -14,6 +14,18 @@ if (!filter_var($id, FILTER_VALIDATE_INT)) {
     exit;
 }
 
+$stmt = $db->prepare('select * from evenement where evenement_id = :evenement_id');
+$stmt->bindParam('evenement_id', $id);
+$stmt->execute();
+if($stmt->rowCount() == 0) {
+    redirect('/index.php','evenement niet gevonden in de database');
+}
+
+/** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
+if($rol === 'externbedrijf') {
+    viewEvent($stmt->fetch());
+}
+
 if (isset($_POST['titel'])) {
     $error = [];
 
@@ -89,6 +101,17 @@ if (isset($_POST['titel'])) {
         $error['soort'] = ' het filteren van soort ging verkeerd';
     }
 
+
+    /** Whitelist */
+    if (!isset($_POST['whitelist'])) {
+        $error['soort'] = ' whitelist is verplicht';
+    }
+    $whitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
+    var_dump($whitelist);
+    if ($whitelist !== '1' && $whitelist !== '0'){
+        $error['soort'] = ' whitelist kan alleen maar publiek of privaat zijn';
+    }
+
     // not required fields here but preveent XSS attack
     /** Vervoer */
     $vervoer = filter_input(INPUT_POST, 'vervoer', FILTER_SANITIZE_STRING);
@@ -108,7 +131,6 @@ if (isset($_POST['titel'])) {
         $error['Max_leerlingen'] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
     }
 
-
     /** Lokaalnummer */
     $lokaalnummer = filter_input(INPUT_POST, 'lokaalnummer', FILTER_SANITIZE_STRING);
     if ($lokaalnummer === false) {
@@ -120,9 +142,17 @@ if (isset($_POST['titel'])) {
     if(strlen($contactnr) > 11){
         $error['contactnummer'] = ' het contactnummer mag niet langer zijn dan 11 karakters';
     }
-    if ($contactnr === false) {
+    if ($contactnr === false || empty($contactnr)) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
+
+    $inschrijving = $db->prepare("
+    SELECT publiek
+    FROM evenement
+    WHERE evenement_id=?");
+    $inschrijving->execute(array($id));
+    $whitelistcheck = $inschrijving->fetch();
+
     if (count($error) === 0) {
         $update = $db->prepare('
         UPDATE `evenement` SET 
@@ -136,8 +166,9 @@ if (isset($_POST['titel'])) {
         `min_leerlingen`=?,
         `max_leerlingen`=?,
         `lokaalnummer`=?,
-        `soort`=?,
-        `contactnr`=?
+        `soort_id`=?,
+        `contactnr`=?,
+        `publiek`=?
         WHERE 
         `evenement_id`=?');
 
@@ -154,8 +185,23 @@ if (isset($_POST['titel'])) {
             $lokaalnummer,
             $soort,
             $contactnr,
+            $whitelist,
             $id
         ));
+
+        if ($whitelist != $whitelistcheck){
+            $inschrijvingupdate = $db->prepare("
+            UPDATE inschrijving
+            SET `gewhitelist`=?
+            WHERE `evenement_id`=?");
+            $inschrijvingupdate->execute(array(
+                    $whitelist,
+                    $id
+            ));
+
+        }
+
+        //redirect('/index.php?evenementen=specifiek&evenement_id=' . $id);
 
     }
 }
@@ -168,16 +214,16 @@ if (isset($_POST['titel'])) {
 //load info from database using the id
 
 $stmt = $db->prepare("
-SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, e.soort, contactnr
+SELECT e.titel as titel, e.onderwerp, e.omschrijving, e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, s.soort, contactnr, publiek
 FROM evenement e 
-JOIN soort s ON s.soort = e.soort
+JOIN soort s ON s.soort_id = e.soort_id
 WHERE evenement_id = $id");
 $stmt->execute();
 
 //put the results in $row
 $row = $stmt->fetch();
 
-$soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
+$soorten = $db->query('select * from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -192,7 +238,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 <small>Wijzigen</small>
                 <div class='pull-right control-group'>
                     <a href="<?= route('/index.php?evenementen=specifiek&evenement_id=' . $id) ?>"
-                       class="btn btn-primary">Terug naar evenementen</a>
+                       class="btn btn-primary">Terug naar evenement</a>
                 </div>
             </div>
             <div class="card-body">
@@ -277,13 +323,30 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                             if (!empty($soort['soort'])) {
 
                                 echo '<option value="' .
-                                    $soort['soort'] .
+                                    $soort['soort_id'] .
                                     '">' .
                                     $soort['soort'] .
                                     '</option>';
                             }
                         }
+
+                        $whitelist = $row['publiek'];
+                        if ($whitelist == 1){
+                            $option1 = '<option value="1">Publiek</option>';
+                            $option2 = '<option value="0">Privaat</option>';
+                        }
+                        elseif($whitelist == 0){
+                            $option1 = '<option value="0">Privaat</option>';
+                            $option2 = '<option value="1">Publiek</option>';
+                        }
                         ?>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="whitelist">whitelist</label>
+                    <select class="form-control" id="whitelist" name="whitelist" required="required">
+                        <?= $option1, $option2 ?>
                     </select>
                 </div>
                 <?php

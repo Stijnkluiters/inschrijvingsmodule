@@ -3,7 +3,7 @@
 include_once '../config.php';
 
 $db = db();
-$stmt = $db->prepare('select * from evenement WHERE status = 1 AND eindtijd > ?');
+$stmt = $db->prepare('SELECT * FROM evenement e WHERE  e.status = 1 AND e.eindtijd > ?');
 $stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
 
@@ -11,8 +11,7 @@ if(count($evenemten)===0) {
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
 
-
-
+$user = get_user_info();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,18 +21,13 @@ if(count($evenemten)===0) {
     <meta name="description" content="">
     <meta name="author" content="">
     <!--<link rel="icon" href="../../favicon.ico">-->
-
     <title>Studenten evenementen overzicht</title>
-
     <!-- Bootstrap core CSS -->
     <link href="<?= route('/public/css/style.css'); ?>" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="<?= route('/public/css/student.css'); ?>" rel="stylesheet">
 </head>
-
 <body>
-
 <div class="collapse bg-inverse" id="navbarHeader">
     <div class="container">
         <div class="row">
@@ -51,40 +45,37 @@ if(count($evenemten)===0) {
 <div class="navbar navbar-inverse bg-inverse">
     <div class="container d-flex justify-content-between">
         <a href="#" class="navbar-brand">Roc midden Nederland</a>
-
     </div>
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
+        <?php
+        $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
+        $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
+        $leerlingQuery->execute();
+        $leerlingen = $leerlingQuery->fetch();
+        ?>
+        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
     </div>
 </div>
-
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
-        <?php
-            $user = get_user_info();
-            $stmt = $db->prepare('select roepnaam FROM leerling WHERE roepnaam = ?');
-            $stmt->execute(array($user['roepnaam']));
-
-        ?>
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
-        <p class="lead text-muted">Evenementen overzicht van <?php print($user['roepnaam']) ; ?></p>
+        <p class="lead text-muted">Evenementen overzicht van <?= $user['roepnaam'] ; ?></p>
     </div>
 </section>
-
 <div class="album text-muted">
     <div class="container">
         <?php
         if(isset($bericht)){
             print($bericht);
         }
-        ?>
-        <?php foreach ($evenemten as $evenemnt) { ?>
+
+        foreach ($evenemten as $evenemnt) { ?>
         <div class="row">
             <div class="card col-12">
                 <div class="card-body">
                     <h4 class="card-title"><?= ucfirst($evenemnt[ 'titel' ]); ?></h4>
                     <h5 class="text-muted"><?= ucfirst($evenemnt[ 'onderwerp' ]); ?></h5>
-
                 <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
                 <ul class="list-group">
                     <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
@@ -93,53 +84,71 @@ if(count($evenemten)===0) {
             </div>
                 <form action="<?= route('/student/index.php') ?>" method="post">
                     <?php
-                        if(isset($_POST['submit'])){
+                    $user = get_user_info();
+                    $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
+                    $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
+                    $inschrijving = $stmt->fetch();
+                    if(isset($_POST['submit'])){
+                        if(empty($inschrijving['aangemeld_op'])) {
+                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+                            $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
-                            $user = get_user_info();
-                            $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
-                            $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
-                            $rowcount = $stmt->rowCount();
-                            if(empty($rowcount)){
+                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
+                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
 
-                                $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-                                $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
+                            //QUERY voor ophalen gegevens voor de mail
+                            $db = db();
+                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
+                            $stmt->execute();
+                            $evenement = $stmt->fetch();
+                            $leerling = $user;
+                            // toestemming $message
+                            include_once '../mail/bevestiging_inschrijving.php';
+                            /** @var TYPE_NAME $message */
+                            sendMail($receiver, $subject, $message);
+                            $inschrijving['aangemeld_op'] = 'X';
 
-                                // create mail functionality
-                                $mail = new \PHPMailer\PHPMailer\PHPMailer();
-                                //Server settings
-                                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                                $mail->isSMTP();                                      // Set mailer to use SMTP
-                                $mail->Host = mailhost;  // Specify main and backup SMTP servers
-                                $mail->SMTPAuth = mailSMTP;                               // Enable SMTP authentication
-                                $mail->Username = mailuser;                 // SMTP username
-                                $mail->Password = mailpassword;                           // SMTP password
-                                $mail->SMTPSecure = mailSMTPSecure;                            // Enable TLS encryption, `ssl` also accepted
-                                $mail->Port = mailPort;                                    // TCP port to connect to
-                                $mail->setFrom(mailFromEmail, mailFromUser);
-                                $mail->addReplyTo(mailFromEmail, mailFromUser);
-                                $mail->addBCC(mailFromEmail);
-                                $mail->addAddress($user['leerlingnummer'].'@edu.rocmn.nl');
-                                $mail->subject = 'HI';
-                                $mail->body = 'HOI!';
-                                $mail->send();
+                            success('Je hebt je ingeschreven!');
+                        }else{
+                            success('Je hebt je uitgeschreven!');
+                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+                            $stmt->execute(array(NULL, $evenemnt['evenement_id'], $user['leerlingnummer']));
+                            $inschrijving['aangemeld_op'] = NULL;
 
+                            //test
+                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
+                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
 
-                                success('Je hebt je ingeschreven!');
-                            }else{
-                                error('Je kan je niet inschrijven!');
-                            }
+                            //QUERY voor ophalen gegevens voor de mail
+                            $db = db();
+                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
+                            $stmt->execute();
+                            $evenement = $stmt->fetch();
+                            $leerling = $user;
+                            // toestemming $message
+                            include_once '../mail/bevestiging_uitschrijving.php';
+                            /** @var TYPE_NAME $message */
+                            sendMail($receiver, $subject, $message);
+                            $inschrijving['aangemeld_op'] = 'X';
                         }
-
+                    }
                     ?>
-                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">Inschrijven</button>
+                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">
+                        <?php
+                            if(!empty($inschrijving['aangemeld_op'])){
+                                print('Uitschrijven');
+                            }else{
+                                print('Inschrijven');
+                            }
+                        ?></button>
                 </form>
             </div>
             </div>
             <?php } ?>
-
     </div>
 </div>
-
 <footer class="text-muted">
     <div class="container">
         <p class="float-right">

@@ -1,63 +1,13 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: stijn
- * Date: 13-12-2017
- * Time: 10:18
+ * User: Johan Vd Wetering
+ * Date: 19-12-2017
+ * Time: 15:30
  */
-
-$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
-if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
-    redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
-}
-$db = db();
-
-if (isset($_POST["whitelist"])) {
-    $leerlingnummer = $_POST['leerlingnummer'];
-    $updatewhitelist = filter_input(INPUT_POST, 'whitelistt', FILTER_SANITIZE_NUMBER_INT);
-    var_dump($_POST);
-    if ($updatewhitelist == '0' || $updatewhitelist == '1') {
-
-        $upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
-        $upwhite->execute(array(
-            $updatewhitelist, $evenement_id,));
-    }
-}
-
-$stmt = $db->prepare('select * from inschrijfmodule.inschrijving i
-  JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
-  WHERE i.evenement_id = :evenement_id');
-$stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
-$stmt->execute();
-$inschrijvingen = $stmt->fetchAll();
-
-
-if (isset($_POST["toestemming"])) {
-    $value = $_POST["toestemming"];
-    $leerlingnummer = $_POST["leerlingnummer"];
-    $toestemming = 0;
-
-    // evenementen ophalen afhankelijk van de primary key, evenement_id
-    $stmt = $db->prepare('select * from evenement WHERE evenement_id = ?');
-    $stmt->execute(array($evenement_id));
-    $evenement = $stmt->fetch();
-
-    if (empty($evenement)) {
-        $error = 'Evenement bestaat niet? wtf?';
-    }
-    // leerlingen ophalen afhankelijk van de primary key, leerlingnummer
-    $stmt = $db->prepare('select * from leerling WHERE leerlingnummer = ?');
-    $stmt->execute(array($leerlingnummer));
-    $leerling = $stmt->fetch();
-
-    $subject = 'asdf';
-
-    if ($value == "ja") {
-        $toestemming = 1;
-
-        // onderwerp
-        $subject = 'Bevestiging inschrijving';
-        $message = '<!DOCTYPE html>
+// onderwerp
+$subject= 'Bevestiging uitschrijving';
+$message = '<!DOCTYPE html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
               xmlns:o="urn:schemas-microsoft-com:office:office">
         <head><title></title>  <!--[if !mso]><!-- -->
@@ -112,16 +62,7 @@ if (isset($_POST["toestemming"])) {
                 }    @viewport {
                     width: 320px;
                 }
-            }</style><!--<![endif]--><!--[if mso]>
-            <xml>
-                <o:OfficeDocumentSettings>
-                    <o:AllowPNG/>
-                    <o:PixelsPerInch>96</o:PixelsPerInch>
-                </o:OfficeDocumentSettings>
-            </xml><![endif]--><!--[if lte mso 11]>
-            <style type="text/css">  .outlook-group-fix {
-                width: 100% !important;
-            }</style><![endif]--><!--[if !mso]><!-->
+            }</style>
             <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet"
                   type="text/css">
             <style type="text/css">        @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);    </style>
@@ -141,11 +82,7 @@ if (isset($_POST["toestemming"])) {
             }</style>
         </head>
 <body style="background: #FFFFFF;">
-<div class="mj-container" style="background-color:#FFFFFF;"><!--[if mso | IE]>
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center"
-           style="width:600px;">
-        <tr>
-            <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">      <![endif]-->
+<div class="mj-container" style="background-color:#FFFFFF;">
     <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" border="0">
         <tbody>
         <tr>
@@ -156,10 +93,6 @@ if (isset($_POST["toestemming"])) {
                         <tbody>
                         <tr>
                             <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:9px 0px 9px 0px;">
-                                <!--[if mso | IE]>
-                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td style="vertical-align:top;width:240px;">      <![endif]-->
                                 <div class="mj-column-per-40 outlook-group-fix"
                                      style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
                                     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -185,8 +118,6 @@ if (isset($_POST["toestemming"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                                <!--[if mso | IE]>      </td>
-                            <td style="vertical-align:top;width:360px;">      <![endif]-->
                                 <div class="mj-column-per-60 outlook-group-fix"
                                      style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
                                     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -195,23 +126,26 @@ if (isset($_POST["toestemming"])) {
                                             <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;"
                                                 align="left">
                                                 <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
-                                                    <p>Beste '.formatusername($leerling).',<br><br>Je aanvraag op '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
-                                                        het evenement&#xA0;is goedgekeurd, je mag nu bij het
-                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y H:i",strtotime($inschrijving['aangemeld_op'])).' ben je op
-                                                        <strong>ingeschreven voor</strong>:</p>
+                                                    <p>Beste '.formatusername($leerling).',<br><br>Je bent uitgeschreven voor '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
+                                                        het evenement&#xA0;.<br>&#xA0;<br>Op '.date("d-M-y H:i",strtotime($inschrijving['aangemeld_op'])).' ben je op
+                                                        <strong>uitgeschreven voor</strong>:</p>
                                                     <table align="center" border="2" cellpadding="1" cellspacing="2"
                                                            style="width:100%;"
-                                                           summary="Het ongedaan maken van je inschrijving kan op de website waar je je hebt ingeschreven voor het evenement">
+                                                           summary="Je kan je opnieuw inschrijven via de website!">
                                                         <thead>
                                                         <tr>
-                                                            <th scope="col">Nummer voor het geplande activiteit</th>
-                                                            <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
+                                                            <th scope="col">Toegangscode</th>
+                                                            <th scope="col">'.md5($leerling['leerlingnummer'].$evenement['evenement_id']).'</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         <tr>
-                                                            <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td><strong>Datum</strong></td>                                                            
+                                                            <td>'. date('d-M-Y',strtotime($evenement['begintijd'])) . ' tot ' . date("d-M-Y",strtotime($evenement['eindtijd'])) . '</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Tijd</strong></td>                                                            
+                                                            <td>'. date('H:i',strtotime($evenement['begintijd'])) . ' tot ' . date("H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>
@@ -231,7 +165,7 @@ if (isset($_POST["toestemming"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                                <!--[if mso | IE]>      </td></tr></table>      <![endif]--></td>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -240,112 +174,23 @@ if (isset($_POST["toestemming"])) {
         </tr>
         </tbody>
     </table>
-    <!--[if mso | IE]>      </td></tr></table>      <![endif]-->      <!--[if mso | IE]>
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center"
-           style="width:600px;">
-        <tr>
-            <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">      <![endif]-->
     <div style="margin:0px auto;max-width:600px;">
         <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;" align="center"
                border="0">
             <tbody>
             <tr>
                 <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:9px 0px 9px 0px;">
-                    <!--[if mso | IE]>
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td style="vertical-align:top;width:600px;">      <![endif]-->
                     <div class="mj-column-per-100 outlook-group-fix"
                          style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
                         <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                             <tbody></tbody>
                         </table>
                     </div>
-                    <!--[if mso | IE]>      </td></tr></table>      <![endif]--></td>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <!--[if mso | IE]>      </td></tr></table>      <![endif]--></div>
+    </div>
 </body>
 </html>';
-
-    } elseif ($value == "nee") {
-        // hier moet mnr. van dalen even de $message template aanmaken.
-        $toestemming = 0;
-        $subject = 'asdfasfd';
-        $message = 'sadfasdf';
-
-    }
-    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
-    $r = $stmt->execute(array($toestemming, $leerlingnummer, $evenement_id));
-    if ($r) {
-        sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
-    } else {
-        $error = 'Opslaan niet gelukt! probeer het opnieuw';
-    }
-
-
-}
-?>
-
-<form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Leerlingnummer</th>
-            <th>Naam</th>
-            <th>Aangemeld op</th>
-            <th>Gewhitelist</th>
-            <th>Toestemming</th>
-        </tr>
-        </thead>
-        <tfoot>
-        <tr>
-            <th>Leerlingnummer</th>
-            <th>Naam</th>
-            <th>Aangemeld op</th>
-            <th>Gewhitelist</th>
-            <th>Toestemming</th>
-        </tr>
-        </tfoot>
-        <tbody>
-        <?php foreach ($inschrijvingen as $inschrijving) {
-        if ($inschrijving['gewhitelist'] === '1')
-        {
-        $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $inschrijving['leerlingnummer'] . '">
-                <span class="text-success">
-                <i class="fa fa-check" aria-hidden="true"></i>
-                <button class="btn btn-danger pull-right" type="submit" name="whitelist" value="0">
-                <i class="fa fa-times" aria-hidden="true">
-                </i> Blacklisten
-                </button>
-                </span>';
-        }elseif ($inschrijving['gewhitelist'] === '0'){
-        $whitelist = '<span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i><button class="btn btn-success pull-right" type="submit" name="whitelist" value="1"><i class="fa fa-check" aria-hidden="true"></i> Whitelisten</button></span>';
-        } ?>
-
-        <tr>
-            <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
-        </tr>
-                <td><?= $inschrijving['leerlingnummer'] ?></td>
-                <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
-                <td><?=$whitelist ?></td>
-                <td>
-                    <?php if (!$inschrijving['toestemming']) { ?>
-                        <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
-                    <?php } else { ?>
-                        <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
-                        <div class="form-group">
-                            <label for="comment">Opmerking afwijzing</label>
-                            <textarea class="form-control" id="comment"></textarea>
-                        </div>
-                    <?php } ?>
-                </td>
-            </tr>
-        <?php } ?>
-        </tbody>
-    </table>
-</form>
-

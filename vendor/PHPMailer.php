@@ -1321,7 +1321,7 @@ class PHPMailer
         } catch (PHPMailerException $exc) {
             $this->mailHeader = '';
             $this->setError($exc->getMessage());
-            if ($this->PHPMailerExceptions) {
+            if ($this->exceptions) {
                 throw $exc;
             }
 

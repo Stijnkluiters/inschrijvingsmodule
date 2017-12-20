@@ -17,13 +17,36 @@ function PermissionBaseQuery()
     return $sql;
 }
 
-function has_permission($permissionString)
+function has_permission($compareRole)
 {
-    $dbh = db();
-    $stmt = $dbh->prepare(PermissionBaseQuery());
-    $stmt->bindParam('user_id', $_SESSION[authenticationSessionName], PDO::PARAM_STR);
-    $stmt->bindParam('name',$permissionString,PDO::PARAM_STR);
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return count( $results ) > 0;
+    startsession();
+    $role = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
+    if(is_array($compareRole)) {
+
+        // returns true or false
+        return in_array($role,$compareRole);
+    } else {
+        // returns true or false
+        return $role == $compareRole;
+    }
+    // still here?
+}
+
+function handleUnauthenticatedRole($compareRol) {
+    if(!has_permission($compareRol)) {
+        //logout();
+        //redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+        dump('derp? uitgelogd');
+        exit;
+    }
+}
+
+function viewEvent($event)
+{
+    if($event['account_id'] != $_SESSION[authenticationSessionName]) {
+//        logout();
+//        redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+        dump('derp? uitgelogd');
+        exit;
+    }
 }

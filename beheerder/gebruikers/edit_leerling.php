@@ -5,7 +5,7 @@
  * Date: 22-11-2017
  * Time: 13:08
  */
-$leerlingnummer = filter_input(INPUT_GET, 'leerlingnummer', FILTER_SANITIZE_STRING);
+$leerlingnummer = filter_var(filter_input(INPUT_GET,'leerlingnummer',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 $db = db();
 $leerlingQuery = $db->prepare("SELECT * FROM leerling l LEFT JOIN account a ON a.account_id = l.account_id WHERE leerlingnummer = :leerlingnummer");
 $leerlingQuery->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);

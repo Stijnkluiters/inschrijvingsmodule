@@ -10,28 +10,28 @@
  *
  */
 
+include_once 'config.php';
 // check if user is logged in.
-
-
+if(!isset($_SESSION[authenticationSessionName])) {
+    redirect('/login.php');
+}
 //
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
 
-include_once 'config.php';
 startsession();
-if(isset($_SESSION['message'])) {
+if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     //Laat het bericht maar 1x zien per request!
     unset($_SESSION['message']);
 }
 session_regenerate_id();
-check_logged_in_user();
-
+handleUnauthenticatedRole(array('beheerder', 'externbedrijf', 'docent'));
 $user = get_user_info();
 
 
-
+$rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
 //9bcratj86fvn52ov5lsrvtlv2u
 //
 ?>
@@ -105,41 +105,47 @@ $user = get_user_info();
                 <li class="nav-title">
                     Interacties
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?evenementen=alles') ?>"><i
-                                class="icon-pie-chart"></i> Evenementen</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtleerling'); ?>">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Leerlingen
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtmedewerker'); ?>">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Medewerkers
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtcontactpersonen'); ?>">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Contactpersonen
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=roltoewijzen'); ?>">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Roltoewijzing
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= route('/index.php?gebruiker=registreren_externbedrijf'); ?>">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Registreren externbedrijf
-                    </a>
-                </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= route('/index.php?evenementen=alles') ?>"><i
+                                    class="icon-pie-chart"></i> Evenementen</a>
+                    </li>
+                    <?php
+                if (in_array($rol, array('beheerder','docent'))) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtleerling'); ?>">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            Leerlingen
+                        </a>
+                    </li>
+                    <?php
+                }
+                if (in_array($rol, array('beheerder'))) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtmedewerker'); ?>">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            Medewerkers
+                        </a>
+                    </li>
+
+                <?php }
+                if (in_array($rol, array('beheerder', 'externbedrijf'))) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= route('/index.php?gebruiker=overzichtcontactpersonen'); ?>">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            Contactpersonen
+                        </a>
+                    </li>
+                    <?php
+                }
+                if (in_array($rol, array('beheerder'))) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= route('/index.php?gebruiker=roltoewijzen'); ?>">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            Roltoewijzing
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -158,39 +164,97 @@ $user = get_user_info();
                 // gebruikers
 
                 if (isset($_GET['gebruiker'])) {
+
+
                     if ($_GET['gebruiker'] === 'alles') {
+
+
                         //require 'beheerder/gebruikers/all.php';
                         // alle gebruikers
                     } elseif ($_GET['gebruiker'] == 'invoerenmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/insertdocent.php';
                     } elseif ($_GET['gebruiker'] == 'invoerenleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'docent'));
+
                         require 'beheerder/gebruikers/insertstudent.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'docent'));
+
                         require 'beheerder/gebruikers/overzicht_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/bekijken_docent.php';
                     } elseif ($_GET['gebruiker'] == 'editleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'docent'));
+
                         require 'beheerder/gebruikers/edit_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'activatieleerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/activatie_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'deleteLeerling') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'docent'));
+
                         require 'beheerder/gebruikers/delete_leerling.php';
                     } elseif ($_GET['gebruiker'] == 'editmedewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/edit_docent.php';
                     } elseif ($_GET['gebruiker'] == 'activatie-deactivatie-medewerker') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/medewerker/activeer_deactivieer_docent.php';
                     } elseif ($_GET['gebruiker'] == 'overzichtcontactpersonen') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'externbedrijf'));
+
                         require 'beheerder/gebruikers/contactpersoon/overzichtcontactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'editcontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder', 'externbedrijf'));
+
                         require 'beheerder/gebruikers/contactpersoon/edit_contactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'deletecontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/contactpersoon/delete_contactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'activatiecontactpersoon') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/contactpersoon/activatiecontactpersoon.php';
                     } elseif ($_GET['gebruiker'] == 'roltoewijzen') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
                         require 'beheerder/gebruikers/roltoewijzing.php';
-                    } elseif ($_GET['gebruiker'] == 'registreren_externbedrijf') {
-                        require 'registreren_contactpersoon/registreren_externbedrijf.php';
                     } else {
                         exit;
                         // specifieke gebruiker
@@ -199,6 +263,7 @@ $user = get_user_info();
 
                 // evenementen
                 if (isset($_GET['evenementen'])) {
+
                     if ($_GET['evenementen'] === 'alles') {
                         include 'evenement/bekijken.php';
                     } elseif ($_GET['evenementen'] === 'specifiek') {
@@ -222,6 +287,7 @@ $user = get_user_info();
                         }
                     }
                 }
+
                 // soorten evenementen
                 if (isset($_GET['soorten'])) {
                     if ($_GET['soorten'] === 'overzicht') {
@@ -232,6 +298,12 @@ $user = get_user_info();
                     }
                     if ($_GET['soorten'] === 'aanpassen') {
                         include 'evenement/soort/soort_aanpassen.php';
+                    }
+                    handleUnauthenticatedRole(array('beheerder'));
+                }
+                if (isset($_GET['bedrijfsinfo'])) {
+                    if ($_GET['bedrijfsinfo'] === 'wijzigen') {
+                        include 'beheerder/gebruikers/contactpersoon/bedrijf/bedrijfwijzigen.php';
                     }
                 }
 
@@ -275,7 +347,7 @@ $user = get_user_info();
     <?php
 
     if(isset($message)) { ?>
-    $.notify("<?= $message; ?>",{
+    $.notify("<?= $message; ?>", {
         className: 'info'
     });
     <?php } ?>

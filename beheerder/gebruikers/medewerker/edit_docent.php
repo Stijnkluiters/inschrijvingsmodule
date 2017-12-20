@@ -7,7 +7,7 @@
  */
 
 
-$afkorting = ($_GET['afkorting']);
+$afkorting = filter_var(filter_input(INPUT_GET,'afkorting',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");

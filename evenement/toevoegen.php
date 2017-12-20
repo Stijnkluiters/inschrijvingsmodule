@@ -76,7 +76,7 @@ if (isset($_POST['titel'])) {
     if (!isset($_POST['soort']) || empty($_POST['soort'])) {
         $error['soort'] = ' soort is verplicht';
     }
-    $soort = filter_input(INPUT_POST, 'soort', FILTER_SANITIZE_STRING);
+    $soort = filter_input(INPUT_POST, 'soort', FILTER_SANITIZE_NUMBER_INT);
     if (empty($soort)) {
         $error['soort'] = ' het filteren van soort ging verkeerd';
     }
@@ -88,14 +88,15 @@ if (isset($_POST['titel'])) {
         $error['vervoer'] = ' het filteren van vervoer ging verkeerd';
     }
 
-    /** Min_leerlingen */
-    $min_leerlingen = filter_input(INPUT_POST, 'min_leerlingen', FILTER_SANITIZE_STRING);
+    /** Min_leerlingen & max_leerlingen*/
+    $min_leerlingen = (int)filter_input(INPUT_POST, 'min_leerlingen', FILTER_SANITIZE_STRING);
+    $max_leerlingen = (int)filter_input(INPUT_POST, 'max_leerlingen', FILTER_SANITIZE_STRING);
     if ($min_leerlingen === false) {
         $error['Min_leerlingen'] = ' het filteren van Minimaal aantal leerlingen ging verkeerd';
+    } elseif($min_leerlingen < 0 || $min_leerlingen > $max_leerlingen){
+        $error['Min_leerlingengetal'] = 'minimaal aantal leerlingen moet tussen 0 en maximaal aantal leerlingen';
     }
 
-    /** Max_leerlingen */
-    $max_leerlingen = filter_input(INPUT_POST, 'max_leerlingen', FILTER_SANITIZE_STRING);
     if ($max_leerlingen === false) {
         $error['Max_leerlingen'] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
     }
@@ -113,6 +114,9 @@ if (isset($_POST['titel'])) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
 
+    if(!($_POST['whitelist'] == 1 || $_POST['whitelist'] == 0)){
+        $error['whitelist'] = ' Whitelist kan alleen maar publiek of privaat zijn';
+    }
 
     if (count($error) === 0) {
         $stmt = $db->prepare('
@@ -127,19 +131,21 @@ if (isset($_POST['titel'])) {
         min_leerlingen,
         max_leerlingen,
         lokaalnummer,
-        soort,
+        soort_id,
         contactnr,
+        publiek,
         account_id
         ) VALUES(
               ?,
               ?,
-                ?,
-                ?,
-                ?,
-                ?,
-                ?,
-                ?,
-                ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
               ?,
               ?,
               ?,
@@ -159,21 +165,35 @@ if (isset($_POST['titel'])) {
             $lokaalnummer,
             $soort,
             $contactnummer,
+            $_POST['whitelist'],
             $_SESSION[authenticationSessionName]
             ));
+        $evenement_id = $db->lastInsertId();
 
-        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
+        $stmt3 = $db->prepare("
+INSERT INTO inschrijving(evenement_id, leerlingnummer, gewhitelist)
+SELECT :evenement_id, leerlingnummer, :gewhitelist
+FROM leerling l
+WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
+        $stmt3->bindParam('evenement_id',$evenement_id);
+        $stmt3->bindParam('gewhitelist', $_POST['whitelist']);
+        $stmt3->execute();
+        //redirect('/index.php?evenementen=alles','Evenement toegevoegd');
 
     }
 
 }
 
 
-$soorten = $db->query('select * from soort WHERE soort.soort IS NOT NULL');
+$soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
 if(count($soorten) === 0) {
-    redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+    if($rol === 'beheerder') {
+        redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+    } else {
+        redirect('/index.php?evenementen=alles','Er bestaan nog geen soorten, neem contact op met de beheerder');
+    }
 }
 
 ?>
@@ -265,7 +285,7 @@ if(count($soorten) === 0) {
                             if (!empty($soort['soort'])) {
 
                                 echo '<option value="' .
-                                    $soort['soort'] .
+                                    $soort['soort_id'] .
                                     '">' .
                                     $soort['soort'] .
                                     '</option>';
@@ -279,7 +299,14 @@ if(count($soorten) === 0) {
                     <input type="text" class="form-control" id="contactnr" name="contactnr"
                            value="" placeholder="Contactnr">
                 </div>
-
+                <div class="form-group">
+                    <label for="whitelist">whitelist</label>
+                    <select class="form-control" id="whitelist" name="whitelist" required="required">
+                        <option value="">Selecteer soort whitelist</option>
+                        <option value="1">Publiek</option>
+                        <option value="0">Privaat</option>
+                    </select>
+                </div>
             </div>
 
             <?php

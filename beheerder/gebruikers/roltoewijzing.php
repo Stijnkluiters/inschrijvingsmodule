@@ -96,7 +96,7 @@ foreach ($accounts as $account) {
                 }
             }
             else{
-                print("<p class='bg-danger'>! er zijn op dit moment geen gebruikers !</p>");
+                print("<p class='bg-danger'>! er zijn op dit moment geen gebruikers behalve jezelf!</p>");
             }
             ?>
 
