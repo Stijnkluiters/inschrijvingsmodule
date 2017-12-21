@@ -354,7 +354,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 if (isset($error)) {
                     print '<ul>';
                     foreach ($error as $key => $message) {
-                        print '<li>' . $key . ':' . $message . '</li>';
+                        print '<li>' . $message . '</li>';
                     }
                     print '</ul>';
                 }
