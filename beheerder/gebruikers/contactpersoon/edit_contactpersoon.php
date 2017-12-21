@@ -89,8 +89,8 @@ if (isset($_POST['submit'])) {
             tussenvoegsel = :tussenvoegsel, 
             achternaam = :achternaam,
             functie = :functie, 
-            `telefoonnr.` = :telefoonnummer,
-            `email-adres` = :email
+            `telefoonnummer` = :telefoonnummer,
+            `email` = :email
             WHERE contact_id = :contact_id');
 
         $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
@@ -149,14 +149,14 @@ $contact = $contactQuery->fetch();
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">telefoon</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $contact['telefoonnr.'] ?>" id="text-input" name="telefoon" class="form-control"
+            <input type="text" value="<?= $contact['telefoonnummer'] ?>" id="text-input" name="telefoon" class="form-control"
                    placeholder="<?= $contact['telefoonnummer'] ?>">
         </div>
     </div>
         <div class="form-group row">
             <label class="col-md-3 form-control-label" for="text-input">Email</label>
             <div class="col-md-9">
-                <input type="text" value="<?= $contact['email-adres'] ?>" id="text-input" name="Email" class="form-control"
+                <input type="text" value="<?= $contact['email'] ?>" id="text-input" name="Email" class="form-control"
                        placeholder="<?= $contact['email'] ?>">
             </div>
         </div>
