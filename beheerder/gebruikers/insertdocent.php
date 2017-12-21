@@ -8,7 +8,7 @@
 
 if( isset($_POST[ 'invoeren' ]) )
 {
-    if( !is_csv($_FILES[ 'csv' ][ 'type' ]) )
+    if( !is_csv($_FILES[ 'csv' ]) )
     {
         $error = 'Het bestandstype moet verplicht: .csv zijn.';
     }
