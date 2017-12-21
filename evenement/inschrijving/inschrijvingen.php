@@ -125,7 +125,7 @@ if (isset($_POST["toestemming"])) {
 
         <tr>
             <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
-        </tr>
+
                 <td><?= $inschrijving['leerlingnummer'] ?></td>
                 <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
                 <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>

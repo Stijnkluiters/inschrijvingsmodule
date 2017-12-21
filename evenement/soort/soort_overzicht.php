@@ -9,7 +9,7 @@
 $db = db();
 if (isset($_POST['soortid'])) {
 
-    $soortid = filter_var(filter_input(INPUT_GET,'soortid',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+    $soortid = filter_var(filter_input(INPUT_POST,'soortid',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
     if (!filter_var($soortid, FILTER_VALIDATE_INT)) {
         redirect('/index.php', 'SoortID is geen nummeriek getal');
