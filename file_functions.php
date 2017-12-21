@@ -19,9 +19,7 @@ function is_csv($file)
      * gather fileinformation by a class.
      */
 
-
-
-    $file = new SplFileInfo($file['tmp_name']);
+    $file = new SplFileInfo($file['name']);
     $fileExtension = $file->getExtension();
     return in_array($fileExtension, $allowedExtensions);
 }

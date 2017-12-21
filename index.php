@@ -42,7 +42,7 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="ROC-midden Nederland evenementenmodule">
-    <meta name="author" content="Stijn Kluiters, ...">
+    <meta name="author" content="Stijn Kluiters, Johan van de Wetering ...">
     <meta name="keyword"
           content="Bootstrap,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
     <title>Inschrijfmodule</title>
@@ -88,7 +88,7 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
                 <div class="dropdown-header">
                     <i class="fa fa-user-circle"></i><strong class="ml-1"><?= formatusername($user); ?></strong>
                 </div>
-                <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profiel</a>
+                <a class="dropdown-item" href="<?= route('/profiel.php?=profiel&account_id=' . $user['account_id']);?>"><i class="fa fa-user"></i> Profiel</a>
                 <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
             </div>
         </li>
@@ -207,6 +207,12 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
                         handleUnauthenticatedRole(array('beheerder'));
 
                         require 'beheerder/gebruikers/activatie_leerling.php';
+                    }elseif ($_GET['gebruiker'] == 'profiel') {
+
+
+                        handleUnauthenticatedRole(array('beheerder'));
+
+                        require 'profiel.php';
                     } elseif ($_GET['gebruiker'] == 'deleteLeerling') {
 
 

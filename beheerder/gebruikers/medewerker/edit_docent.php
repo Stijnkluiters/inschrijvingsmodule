@@ -7,7 +7,8 @@
  */
 
 
-$afkorting = filter_var(filter_input(INPUT_GET,'afkorting',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+$afkorting = filter_input(INPUT_GET,'afkorting',FILTER_SANITIZE_STRING);
+
 
 $db = db();
 $docentQuery = $db->prepare("SELECT * FROM medewerker WHERE afkorting = :afkorting");
@@ -17,8 +18,6 @@ $docent = $docentQuery->fetch();
 
 
 if (isset($_POST['submit'])) {
-
-
     /** gebruikersnaam */
     $error = array();
 

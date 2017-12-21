@@ -7,19 +7,14 @@
  */
 
 
+$db = db();
 $contact_id = filter_var(filter_input(INPUT_GET,'contact_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
 
-$db = db();
-$contactQuery = $db->prepare("SELECT * FROM contactpersoon WHERE contact_id = :contact_id");
-$contactQuery->bindParam('contact_id' ,$contact_id, PDO::PARAM_STR);
-$contactQuery->execute();
-$contact = $contactQuery->fetch();
+
 
 
 
 if (isset($_POST['submit'])) {
-
-var_dump($_GET);
     /** gebruikersnaam */
     $error = array();
 
@@ -94,8 +89,8 @@ var_dump($_GET);
             tussenvoegsel = :tussenvoegsel, 
             achternaam = :achternaam,
             functie = :functie, 
-            telefoonnummer = :telefoonnummer,
-            email = :email
+            `telefoonnr.` = :telefoonnummer,
+            `email-adres` = :email
             WHERE contact_id = :contact_id');
 
         $stmt->bindParam('contact_id', $contact_id, PDO::PARAM_STR);
@@ -108,9 +103,16 @@ var_dump($_GET);
         $stmt->bindParam('contact_id', $contact_id,PDO::PARAM_STR);
         $stmt->execute();
         redirect('/index.php?gebruiker=overzichtcontactpersonen', $roepnaam.' is aangepast.');
+    } else {
+        dump($error);
+        exit;
     }
 }
 
+$contactQuery = $db->prepare("SELECT * FROM contactpersoon WHERE contact_id = :contact_id");
+$contactQuery->bindParam('contact_id' ,$contact_id, PDO::PARAM_STR);
+$contactQuery->execute();
+$contact = $contactQuery->fetch();
 
 ?>
 
@@ -147,14 +149,14 @@ var_dump($_GET);
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">telefoon</label>
         <div class="col-md-9">
-            <input type="text" value="<?= $contact['telefoonnummer'] ?>" id="text-input" name="telefoon" class="form-control"
+            <input type="text" value="<?= $contact['telefoonnr.'] ?>" id="text-input" name="telefoon" class="form-control"
                    placeholder="<?= $contact['telefoonnummer'] ?>">
         </div>
     </div>
         <div class="form-group row">
             <label class="col-md-3 form-control-label" for="text-input">Email</label>
             <div class="col-md-9">
-                <input type="text" value="<?= $contact['email'] ?>" id="text-input" name="Email" class="form-control"
+                <input type="text" value="<?= $contact['email-adres'] ?>" id="text-input" name="Email" class="form-control"
                        placeholder="<?= $contact['email'] ?>">
             </div>
         </div>
