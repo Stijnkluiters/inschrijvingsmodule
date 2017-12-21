@@ -46,6 +46,7 @@ if (isset($_POST)) {
                 $soortnaam,
                 $benodigdheden));
             $successmessage = "<div><span class='bg-success'>$soortnaam is toegevoegd</span></div>";
+            redirect('soort_overzicht', $successmessage);
 
         } else {
             $successmessage = "";
@@ -78,7 +79,6 @@ if (isset($_POST)) {
                     <textarea class="form-control" id="benodigdheden" name="benodigdheden"
                               placeholder="benodigdheden bij soort evenement"></textarea>
                 </div>
-                <?= $successmessage ?>
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen
             </div>
         </div>

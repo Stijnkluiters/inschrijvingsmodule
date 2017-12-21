@@ -107,7 +107,6 @@ if (isset($_POST['titel'])) {
         $error['soort'] = ' whitelist is verplicht';
     }
     $whitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
-    var_dump($whitelist);
     if ($whitelist !== '1' && $whitelist !== '0'){
         $error['soort'] = ' whitelist kan alleen maar publiek of privaat zijn';
     }
@@ -142,7 +141,7 @@ if (isset($_POST['titel'])) {
     if(strlen($contactnr) > 11){
         $error['contactnummer'] = ' het contactnummer mag niet langer zijn dan 11 karakters';
     }
-    if ($contactnr === false || empty($contactnr)) {
+    if ($contactnr === false) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
 

@@ -7,7 +7,7 @@
  */
 
 $db = db();
-$id = filter_var(filter_input(INPUT_GET, 'contact_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
+$id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
 
 if (isset($_POST['activeren'])) {
     $error = [];
@@ -15,7 +15,7 @@ if (isset($_POST['activeren'])) {
         $error['comment'] = ' reden is verplicht.';
     }
 
-    $activeren = filter_input(INPUT_POST, 'contact_id', FILTER_SANITIZE_STRING);
+    $activeren = filter_input(INPUT_POST, 'activeren', FILTER_SANITIZE_STRING);
 
     $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_STRING);
     if (empty($_POST['comment'])) {
@@ -138,7 +138,7 @@ $row = $stmt->fetch()
             if ($row['status'] == 1) {
                 $actiefknop = 'danger';
                 $knopnaam = 'deactiveren';
-                $activeren = false ?>
+                $activeren = '0' ?>
 
                 <div class="form-group">
                     <label for="comment"></label>
@@ -150,7 +150,7 @@ $row = $stmt->fetch()
                 ?><input type="hidden" name="comment" value=""><?php
                 $actiefknop = 'success';
                 $knopnaam = 'activeren';
-                $activeren = true;
+                $activeren = '1';
             } ?>
             <input type="hidden" name="activeren" value="<?= $activeren ?>">
             <button type="submit" name="submit" class="btn btn-sm btn-<?= $actiefknop ?>"><?= $knopnaam ?></button>
