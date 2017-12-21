@@ -58,6 +58,7 @@ if( isset($_POST[ 'submit' ]) )
             $benodigdheid,
             $soortID
         ));
+        redirect('/index.php?soorten=overzicht');
     }
 }
 

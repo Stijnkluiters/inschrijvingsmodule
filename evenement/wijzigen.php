@@ -200,7 +200,7 @@ if (isset($_POST['titel'])) {
 
         }
 
-        //redirect('/index.php?evenementen=specifiek&evenement_id=' . $id);
+        redirect('/index.php?evenementen=specifiek&evenement_id=' . $id);
 
     }
 }

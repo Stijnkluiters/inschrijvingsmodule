@@ -5,8 +5,7 @@ $db = db();
 $sql = "
 SELECT evenement_id, titel, onderwerp, begintijd, eindtijd, s.soort, locatie, status, publiek
 FROM evenement e
-JOIN soort s ON e.soort_id = s.soort_id
-WHERE s.actief = 1";
+JOIN soort s ON e.soort_id = s.soort_id";
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
 
 if ($rol === 'externbedrijf') {

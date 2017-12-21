@@ -178,7 +178,7 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
         $stmt3->bindParam('evenement_id',$evenement_id);
         $stmt3->bindParam('gewhitelist', $_POST['whitelist']);
         $stmt3->execute();
-        //redirect('/index.php?evenementen=alles','Evenement toegevoegd');
+        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
 
     }
 

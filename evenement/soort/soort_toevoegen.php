@@ -46,7 +46,7 @@ if (isset($_POST)) {
                 $soortnaam,
                 $benodigdheden));
             $successmessage = "<div><span class='bg-success'>$soortnaam is toegevoegd</span></div>";
-            redirect('soort_overzicht', $successmessage);
+            redirect('/index.php?soorten=overzicht');
 
         } else {
             $successmessage = "";

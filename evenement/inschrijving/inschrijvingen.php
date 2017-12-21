@@ -11,7 +11,6 @@ if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
 $db = db();
-
 if (isset($_POST["whitelist"])) {
     $leerlingnummer = $_POST['leerlingnummer'];
     $updatewhitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
@@ -98,9 +97,7 @@ if (isset($_POST["toestemming"])) {
     </tfoot>
     <tbody>
     <?php foreach ($inschrijvingen as $inschrijving) {
-        ?>
-    <form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
-            <?php
+
             $leerlingnummer2 = $inschrijving['leerlingnummer'];
             if ($inschrijving['gewhitelist'] === '1') {
                 $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $leerlingnummer2 . '">
@@ -121,9 +118,12 @@ if (isset($_POST["toestemming"])) {
                 <i class="fa fa-check" aria-hidden="true">
                 </i> Whitelisten</button>
                 </span>';
-            } ?>
+            } else{
+                $whitelist = '';
+            }?>
 
         <tr>
+            <form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
             <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
 
                 <td><?= $inschrijving['leerlingnummer'] ?></td>
