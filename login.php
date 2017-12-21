@@ -152,10 +152,9 @@ if( isset($_POST[ 'submit' ]) )
                 <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
                     <div class="card-body text-center">
                         <div>
-                            <h2>Registreren</h2>
-                            <p>klik hier om te registreren, het is de bedoeling dat de beheerder jou registratie
-                                goedkeurt. Het registreer proces is tijdelijk zo en wordt later nog uitgebreid.</p>
-                            <a href="<?= route('/register.php'); ?>" type="button" class="btn btn-primary px-4">Registreren</a>
+                            <h2>Het ROC midden Nederland</h2>
+                            <p>Inschrijvingsmodule</p>
+<!--                            <a href="--><?//= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
                         </div>
                     </div>
                 </div>
