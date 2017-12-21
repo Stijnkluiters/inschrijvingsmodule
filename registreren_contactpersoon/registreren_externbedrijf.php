@@ -438,7 +438,7 @@ if (isset($_POST['submit'])) {
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form method="post" action="<?= route('../registreren_contactpersoon/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
+            <form method="post" action="<?= route('/registreren_contactpersoon/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
                 <div class="card">
                     <div class="container-fluid">
                         <h1>Registreer
@@ -794,6 +794,15 @@ if (isset($_POST['submit'])) {
                                   class="form-text bg-danger text-white"><?= $error['verwachting']; ?></span>
                         <?php } ?>
                         <hr/>
+                        <?php if( isset($error['error-codes']) ) { ?>
+                            <hr/>
+                            <div class="card-footer bg-danger">
+                                <small class="text-center"><?= ucfirst($error['error-codes']); ?></small>
+                            </div>
+                            <?php
+
+                        }
+                        ?>
                         <div class="g-recaptcha" data-sitekey="6LcffjsUAAAAAK_qsbG5FQm4UnceLL2O5ztC0Kp7"></div>
                         <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
                             aanmaken
