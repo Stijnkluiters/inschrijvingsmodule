@@ -141,6 +141,16 @@ if (isset($_POST['submit'])) {
 }
 ?>
 <link href="public/css/style.css" rel="stylesheet">
+<header class="app-header navbar">
+    <a class="navbar-brand" href="#"></a>
+        <div class='pull-right control-group'>
+            <a href="<?= route('/index.php') ?>" class="btn btn-primary">Terug</a>
+        </div>
+</header>
+
+
+
+
 <div class="row">
     <div class="col-sm-6">
         <div class="card">
