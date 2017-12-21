@@ -21,15 +21,15 @@ if (isset($_POST['submit'])) {
     $error = array();
 
 
-    /** Afkorting */
-    if (!isset($_POST['afkorting']) || empty($_POST['afkorting'])) {
-        $error['afkorting'] = ' Afkorting is verplicht';
-    }
-    $afkorting = filter_input(INPUT_POST, 'afkorting', FILTER_SANITIZE_STRING);
-    if (empty($afkorting)) {
-        $error['afkorting'] = ' Het filteren van afkorting ging verkeerd';
-    }
-    $afkorting = strtolower($afkorting);
+//    /** Afkorting */
+//    if (!isset($_POST['afkorting']) || empty($_POST['afkorting'])) {
+//        $error['afkorting'] = ' Afkorting is verplicht';
+//    }
+//    $afkorting = filter_input(INPUT_POST, 'afkorting', FILTER_SANITIZE_STRING);
+//    if (empty($afkorting)) {
+//        $error['afkorting'] = ' Het filteren van afkorting ging verkeerd';
+//    }
+//    $afkorting = strtolower($afkorting);
 
     /** Roepnaam */
     if (!isset($_POST['roepnaam']) || empty($_POST['roepnaam'])) {
@@ -58,16 +58,12 @@ if (isset($_POST['submit'])) {
     }
     $achternaam = strtolower($achternaam);
 
+    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
     /** Functie */
     if (!isset($_POST['functie']) || empty($_POST['functie'])) {
         $error['functie'] = ' Functie is verplicht';
     }
-// check if given date can be converted to strtotime, if not. its false which means incorrect date.
-    if (!strtotime($_POST['functie'])) {
-        $error['functie'] = ' Functie moet ingevult zijn';
-    }
-    $functie = filter_input(INPUT_POST, 'functie', FILTER_SANITIZE_STRING);
-    if (empty($functie)) {
+     if (empty($functie)) {
         $error['functie'] = ' het filteren van functie ging verkeerd';
     }
     $functie = strtolower($functie);
@@ -92,7 +88,7 @@ if (isset($_POST['submit'])) {
     }
     $geboortedatum = filter_input(INPUT_POST, 'geboortedatum', FILTER_SANITIZE_STRING);
     if (empty($geboortedatum)) {
-        $error['geboortedatum'] = ' het filteren van geboortedatum ging verkeerd';
+        $error['geboortedatum'] = 'het filteren van geboortedatum ging verkeerd';
     }
 
     /** Locatie */
@@ -137,9 +133,10 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam('geboortedatum', $geboortedatum);
         $stmt->bindParam('locatie', $locatie, PDO::PARAM_STR);
         $stmt->bindParam('telefoon', $telefoon, PDO::PARAM_STR);
-        $stmt->bindParam('account_id', $_GET['account_id']);
+        $stmt->bindParam('account_id', filter_var($_GET['account_id'],FILTER_SANITIZE_STRING));
         $stmt->execute();
-        redirect('/index.php', 'Gebruiker ' . $gebruiker . ' aangepast!');
+        redirect('/profiel.php?=profiel&account_id='.$account_id, 'Gebruiker ' . $gebruiker['roepnaam'] . ' aangepast!');
+        // TODO: make the error variables readable for the user.
     }
 }
 ?>
@@ -148,10 +145,10 @@ if (isset($_POST['submit'])) {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <form action="<?= route('/index.php') ?>"
+                <form action="<?= route('/profiel.php?=profiel&account_id='.$gebruiker['account_id']) ?>"
                       method="post" class="form-horizontal">
                     <div class="form-group">
-                        <h3><label for="roepnaam" class="col-8">Evenementen overzicht van <?= print ucfirst($gebruiker['roepnaam']); ?> </label></h3>
+                        <h3><label for="roepnaam" class="col-8">Evenementen overzicht van <?= ucfirst($gebruiker['roepnaam']); ?> </label></h3>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label" for="text-input">Naam</label>
@@ -193,7 +190,9 @@ if (isset($_POST['submit'])) {
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
                     <div class="col-md-9">
-                        <input type="date" value="<?= date('Y-m-d', strtotime($gebruiker['geboortedatum'])) ?>" id="email-input" name="geboortedatum"
+                        <input type="date" value="<?= date('Y-m-d', strtotime($gebruiker['geboortedatum'])) ?>"
+                               id="email-input"
+                               name="geboortedatum"
                                class="form-control" placeholder="<?= $gebruiker['geboortedatum'] ?>">
                     </div>
                 </div>
@@ -209,7 +208,7 @@ if (isset($_POST['submit'])) {
                         <label class="col-md-3 form-control-label" for="text-input">Telefoon</label>
                         <div class="col-md-9">
                             <input type="text" value="<?= $gebruiker['telefoon'] ?>"
-                                   id="text-input" name="locatie" class="form-control"
+                                   id="text-input" name="telefoon" class="form-control"
                                    placeholder="<?= $gebruiker['telefoon']?> ">
                         </div>
                     </div>
