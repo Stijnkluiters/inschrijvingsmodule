@@ -153,7 +153,7 @@ if( isset($_POST[ 'submit' ]) )
                     <div class="card-body text-center">
                         <div>
                             <h2>Het ROC midden Nederland</h2>
-                            <p>Inschrijvingsmodule</p>
+                            <p>Inschrijvingsmodule </p>
 <!--                            <a href="--><?//= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
                         </div>
                     </div>
