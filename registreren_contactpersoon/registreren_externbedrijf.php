@@ -268,7 +268,7 @@ if (isset($_POST['submit'])) {
                 // gather rol_id
 
 
-                $rolnaam = 'contactpersoon';
+                $rolnaam = 'externbedrijf';
 
                 $rol_id = check_if_role_exists($rolnaam);
 
