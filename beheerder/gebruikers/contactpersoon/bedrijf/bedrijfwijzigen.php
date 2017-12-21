@@ -177,13 +177,10 @@ if( isset($_POST[ 'branche_submit' ]) )
     /**
      * branche
      */
+    $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
     if( !isset($_POST[ 'branche' ]) )
     {
         $error[ 'branche' ] = 'branche is verplicht';
-    }
-    else
-    {
-        $branche = filter_input(INPUT_POST, 'branche', FILTER_SANITIZE_STRING);
     }
     /**
      * Webadres
@@ -239,19 +236,26 @@ if( isset($_POST[ 'branche_submit' ]) )
         $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_STRING);
     }
 
-
+    /**
+     * branche_id
+     */
+    $branche_id = filter_input(INPUT_POST,'branche_id',FILTER_SANITIZE_STRING);
+    if( !isset($_POST[ 'branche_id' ]) )
+    {
+        $error[ 'branche_id' ] = 'branche_id is verplicht';
+    }
     if( count($error) === 0 )
     {
 
 
-        $db->prepare('update branche SET
+        $stmt = $db->prepare('update branche SET
             branche = ?,
             webadres = ?,
             adres = ?,
             postcode = ?,
             plaatsnaam = ?,
             contactnr = ?,
-            deleted = ?,
+            deleted = ?
             where branche_id = ?
         ');
         $r = $stmt->execute(array(
@@ -267,15 +271,13 @@ if( isset($_POST[ 'branche_submit' ]) )
 
         if( $r )
         {
-            redirect('index.php?gebruiker=overzichtcontactpersonen', 'Branche geüpdate!');
+            redirect('/index.php?bedrijfsinfo=wijzigen&contactpersoon='.$contact_id, 'Branche geüpdate!');
         }
         else
         {
             $error[ 'branche' ] = 'er ging iets mis met het opslaan van de branche';
         }
     }
-
-
 }
 
 
@@ -290,6 +292,7 @@ else
     ?>
     <h6>Uw bedrijfsnaam
         <small>
+            <?= $companyInfo['bedrijfsnaam']; ?>
         </small>
     </h6>
     <div class="row">
@@ -399,7 +402,7 @@ else
 
         <div class="col-sm-6">
             <form action="<?= route('/index.php?bedrijfsinfo=wijzigen&contactpersoon='.$contact_id) ?>" method="post">
-                <input type="hidden" name="branche_id" value="<?= $companyInfo[ 'b.branche_id' ]; ?>">
+                <input type="hidden" name="branche_id" value="<?= $companyInfo[ 'branche_id' ]; ?>">
                 <div class="card">
                     <div class="card-header">
                         <strong>Branche info</strong>
