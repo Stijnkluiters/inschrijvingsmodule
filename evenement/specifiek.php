@@ -46,8 +46,6 @@ $eindtijd = strtotime($eindtijd);
 
 if (strlen($soort) > 25) {
     $soort = substr($soort, 0, 26) . "...";
-} else {
-    $soort = $soort;
 }
 
 if (!empty($row['eindtijd'])) {
