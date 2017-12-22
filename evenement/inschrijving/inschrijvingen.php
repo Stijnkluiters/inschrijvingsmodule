@@ -6,7 +6,7 @@
  * Time: 10:18
  */
 
-$evenement_id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+$evenement_id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
 if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
@@ -77,32 +77,41 @@ $stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
 $stmt->execute();
 $inschrijvingen = $stmt->fetchAll();
 ?>
+<div class="card">
+    <div class="card-header">
+        <div class='pull-right control-group'>
+            <a href="<?= route('/index.php?evenementen=specifiek&evenement_id=' . $evenement_id) ?>"
+               class="btn btn-primary">Terug naar evenement</a>
+        </div>
+        <h4>Inschrijvingen</h4>
 
-<table id="dataTable" class="table table-striped table-bordered">
-    <thead>
-    <tr>
-        <th>Leerlingnummer</th>
-        <th>Naam</th>
-        <th>Aangemeld op</th>
-        <th>Gewhitelist</th>
-        <th>Toestemming</th>
-    </tr>
-    </thead>
-    <tfoot>
-    <tr>
-        <th>Leerlingnummer</th>
-        <th>Naam</th>
-        <th>Aangemeld op</th>
-        <th>Gewhitelist</th>
-        <th>Toestemming</th>
-    </tr>
-    </tfoot>
-    <tbody>
-    <?php foreach ($inschrijvingen as $inschrijving) {
+    </div>
+    <div class="card-body">
+            <table id="dataTable" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Leerlingnummer</th>
+                    <th>Naam</th>
+                    <th>Aangemeld op</th>
+                    <th>Gewhitelist</th>
+                    <th>Toestemming</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Leerlingnummer</th>
+                    <th>Naam</th>
+                    <th>Aangemeld op</th>
+                    <th>Gewhitelist</th>
+                    <th>Toestemming</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                <?php foreach ($inschrijvingen as $inschrijving) {
 
-            $leerlingnummer2 = $inschrijving['leerlingnummer'];
-            if ($inschrijving['gewhitelist'] === '1') {
-                $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $leerlingnummer2 . '">
+                    $leerlingnummer2 = $inschrijving['leerlingnummer'];
+                    if ($inschrijving['gewhitelist'] === '1') {
+                        $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $leerlingnummer2 . '">
                 <span class="text-success">
                 <i class="fa fa-check" aria-hidden="true">
                 </i>
@@ -111,8 +120,8 @@ $inschrijvingen = $stmt->fetchAll();
                 </i> Blacklisten
                 </button>
                 </span>';
-            } elseif ($inschrijving['gewhitelist'] === '0') {
-                $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $leerlingnummer2 . '">
+                    } elseif ($inschrijving['gewhitelist'] === '0') {
+                        $whitelist = '<input type="hidden" name="leerlingnummer" value="' . $leerlingnummer2 . '">
                 <span class="text-danger">
                 <i class="fa fa-times" aria-hidden="true">
                 </i>
@@ -120,33 +129,41 @@ $inschrijvingen = $stmt->fetchAll();
                 <i class="fa fa-check" aria-hidden="true">
                 </i> Whitelisten</button>
                 </span>';
-            } else{
-                $whitelist = '';
-            }?>
+                    } else {
+                        $whitelist = '';
+                    } ?>
 
-        <tr>
-            <form method="POST" action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
-            <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
+                    <tr>
+                        <form method="POST"
+                              action='<?= route("/index.php?inschrijving=overzicht&evenement_id=" . $evenement_id); ?>'>
+                            <input type="hidden" name="leerlingnummer" value="<?= $inschrijving['leerlingnummer']; ?>"/>
 
-                <td><?= $inschrijving['leerlingnummer'] ?></td>
-                <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
-                <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
-                <td><?=$whitelist ?></td>
-                <td>
-                    <?php if (!$inschrijving['toestemming']) { ?>
-                        <button type="submit" name="toestemming" value="ja" class="btn btn-success">Toestemming verlenen</button>
-                    <?php } else { ?>
-                        <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Toestemming intrekken/weigeren</button>
-                        <div class="form-group">
-                            <label for="comment">Opmerking afwijzing</label>
-                            <textarea class="form-control" id="comment"></textarea>
-                        </div>
-                    <?php } ?>
-                </td>
-            </tr>
-    </form>
-    <?php } ?>
-    </tbody>
-</table>
+                            <td><?= $inschrijving['leerlingnummer'] ?></td>
+                            <td><?= ucfirst($inschrijving['roepnaam']) . " " . $inschrijving['tussenvoegsel'] . " " . ucfirst($inschrijving['achternaam']); ?></td>
+                            <td><?= (!empty($inschrijving['aangemeld_op'])) ? date('Y-M-d H:i', strtotime($inschrijving['aangemeld_op'])) : '' ?></td>
+                            <td><?= $whitelist ?></td>
+                            <td>
+                                <?php if (!$inschrijving['toestemming']) { ?>
 
+                                    <button type="submit" name="toestemming" value="ja" class="pull-right btn btn-success">
+                                        Toestemming verlenen
+                                    </button>
+                                    <i class="text-danger fa fa-times" aria-hidden="true"></i>
+                                <?php } else { ?>
+                                    <button type="submit" name="toestemming" value="nee" class="pull-right btn btn-danger">
+                                        Toestemming intrekken/weigeren
+                                    </button><i class="text-success fa fa-check" aria-hidden="true"></i>
+                                    <div class="form-group">
+                                        <label for="comment">Opmerking afwijzing</label>
+                                        <textarea class="form-control" id="comment"></textarea>
+                                    </div>
+                                <?php } ?>
+                            </td>
+                    </tr>
+                    </form>
+                <?php } ?>
+                </tbody>
+            </table>
 
+    </div>
+</div>
