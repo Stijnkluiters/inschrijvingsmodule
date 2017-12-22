@@ -160,7 +160,7 @@ $message = '<!DOCTYPE html>
                                                         <tbody>
                                                         <tr>
                                                             <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['begintijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>

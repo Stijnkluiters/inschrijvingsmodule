@@ -22,14 +22,6 @@ if (isset($_POST["whitelist"])) {
     }
 }
 
-$stmt = $db->prepare('select * from inschrijving i
-  JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
-  WHERE i.evenement_id = :evenement_id');
-$stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
-$stmt->execute();
-$inschrijvingen = $stmt->fetchAll();
-
-
 if (isset($_POST["toestemming"])) {
     $value = $_POST["toestemming"];
     $leerlingnummer = $_POST["leerlingnummer"];
@@ -47,6 +39,10 @@ if (isset($_POST["toestemming"])) {
     $stmt = $db->prepare('select * from leerling WHERE leerlingnummer = ?');
     $stmt->execute(array($leerlingnummer));
     $leerling = $stmt->fetch();
+
+    $stmt2 = $db->prepare("select created_at, aangemeld_op FROM inschrijving WHERE leerlingnummer = ? AND evenement_id =?");
+    $stmt2->execute(array($leerlingnummer, $evenement_id));
+    $inschrijving = $stmt2->fetch();
 
     $subject = 'asdf';
 
@@ -74,6 +70,12 @@ if (isset($_POST["toestemming"])) {
 
 
 }
+$stmt = $db->prepare('select * from inschrijving i
+  JOIN leerling l ON i.leerlingnummer = l.leerlingnummer
+  WHERE i.evenement_id = :evenement_id');
+$stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
+$stmt->execute();
+$inschrijvingen = $stmt->fetchAll();
 ?>
 
 <table id="dataTable" class="table table-striped table-bordered">
@@ -132,9 +134,9 @@ if (isset($_POST["toestemming"])) {
                 <td><?=$whitelist ?></td>
                 <td>
                     <?php if (!$inschrijving['toestemming']) { ?>
-                        <button type="submit" name="toestemming" value="ja" class="btn btn-success">Ja</button>
+                        <button type="submit" name="toestemming" value="ja" class="btn btn-success">Toestemming verlenen</button>
                     <?php } else { ?>
-                        <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Nee</button>
+                        <button type="submit" name="toestemming" value="nee" class="btn btn-danger">Toestemming intrekken/weigeren</button>
                         <div class="form-group">
                             <label for="comment">Opmerking afwijzing</label>
                             <textarea class="form-control" id="comment"></textarea>
