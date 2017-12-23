@@ -54,13 +54,6 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
 
     <!-- Main styles for this application -->
     <link href="public/css/style.css" rel="stylesheet">
-    <?php
-
-    if (isset($_GET['evenementen']) || isset($_GET['soorten'])) {
-        echo '<link href="' . route('/public/css/evenementen.css') . '" rel="stylesheet"/>';
-    }
-    ?>
-
     <!--Table order-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 
@@ -331,7 +324,7 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
 <script src="public/js/pace.js"></script>
 
 <!-- Plugins and scripts required by all views -->
-<script src="public/js/Chart.min.js"></script>
+<!--<script src="public/js/Chart.min.js"></script>-->
 
 <!-- GenesisUI main scripts -->
 

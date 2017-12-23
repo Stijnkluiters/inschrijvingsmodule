@@ -388,6 +388,3 @@ if (isset($_POST['account_wijzigen'])) {
     <!--/.col-->
 
 </div>
-
-
-</form>
