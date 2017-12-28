@@ -44,7 +44,7 @@ $rows = $stmt->fetchAll();
     </h4>
     <div class="card-body">
         <div class="card-text">
-            <?php if(count($rows) > 0) { ?>
+            <?php if (count($rows) > 0) { ?>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -81,21 +81,21 @@ $rows = $stmt->fetchAll();
                     $soort = ucfirst(filter_var($row["soort"], FILTER_SANITIZE_STRING));
 
                     //als het evenement nog moet beginnen: actief of niet,
-                    if($row['begintijd'] > date("Y-m-d H:i:s")) {
+                    if ($row['begintijd'] > date("Y-m-d H:i:s")) {
                         if ($row['status'] == false) {
                             $actief = "<td class='bg-danger'>Nee</td>";
                         } elseif ($row['status'] == true) {
                             $actief = "<td class='bg-success'>Ja</td>";
                         }
-                    }
-
-                    //als het evenement al bezig is: bezig
-                    elseif($row['eindtijd'] > date("Y-m-d H:i:s")) {
+                    } //als het evenement al bezig is: bezig
+                    elseif ($row['eindtijd'] > date("Y-m-d H:i:s") && $row['status'] == 1) {
                         $actief = "<td class='bg-warning text-dark'>Bezig</td>";
                     }
-
+                    elseif ($row['eindtijd'] > date("Y-m-d H:i:s") && $row['status'] == 0){
+                        $actief = "<td class='bg-warning text-dark'>Zou bezig zijn</td>";
+                    }
                     //als het evenement al afgelopen is: verlopen
-                    elseif($row['eindtijd'] < date("Y-m-d H:i:s")){
+                    elseif ($row['eindtijd'] < date("Y-m-d H:i:s")) {
                         $actief = "<td class='bg-secondary'>Verlopen</td>";
                     }
 
