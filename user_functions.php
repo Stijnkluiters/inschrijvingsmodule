@@ -87,9 +87,9 @@ function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whi
     $db = db();
     if( $evenement_id === null )
     {
-        $stmt = $db->prepare('select evenement_id from evenement where status = ? and begintijd > ?');
+        $stmt = $db->prepare('select evenement_id, publiek from evenement where status = ? and begintijd > ?');
         $stmt->execute(array(
-            0,
+            1,
             date('Y-m-d H:i')
         ));
         $evenement_id = $stmt->fetchAll();
@@ -111,7 +111,7 @@ function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whi
         foreach ($evenement_id as $evenement)
         {
             $evenement_id = $evenement[ 'evenement_id' ];
-            chainEventWithLeerlingen($evenement_id, $leerlingnummer, $whitelisted, $update);
+            chainEventWithLeerlingen($evenement_id, $leerlingnummer, intval($evenement['publiek']), $update);
         }
     }
 }

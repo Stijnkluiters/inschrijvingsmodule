@@ -251,12 +251,13 @@ if( isset($_POST[ 'invoeren' ]) )
                         $leerling[ 'LGF' ],
                         $leerling[ 'Groepscode' ]
                     ));
+                    $leerlingnummer = $db->lastInsertId();
                 }
-
+                linkStudentstoEvents(null,intval($leerling['Nummer']),0);
                 $i++;
             }
         }
-        redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
+        //redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
     }
 }
 ?>
