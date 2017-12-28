@@ -253,14 +253,18 @@ if( isset($_POST[ 'titel' ]) )
         ));
         $evenement_id = $db->lastInsertId();
 
-        $stmt3 = $db->prepare("
-INSERT INTO inschrijving(evenement_id, leerlingnummer, gewhitelist)
-SELECT :evenement_id, leerlingnummer, :gewhitelist
-FROM leerling l
-WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
-        $stmt3->bindParam('evenement_id', $evenement_id);
-        $stmt3->bindParam('gewhitelist', $_POST[ 'whitelist' ]);
-        $stmt3->execute();
+        // gather all leerlingen
+            $stmt3 = $db->prepare("SELECT leerlingnummer
+          FROM leerling l
+          WHERE deleted = 0 
+          AND l.account_id IN ( SELECT a.account_id FROM account a )");
+
+            $stmt3->execute();
+            $students = $stmt3->fetchAll();
+
+        foreach ($students as $student) {
+            linkStudentstoEvents(intval($evenement_id),intval($student['leerlingnummer']), intval($whitelist));
+        }
         redirect('/index.php?evenementen=alles', 'Evenement toegevoegd');
 
     }

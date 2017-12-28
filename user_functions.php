@@ -170,19 +170,19 @@ function chainEventToLeerling($evenement_id, $leerlingnummer, $whitelisted, $upd
     $db = db();
     $stmt = $db->prepare('select evenement_id from inschrijving where leerlingnummer = ? and evenement_id = ?');
     $stmt->execute(array(
-        $evenement_id,
-        $leerlingnummer
+        $leerlingnummer,
+        $evenement_id
     ));
-    $results = $stmt->rowCount();
+    $results = $stmt->fetch();
     // update user with new whitelisted status
-    if( $results > 0 && $update === true )
+    if( count($results) > 0 && $update === true )
     {
         $stmt = $db->prepare('UPDATE `inschrijving` 
         SET 
         `gewhitelist`= ?
          WHERE evenement_id = ? and leerlingnummer = ?');
 
-        return $stmt->execute(array(
+        $stmt->execute(array(
             $whitelisted, $evenement_id, $leerlingnummer
         ));
     }
