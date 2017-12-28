@@ -68,9 +68,8 @@ if( isset($_POST[ "toestemming" ]) )
         include_once 'afwijzingsmessage.php';
 
     }
-
-    $r = chainEventToLeerling(intval($evenement_id), intval($leerlingnummer), $toestemming);
-
+    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
+    $r = $stmt->execute(array( $toestemming, $leerlingnummer, $evenement_id ));
     if( $r )
     {
         sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
