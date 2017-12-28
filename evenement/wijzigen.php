@@ -9,7 +9,8 @@
 $db = db();
 //Get the id that's been given from specifiek.php
 $id = intval(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING));
-if (!filter_var($id, FILTER_VALIDATE_INT)) {
+if( !filter_var($id, FILTER_VALIDATE_INT) )
+{
     echo "evenement_id is geen numerieke waarde";
     exit;
 }
@@ -17,25 +18,30 @@ if (!filter_var($id, FILTER_VALIDATE_INT)) {
 $stmt = $db->prepare('select * from evenement where evenement_id = :evenement_id');
 $stmt->bindParam('evenement_id', $id);
 $stmt->execute();
-if($stmt->rowCount() == 0) {
-    redirect('/index.php','evenement niet gevonden in de database');
+if( $stmt->rowCount() == 0 )
+{
+    redirect('/index.php', 'evenement niet gevonden in de database');
 }
 
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
-if($rol === 'externbedrijf') {
+if( $rol === 'externbedrijf' )
+{
     viewEvent($stmt->fetch());
 }
 
-if (isset($_POST['titel'])) {
+if( isset($_POST[ 'titel' ]) )
+{
     $error = [];
 
     /**titel*/
-    if (!isset($_POST['titel']) || empty($_POST['titel'])) {
-        $error['titel'] = ' titel is verplicht.';
+    if( !isset($_POST[ 'titel' ]) || empty($_POST[ 'titel' ]) )
+    {
+        $error[ 'titel' ] = ' titel is verplicht.';
     }
     $titel = filter_input(INPUT_POST, 'titel', FILTER_SANITIZE_STRING);
-    if (empty($titel)) {
-        $error['titel'] = ' het filteren van titel ging verkeerd';
+    if( empty($titel) )
+    {
+        $error[ 'titel' ] = ' het filteren van titel ging verkeerd';
     }
 
     /** starttijd */
@@ -71,9 +77,9 @@ if (isset($_POST['titel'])) {
      */
     if( !empty($eindtijd) && !empty($starttijd) )
     {
-        $starttijd = date('Y-m-d H:i',strtotime($starttijd));
-        $eindtijd = date('Y-m-d H:i',strtotime($eindtijd));
-        $huidigetijd = date('Y-m-d H:i',strtotime("now"));
+        $starttijd = date('Y-m-d H:i', strtotime($starttijd));
+        $eindtijd = date('Y-m-d H:i', strtotime($eindtijd));
+        $huidigetijd = date('Y-m-d H:i', strtotime("now"));
 
         // controleer of de startijd vroeger is dan de eindtijd
         if( $starttijd >= $eindtijd )
@@ -96,103 +102,122 @@ if (isset($_POST['titel'])) {
     }
 
     /** onderwerp */
-    if (!isset($_POST['onderwerp']) || empty($_POST['onderwerp'])) {
-        $error['onderwerp'] = ' onderwerp is verplicht';
+    if( !isset($_POST[ 'onderwerp' ]) || empty($_POST[ 'onderwerp' ]) )
+    {
+        $error[ 'onderwerp' ] = ' onderwerp is verplicht';
     }
     $onderwerp = filter_input(INPUT_POST, 'onderwerp', FILTER_SANITIZE_STRING);
-    if (empty($onderwerp)) {
-        $error['onderwerp'] = ' het filteren van onderwerp ging verkeerd';
+    if( empty($onderwerp) )
+    {
+        $error[ 'onderwerp' ] = ' het filteren van onderwerp ging verkeerd';
     }
 
     /** omschrijving */
-    if (!isset($_POST['omschrijving']) || empty($_POST['omschrijving'])) {
-        $error['omschrijving'] = ' omschrijving is verplicht';
+    if( !isset($_POST[ 'omschrijving' ]) || empty($_POST[ 'omschrijving' ]) )
+    {
+        $error[ 'omschrijving' ] = ' omschrijving is verplicht';
     }
     $omschrijving = filter_input(INPUT_POST, 'omschrijving', FILTER_SANITIZE_STRING);
-    if (empty($omschrijving)) {
-        $error['omschrijving'] = ' het filteren van omschrijving ging verkeerd';
+    if( empty($omschrijving) )
+    {
+        $error[ 'omschrijving' ] = ' het filteren van omschrijving ging verkeerd';
     }
 
 
     /** locatie */
-    if (!isset($_POST['locatie']) || empty($_POST['locatie'])) {
-        $error['locatie'] = ' locatie is verplicht';
+    if( !isset($_POST[ 'locatie' ]) || empty($_POST[ 'locatie' ]) )
+    {
+        $error[ 'locatie' ] = ' locatie is verplicht';
     }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if (empty($locatie)) {
-        $error['locatie'] = ' het filteren van locatie ging verkeerd';
+    if( empty($locatie) )
+    {
+        $error[ 'locatie' ] = ' het filteren van locatie ging verkeerd';
     }
 
     /** locatie */
-    if (!isset($_POST['locatie']) || empty($_POST['locatie'])) {
-        $error['locatie'] = ' locatie is verplicht';
+    if( !isset($_POST[ 'locatie' ]) || empty($_POST[ 'locatie' ]) )
+    {
+        $error[ 'locatie' ] = ' locatie is verplicht';
     }
     $locatie = filter_input(INPUT_POST, 'locatie', FILTER_SANITIZE_STRING);
-    if (empty($locatie)) {
-        $error['locatie'] = ' het filteren van locatie ging verkeerd';
+    if( empty($locatie) )
+    {
+        $error[ 'locatie' ] = ' het filteren van locatie ging verkeerd';
     }
 
     /** Soort */
-    if (!isset($_POST['soort']) || empty($_POST['soort'])) {
-        $error['soort'] = ' soort is verplicht';
+    if( !isset($_POST[ 'soort' ]) || empty($_POST[ 'soort' ]) )
+    {
+        $error[ 'soort' ] = ' soort is verplicht';
     }
     $soort = filter_input(INPUT_POST, 'soort', FILTER_SANITIZE_STRING);
-    if (empty($soort)) {
-        $error['soort'] = ' het filteren van soort ging verkeerd';
+    if( empty($soort) )
+    {
+        $error[ 'soort' ] = ' het filteren van soort ging verkeerd';
     }
 
 
     /** Whitelist */
-    if (!isset($_POST['whitelist'])) {
-        $error['soort'] = ' whitelist is verplicht';
+    if( !isset($_POST[ 'whitelist' ]) )
+    {
+        $error[ 'soort' ] = ' whitelist is verplicht';
     }
     $whitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
-    if ($whitelist !== '1' && $whitelist !== '0'){
-        $error['soort'] = ' whitelist kan alleen maar publiek of privaat zijn';
+    if( $whitelist !== '1' && $whitelist !== '0' )
+    {
+        $error[ 'soort' ] = ' whitelist kan alleen maar publiek of privaat zijn';
     }
 
     // not required fields here but preveent XSS attack
     /** Vervoer */
     $vervoer = filter_input(INPUT_POST, 'vervoer', FILTER_SANITIZE_STRING);
-    if ($vervoer === false) {
-        $error['vervoer'] = ' het filteren van vervoer ging verkeerd';
+    if( $vervoer === false )
+    {
+        $error[ 'vervoer' ] = ' het filteren van vervoer ging verkeerd';
     }
 
     /** Min_leerlingen */
     $min_leerlingen = filter_input(INPUT_POST, 'min_leerlingen', FILTER_SANITIZE_STRING);
-    if ($min_leerlingen === false) {
-        $error['Min_leerlingen'] = ' het filteren van Minimaal aantal leerlingen ging verkeerd';
+    if( $min_leerlingen === false )
+    {
+        $error[ 'Min_leerlingen' ] = ' het filteren van Minimaal aantal leerlingen ging verkeerd';
     }
 
     /** Max_leerlingen */
     $max_leerlingen = filter_input(INPUT_POST, 'max_leerlingen', FILTER_SANITIZE_STRING);
-    if ($max_leerlingen === false) {
-        $error['Max_leerlingen'] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
+    if( $max_leerlingen === false )
+    {
+        $error[ 'Max_leerlingen' ] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
     }
 
     /** Lokaalnummer */
     $lokaalnummer = filter_input(INPUT_POST, 'lokaalnummer', FILTER_SANITIZE_STRING);
-    if ($lokaalnummer === false) {
-        $error['lokaalnummer'] = ' het filteren van lokaalnummer ging verkeerd';
+    if( $lokaalnummer === false )
+    {
+        $error[ 'lokaalnummer' ] = ' het filteren van lokaalnummer ging verkeerd';
     }
     /** Contactnummer */
 
     $contactnr = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_NUMBER_INT);
-    if(strlen($contactnr) > 11){
-        $error['contactnummer'] = ' het contactnummer mag niet langer zijn dan 11 karakters';
+    if( strlen($contactnr) > 11 )
+    {
+        $error[ 'contactnummer' ] = ' het contactnummer mag niet langer zijn dan 11 karakters';
     }
-    if ($contactnr === false) {
-        $error['contactnummer'] = ' het filteren van contact ging verkeerd';
+    if( $contactnr === false )
+    {
+        $error[ 'contactnummer' ] = ' het filteren van contact ging verkeerd';
     }
 
     $inschrijving = $db->prepare("
     SELECT publiek
     FROM evenement
     WHERE evenement_id=?");
-    $inschrijving->execute(array($id));
+    $inschrijving->execute(array( $id ));
     $whitelistcheck = $inschrijving->fetch();
 
-    if (count($error) === 0) {
+    if( count($error) === 0 )
+    {
         $update = $db->prepare('
         UPDATE `evenement` SET 
         `titel`=?,
@@ -228,17 +253,8 @@ if (isset($_POST['titel'])) {
             $id
         ));
 
-        if ($whitelist != $whitelistcheck){
-            $inschrijvingupdate = $db->prepare("
-            UPDATE inschrijving
-            SET `gewhitelist`=?
-            WHERE `evenement_id`=?");
-            $inschrijvingupdate->execute(array(
-                    $whitelist,
-                    $id
-            ));
 
-        }
+        linkStudentstoEvents(intval($id), null, intval($whitelist));
 
         redirect('/index.php?evenementen=specifiek&evenement_id=' . $id, 'Evenement gewijzigd');
 
@@ -291,7 +307,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            name="titel"
                            required="required"
                            placeholder="Evenementtitel"
-                           value="<?= (isset($_POST[ 'titel' ])) ? $_POST[ 'titel' ] : $row['titel']; ?>"
+                           value="<?= (isset($_POST[ 'titel' ])) ? $_POST[ 'titel' ] : $row[ 'titel' ]; ?>"
                     />
                     <?php if( isset($error[ 'titel' ]) ) { ?>
                         <!-- Titel helper -->
@@ -310,7 +326,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            name="starttijd"
                            required="required"
                            placeholder="Begindatum en tijd"
-                           value="<?= (isset($_POST[ 'starttijd' ])) ? $_POST[ 'starttijd' ] : date("Y-m-d\TH:i:s",strtotime($row['begintijd'])); ?>"
+                           value="<?= (isset($_POST[ 'starttijd' ])) ? $_POST[ 'starttijd' ] : date("Y-m-d\TH:i:s", strtotime($row[ 'begintijd' ])); ?>"
                     />
                     <?php if( isset($error[ 'starttijd' ]) ) { ?>
                         <!-- starttijd helper -->
@@ -329,7 +345,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            name="eindtijd"
                            required="required"
                            placeholder="Einddatum en tijd"
-                           value="<?= (isset($_POST[ 'eindtijd' ])) ? $_POST[ 'eindtijd' ] : date("Y-m-d\TH:i:s",strtotime($row['eindtijd'])); ?>"
+                           value="<?= (isset($_POST[ 'eindtijd' ])) ? $_POST[ 'eindtijd' ] : date("Y-m-d\TH:i:s", strtotime($row[ 'eindtijd' ])); ?>"
                     />
                     <?php if( isset($error[ 'eindtijd' ]) ) { ?>
                         <!-- eindtijd helper -->
@@ -349,7 +365,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            name="onderwerp"
                            required="required"
                            placeholder="Onderwerp"
-                           value="<?= (isset($_POST[ 'onderwerp' ])) ? $_POST[ 'onderwerp' ] : $row['onderwerp']; ?>"
+                           value="<?= (isset($_POST[ 'onderwerp' ])) ? $_POST[ 'onderwerp' ] : $row[ 'onderwerp' ]; ?>"
                     />
                     <?php if( isset($error[ 'onderwerp' ]) ) { ?>
                         <!-- onderwerp helper -->
@@ -369,7 +385,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                               placeholder="Omschrijving voor het evenement"
                               required="required"
                               rows="3"
-                    ><?= (isset($_POST[ 'omschrijving' ])) ? $_POST[ 'omschrijving' ] : $row['omschrijving']; ?></textarea>
+                    ><?= (isset($_POST[ 'omschrijving' ])) ? $_POST[ 'omschrijving' ] : $row[ 'omschrijving' ]; ?></textarea>
 
                     <?php if( isset($error[ 'omschrijving' ]) ) { ?>
                         <!-- omschrijving textarea helper -->
@@ -378,7 +394,6 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     <?php } ?>
                 </div>
-
 
 
                 <div class="row">
@@ -392,7 +407,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                                name="min_leerlingen"
                                required="required"
                                placeholder="Minimaal aantal leerlingen"
-                               value="<?= (isset($_POST[ 'min_leerlingen' ])) ? $_POST[ 'min_leerlingen' ] : $row['min_leerlingen']; ?>"
+                               value="<?= (isset($_POST[ 'min_leerlingen' ])) ? $_POST[ 'min_leerlingen' ] : $row[ 'min_leerlingen' ]; ?>"
                         />
                         <?php if( isset($error[ 'min_leerlingen' ]) ) { ?>
                             <!-- min_leerlingen helper -->
@@ -411,7 +426,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                                name="max_leerlingen"
                                required="required"
                                placeholder="Maximaal aantal leerlingen"
-                               value="<?= (isset($_POST[ 'max_leerlingen' ])) ? $_POST[ 'max_leerlingen' ] : $row['max_leerlingen']; ?>"
+                               value="<?= (isset($_POST[ 'max_leerlingen' ])) ? $_POST[ 'max_leerlingen' ] : $row[ 'max_leerlingen' ]; ?>"
                         />
                         <?php if( isset($error[ 'max_leerlingen' ]) ) { ?>
                             <!-- max_leerlingen helper -->
@@ -422,13 +437,26 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                 </div>
-
                 <div class="form-group">
                     <label for="whitelist">Privaat of Publiekelijk evenement? *</label>
                     <select class="form-control" id="whitelist" name="whitelist" required="required">
                         <option value="">Selecteer soort evenement</option>
-                        <option <?= ($_POST['whitelist'] === "1" || $row['whitelist'] === "1") ? 'selected' : ''; ?> value="1">Publiek</option>
-                        <option <?= ($_POST['whitelist'] === "0" || $row['whitelist'] === "0") ? 'selected' : ''; ?> value="0">Privaat</option>
+                        <option
+                            <?php if( isset($_POST[ 'whitelist' ]) ) { ?>
+                                <?= ($_POST[ 'whitelist' ] === "1") ? 'selected' : ''; ?>
+                            <?php } elseif( isset($row[ 'publiek' ]) ) { ?>
+                                <?= ($row[ 'publiek' ] === "1") ? 'selected' : ''; ?>
+                            <?php } ?>
+                                value="1">Publiek
+                        </option>
+
+                        <option
+                            <?php if( isset($_POST[ 'whitelist' ]) ) { ?>
+                                <?= ($_POST[ 'whitelist' ] === "0") ? 'selected' : ''; ?>
+                            <?php } elseif( isset($row[ 'publiek' ]) ) { ?>
+                                <?= ($row[ 'publiek' ] === "0") ? 'selected' : ''; ?>
+                            <?php } ?> value="0">Privaat
+                        </option>
                     </select>
                 </div>
 
@@ -439,14 +467,17 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                         <?php foreach ($soorten as $key => $soort) { ?>
                             <option
                                     value="<?= $soort[ 'soort_id' ]; ?>"
-                                    <?php
-                                    if(isset($_POST['soort']))
-                                    {
-                                        echo ($_POST[ 'soort' ] == $soort[ 'soort_id' ]) ? 'selected' : '' ;
-                                    } else {
-                                        echo ($row[ 'soort_id' ] == $soort[ 'soort_id' ]) ? 'selected' : '' ;
-                                    }
-                                    ?>
+                                <?php
+
+                                if( isset($_POST[ 'soort' ]) )
+                                {
+                                    echo ($_POST[ 'soort' ] == $soort[ 'soort_id' ]) ? 'selected' : '';
+                                }
+                                else
+                                {
+                                    echo ($row[ 'soort_id' ] == $soort[ 'soort_id' ]) ? 'selected' : '';
+                                }
+                                ?>
                             >
                                 <?= $soort[ 'soort' ]; ?>
                             </option>
@@ -468,7 +499,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            id="vervoer"
                            name="vervoer"
                            placeholder="Vervoers middel"
-                           value="<?= (isset($_POST[ 'vervoer' ])) ? $_POST[ 'vervoer' ] : $row['vervoer']; ?>"
+                           value="<?= (isset($_POST[ 'vervoer' ])) ? $_POST[ 'vervoer' ] : $row[ 'vervoer' ]; ?>"
                     />
                     <?php if( isset($error[ 'vervoer' ]) ) { ?>
                         <!-- vervoer helper -->
@@ -486,7 +517,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            id="locatie"
                            name="locatie"
                            placeholder="locatie"
-                           value="<?= (isset($_POST[ 'locatie' ])) ? $_POST[ 'locatie' ] : $row['locatie']; ?>"
+                           value="<?= (isset($_POST[ 'locatie' ])) ? $_POST[ 'locatie' ] : $row[ 'locatie' ]; ?>"
                     />
                     <?php if( isset($error[ 'locatie' ]) ) { ?>
                         <!-- locatie helper -->
@@ -504,7 +535,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            id="lokaalnummer"
                            name="lokaalnummer"
                            placeholder="Lokaalnummer ( indien van toepassing )"
-                           value="<?= (isset($_POST[ 'lokaalnummer' ])) ? $_POST[ 'lokaalnummer' ] : $row['lokaalnummer']; ?>"
+                           value="<?= (isset($_POST[ 'lokaalnummer' ])) ? $_POST[ 'lokaalnummer' ] : $row[ 'lokaalnummer' ]; ?>"
                     />
                     <?php if( isset($error[ 'lokaalnummer' ]) ) { ?>
                         <!-- lokaalnummer helper -->
@@ -515,7 +546,6 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
 
-
                 <!-- contractnr form -->
                 <div class="form-group">
                     <label for="contractnr">Telefoonisch contact nummer</label>
@@ -523,9 +553,8 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
                            class="form-control <?= (isset($error[ 'contractnr' ])) ? 'is-invalid' : ''; ?>"
                            id="contractnr"
                            name="contractnr"
-                           required="required"
                            placeholder="Telefoonisch contact nummer"
-                           value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contractnr' ] : $row['contactnr']; ?>"
+                           value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contractnr' ] : $row[ 'contactnr' ]; ?>"
                     />
                     <?php if( isset($error[ 'contractnr' ]) ) { ?>
                         <!-- contractnr helper -->
@@ -537,7 +566,7 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
             </div>
             <div class="card-footer">
-                <button type="submit" name="submit" class="btn btn-sm btn-primary">Toevoegen</button>
+                <button type="submit" name="submit" class="btn btn-sm btn-primary">Wijzigen</button>
             </div>
         </div>
 
