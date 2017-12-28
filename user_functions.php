@@ -116,6 +116,15 @@ function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whi
     }
 }
 
+/**
+ * @param      $evenement_id
+ * @param      $leerlingnummer
+ * @param      $whitelisted
+ * @param bool $update
+ *
+ * This function is used as a private function, can be called from the function: linkStudentstoEvents
+ *
+ */
 function chainEventWithLeerlingen($evenement_id, $leerlingnummer, $whitelisted, $update = false)
 {
 
@@ -142,6 +151,18 @@ function chainEventWithLeerlingen($evenement_id, $leerlingnummer, $whitelisted, 
     }
 }
 
+/**
+ * @param      $evenement_id
+ * @param      $leerlingnummer
+ * @param      $whitelisted
+ * @param bool $update
+ *
+ * @return bool
+ *
+ *
+ * This function is used as a private function, can be called from the function: chainEventWithLeerlingen
+ *
+ */
 function chainEventToLeerling($evenement_id, $leerlingnummer, $whitelisted, $update = true)
 {
 
