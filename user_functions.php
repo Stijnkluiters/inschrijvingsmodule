@@ -69,7 +69,19 @@ function get_user_info($account = null)
 
 }
 
-
+/**
+ * @param null $evenement_id
+ * @param null $leerlingnummer
+ * @param bool $whitelisted
+ * @param bool $update
+ *
+ * @throws Exception
+ *
+ *
+ * This is used to link every event to every student. Many to Many relationship.
+ * OR if and argument is given it will specificly only use that ID.
+ *  THIS FUNCTION DOES NOT CHECK IF EVENT OR STUDENT EXISTS!
+ */
 function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whitelisted = false, $update = false)
 {
     $db = db();
