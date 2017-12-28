@@ -182,10 +182,11 @@ $row = $stmt->fetch()
                     $knopnaam = 'activeren';
                     $activeren = '';
                 }
-            }else{
+            }
+            else{
                 $activeren = '';
                 $actiefknop = '';
-                $knopnaam = 'Evenement is al verlopen';
+                $knopnaam = 'Verander de begin- (en eind-) datum om de status van dit evenement te veranderen';
             }?>
             <input type="hidden" name="activeren" value="<?= $activeren ?>">
             <button type="submit" name="submit" class="btn btn-sm <?= $actiefknop ?>"><?= $knopnaam ?></button>

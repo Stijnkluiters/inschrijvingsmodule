@@ -28,18 +28,21 @@ $rows = $stmt->fetchAll();
 //basis voor tabel
 ?>
 <div class="card">
-    <h4 class="card-header">Evenementen</h4>
-    <div class="card-body">
+    <h4 class="card-header">Evenementen
+        <span class="pull-right">
         <?php
         //beheerder en extern bedrijf mogen een evenement toevoegen
         if (in_array($rol, array('beheerder', 'externbedrijf'))) {
-            print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
+            print('<a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a>&nbsp');
         }
         //alleen de beheerder mag de soorten beheren
         if ($rol === 'beheerder') {
-            print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
+            print('<a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a>');
         }
         ?>
+        </span>
+    </h4>
+    <div class="card-body">
         <div class="card-text">
             <?php if(count($rows) > 0) { ?>
             <table class="table table-bordered">
@@ -88,7 +91,7 @@ $rows = $stmt->fetchAll();
 
                     //als het evenement al bezig is: bezig
                     elseif($row['eindtijd'] > date("Y-m-d H:i:s")) {
-                        $actief = "<td class='bg-warning'>Bezig</td>";
+                        $actief = "<td class='bg-warning text-dark'>Bezig</td>";
                     }
 
                     //als het evenement al afgelopen is: verlopen
@@ -119,9 +122,12 @@ $rows = $stmt->fetchAll();
                     </tr>
                     <?php
                 }
+                } else {
+                    //if there is no content, print following
+                    print("Er zijn geen evenementen op dit moment");
+                }
                 ?>
             </table>
-            <?php } ?>
         </div>
     </div>
 </div>
