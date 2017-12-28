@@ -24,7 +24,6 @@ $stmt->execute();
 $rows = $stmt->fetchAll();
 
 //check for content in results
-if (count($rows) > 0) {
 
 //basis voor tabel
 ?>
@@ -42,6 +41,7 @@ if (count($rows) > 0) {
         }
         ?>
         <div class="card-text">
+            <?php if(count($rows) > 0) { ?>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -119,12 +119,9 @@ if (count($rows) > 0) {
                     </tr>
                     <?php
                 }
-                } else {
-                    //if there is no content, print following
-                    print("Er zijn geen evenementen op dit moment");
-                }
                 ?>
             </table>
+            <?php } ?>
         </div>
     </div>
 </div>

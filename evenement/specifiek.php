@@ -184,11 +184,11 @@ if ($current == 0) {
                     <table>
                         <tr>
                             <td>Begindatum:</td>
-                            <td><?= date('d-M-Y', strtotime($begindatum)) ?></td>
+                            <td><?= date('d-M-Y H:i', strtotime($begindatum)) ?></td>
                         </tr>
                         <tr>
                             <td>Einddatum:</td>
-                            <td><?= date('d-M-Y', strtotime($einddatum)) ?></td>
+                            <td><?= date('d-M-Y H:i', strtotime($einddatum)) ?></td>
                         </tr>
                         <tr>
                             <td>Adres:</td>

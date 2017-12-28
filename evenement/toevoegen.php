@@ -74,9 +74,9 @@ if( isset($_POST[ 'titel' ]) )
      */
     if( !empty($eindtijd) && !empty($starttijd) )
     {
-        $starttijd = strtotime($starttijd);
-        $eindtijd = strtotime($eindtijd);
-        $huidigetijd = strtotime("now");
+        $starttijd = date('Y-m-d H:i',strtotime($starttijd));
+        $eindtijd = date('Y-m-d H:i',strtotime($eindtijd));
+        $huidigetijd = date('Y-m-d H:i',strtotime("now"));
 
         // controleer of de startijd vroeger is dan de eindtijd
         if( $starttijd >= $eindtijd )
@@ -84,7 +84,7 @@ if( isset($_POST[ 'titel' ]) )
             $error[ 'starttijd' ] = ' starttijd moet eerder zijn dan de eindtijd.';
         }
         // controleer of de starttijd later dan nu is.
-        if( $starttijd <= $huidigetijd )
+        if( $starttijd < $huidigetijd )
         {
             $error[ 'starttijd' ] = ' starttijd moet later zijn dan de huidige tijd.';
         }
@@ -143,6 +143,17 @@ if( isset($_POST[ 'titel' ]) )
     {
         $error[ 'soort' ] = ' het filteren van soort ging verkeerd';
     }
+
+
+    /** Whitelist */
+    if (!isset($_POST['whitelist'])) {
+        $error['soort'] = ' whitelist is verplicht';
+    }
+    $whitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
+    if ($whitelist !== '1' && $whitelist !== '0'){
+        $error['soort'] = ' whitelist kan alleen maar publiek of privaat zijn';
+    }
+
 
     // not required fields here but preveent XSS attack
     /** Vervoer */
@@ -237,7 +248,7 @@ if( isset($_POST[ 'titel' ]) )
             $lokaalnummer,
             $soort,
             $contactnummer,
-            $_POST[ 'whitelist' ],
+            $whitelist,
             $_SESSION[ authenticationSessionName ]
         ));
         $evenement_id = $db->lastInsertId();
@@ -304,7 +315,7 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
                            name="starttijd"
                            required="required"
                            placeholder="Begindatum en tijd"
-                           value="<?= (isset($_POST[ 'starttijd' ])) ? $_POST[ 'starttijd' ] : ''; ?>"
+                           value="<?= (isset($_POST[ 'starttijd' ])) ? $_POST[ 'starttijd' ] : date("Y-m-d\TH:i",time()); ?>"
                     />
                     <?php if( isset($error[ 'starttijd' ]) ) { ?>
                         <!-- starttijd helper -->
@@ -323,7 +334,7 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
                            name="eindtijd"
                            required="required"
                            placeholder="Einddatum en tijd"
-                           value="<?= (isset($_POST[ 'eindtijd' ])) ? $_POST[ 'eindtijd' ] : ''; ?>"
+                           value="<?= (isset($_POST[ 'eindtijd' ])) ? $_POST[ 'eindtijd' ] : date("Y-m-d\TH:i",strtotime('+1 day',time())); ?>"
                     />
                     <?php if( isset($error[ 'eindtijd' ]) ) { ?>
                         <!-- eindtijd helper -->
@@ -465,20 +476,20 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
                     <?php } ?>
                 </div>
 
-                <!-- Locatie form -->
+                <!-- locatie form -->
                 <div class="form-group">
-                    <label for="Locatie">Locatie </label>
+                    <label for="locatie">Locatie </label>
                     <input type="text"
-                           class="form-control <?= (isset($error[ 'Locatie' ])) ? 'is-invalid' : ''; ?>"
-                           id="Locatie"
-                           name="Locatie"
-                           placeholder="Locatie"
-                           value="<?= (isset($_POST[ 'Locatie' ])) ? $_POST[ 'Locatie' ] : ''; ?>"
+                           class="form-control <?= (isset($error[ 'locatie' ])) ? 'is-invalid' : ''; ?>"
+                           id="locatie"
+                           name="locatie"
+                           placeholder="locatie"
+                           value="<?= (isset($_POST[ 'locatie' ])) ? $_POST[ 'locatie' ] : ''; ?>"
                     />
-                    <?php if( isset($error[ 'Locatie' ]) ) { ?>
-                        <!-- Locatie helper -->
+                    <?php if( isset($error[ 'locatie' ]) ) { ?>
+                        <!-- locatie helper -->
                         <div class="invalid-feedback">
-                            <?= $error[ 'Locatie' ]; ?>
+                            <?= $error[ 'locatie' ]; ?>
                         </div>
                     <?php } ?>
                 </div>
