@@ -7,7 +7,7 @@
  */
 
 //Get the id that's been given from bekijken.php
-$id = filter_var(filter_input(INPUT_GET,'evenement_id',FILTER_SANITIZE_STRING),FILTER_VALIDATE_INT);
+$id = filter_var(filter_input(INPUT_GET, 'evenement_id', FILTER_SANITIZE_STRING), FILTER_VALIDATE_INT);
 
 //load info from database using the id
 $db = db();
@@ -74,17 +74,20 @@ if ($row["lokaalnummer"] != "") {
 $activatie = $row['status'];
 
 $activatieknop = '';
-if ($activatie == 1) {
-    $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
-    $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="btn btn-danger">Deactiveren</a></div>';
-    if (in_array($rol, array('beheerder'))) {
+if($row['begintijd'] > date("Y-m-d H:i:s")) {
+    if ($activatie == 1) {
+        $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
         $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+
+    } elseif ($activatie == 0) {
+        $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
+        if (in_array($rol, array('beheerder'))) {
+            $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
+        }
     }
-} elseif ($activatie == 0) {
-    $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
-    if ($rol === 'beheerder') {
-        $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-success">Activeren</a></div>';
-    }
+}else{
+    $activatiemessage = "<span class='text-center bg-secondary'>Afgelopen</span>";
+    $activatieknop = "<p>Update de datum om dit evenement opnieuw te activeren</p>";
 }
 
 if ($row['publiek'] == 1) {

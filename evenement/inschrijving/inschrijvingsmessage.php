@@ -153,7 +153,7 @@ $message = '<!DOCTYPE html>
                                                            summary="Het ongedaan maken van je inschrijving kan op de website waar je je hebt ingeschreven voor het evenement">
                                                         <thead>
                                                         <tr>
-                                                            <th scope="col">Nummer voor het geplande activiteit</th>
+                                                            <th scope="col">Nummer voor de geplande activiteit</th>
                                                             <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
                                                         </tr>
                                                         </thead>
