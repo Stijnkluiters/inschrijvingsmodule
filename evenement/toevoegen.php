@@ -72,7 +72,7 @@ if( isset($_POST[ 'titel' ]) )
     /**
      * controleren of de starttijd vroeger is dan de eindtijd, en hoger is dan de huidige tijd
      */
-    if( empty($error) )
+    if( !empty($eindtijd) && !empty($starttijd) )
     {
         $starttijd = strtotime($starttijd);
         $eindtijd = strtotime($eindtijd);
