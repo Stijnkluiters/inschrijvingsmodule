@@ -14,15 +14,14 @@ if( !filter_var($evenement_id, FILTER_VALIDATE_INT) )
 $db = db();
 if( isset($_POST[ "whitelist" ]) )
 {
-    $leerlingnummer = $_POST[ 'leerlingnummer' ];
+    $leerlingnummer = filter_input(INPUT_POST, 'leerlingnummer', FILTER_SANITIZE_NUMBER_INT);
     $updatewhitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
     if( $updatewhitelist == '0' || $updatewhitelist == '1' )
     {
+        chainEventToLeerling(intval($evenement_id), intval($leerlingnummer), intval($updatewhitelist));
+        $status = ($updatewhitelist == 0) ? ' geblacklist ' : ' gewhitelist ';
+        redirect('/index.php?inschrijving=overzicht&evenement_id='.$evenement_id,'Leerlingnummer: '.$leerlingnummer.' '. $status.'.');
 
-        $upwhite = $db->prepare("UPDATE inschrijving SET gewhitelist =? WHERE evenement_id =? AND leerlingnummer=? ");
-        $upwhite->execute(array(
-            $updatewhitelist, $evenement_id, $leerlingnummer
-        ));
     }
 }
 
@@ -69,8 +68,9 @@ if( isset($_POST[ "toestemming" ]) )
         include_once 'afwijzingsmessage.php';
 
     }
-    $stmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE leerlingnummer = ? AND evenement_id = ?");
-    $r = $stmt->execute(array( $toestemming, $leerlingnummer, $evenement_id ));
+
+    $r = chainEventToLeerling(intval($evenement_id), intval($leerlingnummer), $toestemming);
+
     if( $r )
     {
         sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
