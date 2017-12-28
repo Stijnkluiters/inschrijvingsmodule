@@ -36,7 +36,6 @@ if (isset($_POST['submit'])) {
             $error['gebruikersnaam'] = ' gebruikersnaam moet langer dan 5 karakters zijn';
         }
         $gebruikersnaam = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
-        $gebruikersnaam = strtolower($gebruikersnaam);
         // controleren of de gebruikersnaam al bestaat.
         $db = db();
         $stmt = $db->prepare('select * from account where gebruikersnaam = :gebruikernaam');

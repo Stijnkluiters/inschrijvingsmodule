@@ -24,7 +24,6 @@ $stmt->execute();
 $rows = $stmt->fetchAll();
 
 //check for content in results
-if (count($rows) > 0) {
 
 //basis voor tabel
 ?>
@@ -45,7 +44,7 @@ if (count($rows) > 0) {
     </h4>
     <div class="card-body">
         <div class="card-text">
-
+            <?php if(count($rows) > 0) { ?>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                 <tr>
