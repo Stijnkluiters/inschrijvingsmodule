@@ -432,8 +432,17 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
                     <label for="whitelist">Privaat of Publiekelijk evenement? *</label>
                     <select class="form-control" id="whitelist" name="whitelist" required="required">
                         <option value="">Selecteer soort evenement</option>
-                        <option <?= ($_POST['whitelist'] === "1") ? 'selected' : ''; ?> value="1">Publiek</option>
-                        <option <?= ($_POST['whitelist'] === "0") ? 'selected' : ''; ?> value="0">Privaat</option>
+
+                        <option
+                        <?php if(isset($_POST['whitelist'])) { ?>
+                            <?= ($_POST['whitelist'] === "1") ? 'selected' : ''; ?>
+                        <?php } ?>
+                        value="1">Publiek</option>
+
+                        <option
+                        <?php if(isset($_POST['whitelist'])) { ?>
+                            <?= ($_POST['whitelist'] === "0") ? 'selected' : ''; ?>
+                        <?php } ?> value="0">Privaat</option>
                     </select>
                 </div>
 
@@ -443,8 +452,14 @@ WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
                         <option value="">Nog niet geselecteerd</option>
                         <?php foreach ($soorten as $key => $soort) { ?>
                             <option
+
+                                <?php
+                                if(isset($_POST['soort']))
+                                {
+                                    echo ($_POST[ 'soort' ] == $soort[ 'soort_id' ]) ? 'selected' : '' ;
+                                }
+                                ?>
                                     value="<?= $soort[ 'soort_id' ]; ?>"
-                                <?= ($_POST[ 'soort' ] == $soort[ 'soort_id' ]) ? 'selected' : '' ?>
                             >
                                 <?= $soort[ 'soort' ]; ?>
                             </option>
