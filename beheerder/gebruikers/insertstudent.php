@@ -251,7 +251,6 @@ if( isset($_POST[ 'invoeren' ]) )
                         $leerling[ 'LGF' ],
                         $leerling[ 'Groepscode' ]
                     ));
-                    $leerlingnummer = $db->lastInsertId();
                 }
                 linkStudentstoEvents(null,intval($leerling['Nummer']),0);
                 $i++;
