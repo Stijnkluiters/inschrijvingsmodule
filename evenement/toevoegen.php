@@ -91,9 +91,10 @@ if (isset($_POST['titel'])) {
     /** Min_leerlingen & max_leerlingen*/
     $min_leerlingen = (int)filter_input(INPUT_POST, 'min_leerlingen', FILTER_SANITIZE_STRING);
     $max_leerlingen = (int)filter_input(INPUT_POST, 'max_leerlingen', FILTER_SANITIZE_STRING);
+    //er moeten niet meer leerlingen kunnen komen dan max (min mag dus niet hoger zijn)
     if ($min_leerlingen === false) {
         $error['Min_leerlingen'] = ' het filteren van Minimaal aantal leerlingen ging verkeerd';
-    } elseif($min_leerlingen < 0 || $min_leerlingen > $max_leerlingen){
+    } elseif ($min_leerlingen < 0 || $min_leerlingen > $max_leerlingen) {
         $error['Min_leerlingengetal'] = 'minimaal aantal leerlingen moet tussen 0 en maximaal aantal leerlingen';
     }
 
@@ -114,10 +115,11 @@ if (isset($_POST['titel'])) {
         $error['contactnummer'] = ' het filteren van contact ging verkeerd';
     }
 
-    if(!($_POST['whitelist'] == 1 || $_POST['whitelist'] == 0)){
+    if (!($_POST['whitelist'] == 1 || $_POST['whitelist'] == 0)) {
         $error['whitelist'] = ' Whitelist kan alleen maar publiek of privaat zijn';
     }
 
+    //geen errors = query uitvoeren
     if (count($error) === 0) {
         $stmt = $db->prepare('
         INSERT INTO `evenement`( 
@@ -167,32 +169,31 @@ if (isset($_POST['titel'])) {
             $contactnummer,
             $_POST['whitelist'],
             $_SESSION[authenticationSessionName]
-            ));
+        ));
         $evenement_id = $db->lastInsertId();
 
+        //koppel alle leerlingen aan het evenement in de inschrijvingtabel, met de whitelist afgesteld op de keuze (publiek of privaat)
         $stmt3 = $db->prepare("
 INSERT INTO inschrijving(evenement_id, leerlingnummer, gewhitelist)
 SELECT :evenement_id, leerlingnummer, :gewhitelist
 FROM leerling l
 WHERE deleted = 0 AND l.account_id IN ( SELECT a.account_id FROM account a )");
-        $stmt3->bindParam('evenement_id',$evenement_id);
+        $stmt3->bindParam('evenement_id', $evenement_id);
         $stmt3->bindParam('gewhitelist', $_POST['whitelist']);
         $stmt3->execute();
-        redirect('/index.php?evenementen=alles','Evenement toegevoegd');
-
+        redirect('/index.php?evenementen=alles', 'Evenement toegevoegd');
     }
-
 }
 
-
+//haal de actieve soorten uit de database
 $soorten = $db->query('select soort_id, soort from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
-if(count($soorten) === 0) {
-    if($rol === 'beheerder') {
-        redirect('/index.php?soorten=toevoegen','Er moet eerst een evenement soort bestaan');
+if (count($soorten) === 0) {
+    if ($rol === 'beheerder') {
+        redirect('/index.php?soorten=toevoegen', 'Er moet eerst een evenement soort bestaan');
     } else {
-        redirect('/index.php?evenementen=alles','Er bestaan nog geen soorten, neem contact op met de beheerder');
+        redirect('/index.php?evenementen=alles', 'Er bestaan nog geen soorten, neem contact op met de beheerder');
     }
 }
 
@@ -205,7 +206,8 @@ if(count($soorten) === 0) {
                 <strong>Evenement</strong>
                 <small>toevoegen</small>
                 <div class="pull-right">
-                    <a href="<?= route('/index.php?evenementen=alles') ?>"class="btn btn-primary">Terug naar evenementen</a>
+                    <a href="<?= route('/index.php?evenementen=alles') ?>" class="btn btn-primary">Terug naar
+                        evenementen</a>
                 </div>
             </div>
             <div class="card-body">
