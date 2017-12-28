@@ -90,9 +90,5 @@ $soorten = $stmt->fetchAll();
         </div>
     </div>
     <div class="card-footer">
-        <?php
-        if (1 == 1) {
-            print('<a href = "' . route('/index.php?soorten=toevoegen') . '" class=" btn btn-primary" >soort toevoegen</a>');
-        }
-        ?>
+            <?= '<a href = "' . route('/index.php?soorten=toevoegen') . '" class=" btn btn-primary" >soort toevoegen</a>'; ?>
     </div>
