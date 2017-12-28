@@ -19,9 +19,6 @@ if (isset($_POST['soortid'])) {
     if ($stmt->rowCount() === 0) {
         redirect('/index.php', 'SoortID bestaat niet in de database');
     }
-
-
-    $stmt3 = $db->prepare("SELECT begintijd FROM evenement WHERE soort_id = " . $soortid);
     if (isset($_POST['deactiveren'])) {
         if ($_POST['deactiveren'] == '2') {
             //if (date('Y-m-d') > date('Y-m-d', strtotime($begintijd))) {
