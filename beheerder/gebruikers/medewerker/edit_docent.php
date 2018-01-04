@@ -330,7 +330,7 @@ if (isset($_POST['account_wijzigen'])) {
                     }
 
                     ?>
-                    <input type="hidden" value="<?= $docent[ 'afkorting' ]; ?>" name="account_id"/>
+                    <input type="hidden" value="<?= $docent[ 'account_id' ]; ?>" name="account_id"/>
                     <div class="row">
 
 
