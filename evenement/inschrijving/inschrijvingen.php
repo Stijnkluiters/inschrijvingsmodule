@@ -194,8 +194,8 @@ $inschrijvingen = $stmt->fetchAll();
                                 </div>
                             <?php } ?>
                         </td>
+                    </form>
                 </tr>
-                </form>
             <?php } ?>
             </tbody>
         </table>

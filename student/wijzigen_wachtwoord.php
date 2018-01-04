@@ -19,20 +19,23 @@ if (isset($_POST['submit'])) {
     $error = array();
 
     // controleren of de gebruikersnaam al bestaat.
+
+    $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
+
+
     $db = db();
     /** Wachtwoord */
     if (!isset($_POST['wachtwoord']) || empty($_POST['wachtwoord'])) {
         $error['wachtwoord'] = ' Wachtwoord is verplicht';
     }
     // wachtwoord moet minimaal 8 karakters hebben
-    if (strlen($_POST['wachtwoord']) < 8) {
+    if (strlen($wachtwoord) < 8) {
         $error['wachtwoord'] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
     }
     // wachtwoord moet minimaal 1 hoofdletter hebben
-    if ($_POST['wachtwoord'] === strtolower($_POST['wachtwoord'])) {
+    if ($wachtwoord === strtolower($_POST['wachtwoord'])) {
         $error['wachtwoord'] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
     }
-    $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
     if ($wachtwoord === false) {
         $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
     }
@@ -42,8 +45,8 @@ if (isset($_POST['submit'])) {
     if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
         $error['herhaal_wachtwoord'] = ' Herhalend wachtwoord is verplicht';
     }
-    if ($_POST['wachtwoord'] !== $_POST['herhaal_wachtwoord']) {
-        $error['herhaal_wachtwoord'] = ' 2 velden zijn niet het zelfde';
+    if ($wachtwoord !== $_POST['herhaal_wachtwoord']) {
+        $error['herhaal_wachtwoord'] = ' Het ingevoerde wachtwoord komt niet overeen met het controle veld.';
     }
 
     if (count($error) === 0) {

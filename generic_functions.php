@@ -97,7 +97,7 @@ function generateRandomAccountForRole($username, $rolename)
     ));
     $subject = 'Het ROC midden Nederland inschrijvingsmodule';
     // message variable.
-    include_once 'mail/leerling_account.php';
+    include 'mail/leerling_account.php';
 
     sendMail($username . '@edu.rocmn.nl', $subject, $message);
 
