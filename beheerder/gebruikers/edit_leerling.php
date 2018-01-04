@@ -235,8 +235,10 @@ if (isset($_POST['account_wijzigen'])) {
                     <div class="form-group row">
                         <label class="col-md-3 form-control-label" for="text-input">Geslacht</label>
                         <div class="col-md-9">
-                            <input type="text" value="<?= $leerling['geslacht'] ?>" id="text-input" name="geslacht"
-                                   class="form-control" placeholder="<?= $leerling['geslacht'] ?>">
+                            <select>
+                                <option value="man">man</option>
+                                <option value="vrouw">vrouw</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
