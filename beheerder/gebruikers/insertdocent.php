@@ -8,14 +8,14 @@
 
 if( isset($_POST[ 'invoeren' ]) )
 {
+
     if( !is_csv($_FILES[ 'csv' ]) )
     {
         $error = 'Het bestandstype moet verplicht: .csv zijn.';
     }
     elseif( $_FILES[ 'csv' ][ 'error' ] !== UPLOAD_ERR_OK )
     {
-
-        $error = sprintf('er is iets fout gegaan tijdens het uploaden: %s' . $_FILES[ 'csv' ][ 'error' ]);
+        $error = sprintf('er is iets fout gegaan tijdens het uploaden: %s' , $_FILES[ 'csv' ][ 'error' ]);
 
     } elseif($_FILES['csv']['size'] > 10000000) {
 
