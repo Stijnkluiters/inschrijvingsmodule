@@ -148,9 +148,19 @@ if (isset($_POST['account_wijzigen'])) {
         if (strlen($wachtwoord) < 7) {
             $error['wachtwoord'] = 'Wachtwoord moet langer dan 7 karakters zijn';
         }
+
+        // controleer voor speciale tekens in het wachtwoord
+        if(!preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $wachtwoord)) {
+            $error['wachtwoord'] = ' Er zitten geen speciale tekens in het wachtwoord';
+        }
+
+
     } else {
         $error['wachtwoord'] = 'Wachtwoord is verplicht';
     }
+
+
+
 
 
     if (isset($_POST['account_id']) && !empty($_POST['account_id'])) {
