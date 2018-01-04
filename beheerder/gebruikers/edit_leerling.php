@@ -207,8 +207,8 @@ if (isset($_POST['account_wijzigen'])) {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <strong>Credit Card</strong>
-                <small>Form</small>
+                <strong>Leerling</strong>
+                <small>wijzigen</small>
             </div>
             <div class="card-body">
                 <form action="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerlingnummer) ?>"
