@@ -256,7 +256,7 @@ if( isset($_POST[ 'invoeren' ]) )
                 $i++;
             }
         }
-        //redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
+        redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
     }
 }
 ?>

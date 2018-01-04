@@ -111,7 +111,6 @@ function login($username, $password)
         }
         else
         {
-
             return 'INVALIDPASSWORD';
         }
     }
