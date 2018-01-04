@@ -77,8 +77,9 @@ $activatieknop = '';
 if($row['begintijd'] > date("Y-m-d H:i:s")) {
     if ($activatie == 1) {
         $activatiemessage = "<span class='text-center bg-success'>Actief</span>";
-        $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
-
+        if($rol === 'externbedrijf' || $rol === 'beheerder') {
+            $activatieknop = '<div><a href="' . route('/index.php?evenementen=activatie&evenement_id=' . $id) . '" class="pull-right btn btn-danger">Deactiveren</a></div>';
+        }
     } elseif ($activatie == 0) {
         $activatiemessage = "<span class='text-center bg-danger'>Inactief</span>";
         if (in_array($rol, array('beheerder'))) {
@@ -160,7 +161,7 @@ if ($current == 0) {
 </div>
 <div class="card">
     <h4 class="card-header">Inschrijvingen
-        <?php if ($rol === 'beheerder') { ?>
+        <?php if ($rol === 'beheerder' || $rol === 'docent') { ?>
             <div class="pull-right">
                 <a href="<?= route('/index.php?inschrijving=overzicht&evenement_id=' . $id) ?>" class="btn btn-primary">inschrijvingen
                     beheren</a>
