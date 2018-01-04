@@ -70,19 +70,18 @@ if (isset($_POST["toestemming"])) {
 
         // onderwerp
         $subject = 'Bevestiging inschrijving';
-        include_once 'inschrijvingsmessage.php';
+        include 'inschrijvingsmessage.php';
 
     } elseif ($value == "nee") {
         // hier moet mnr. van dalen even de $message template aanmaken.
         $toestemming = 0;
         $subject = 'Afwijzing inschrijving';
-        include_once 'afwijzingsmessage.php';
+        include 'afwijzingsmessage.php';
 
     }
 
     $r = chainEventToLeerling(intval($evenement_id), intval($leerlingnummer), $toestemming);
-    $toestemmingStmt = $db->prepare("UPDATE inschrijving SET toestemming = ? WHERE evenement_id = ? AND leerlingnummer = ?");
-    $toestemmingStmt->execute(array($toestemming, $evenement_id, $leerlingnummer));
+
     if ($r) {
         sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);
     } else {

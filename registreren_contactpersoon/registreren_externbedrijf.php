@@ -44,22 +44,25 @@ if (isset($_POST['submit'])) {
         if ($stmt->rowCount() > 0) {
             $error['gebruikersnaam'] = ' er bestaat al een gebruiker met de naam: ' . $gebruikersnaam;
         }
-        /** Wachtwoord */
+
         if ($gebruikersnaam === false) {
             $error['gebruikersnaam'] = ' het filteren van gebruikersnaam ging verkeerd';
         }
+
+
+        /** Wachtwoord */
+        $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
         if (!isset($_POST['wachtwoord']) || empty($_POST['wachtwoord'])) {
             $error['wachtwoord'] = ' Wachtwoord is verplicht';
         }
         // wachtwoord moet minimaal 8 karakters hebben
-        if (strlen($_POST['wachtwoord']) < 8) {
+        if (strlen($wachtwoord) < 8) {
             $error['wachtwoord'] = ' Wachtwoord moet minimaal 8 of meer karakters hebben';
         }
         // wachtwoord moet minimaal 1 hoofdletter hebben
-        if ($_POST['wachtwoord'] === strtolower($_POST['wachtwoord'])) {
+        if ($wachtwoord === strtolower($_POST['wachtwoord'])) {
             $error['wachtwoord'] = ' Wachtwoord moet minimaal 1 hoofdletter hebben';
         }
-        $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
         if ($wachtwoord === false) {
             $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
         }
@@ -69,9 +72,14 @@ if (isset($_POST['submit'])) {
         if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
             $error['herhaal_wachtwoord'] = ' Herhalend wachtwoord is verplicht';
         }
-        if ($_POST['wachtwoord'] !== $_POST['herhaal_wachtwoord']) {
+        if ($wachtwoord !== $_POST['herhaal_wachtwoord']) {
             $error['herhaal_wachtwoord'] = ' Wachtwoord is niet het zelfde';
         }
+        // controleer voor speciale tekens in het wachtwoord
+        if(!preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $wachtwoord)) {
+            $error['wachtwoord'] = ' Er zitten geen speciale tekens in het wachtwoord';
+        }
+
 
         /** Bedrijfsgegevens */
 

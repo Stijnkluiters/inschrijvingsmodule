@@ -105,7 +105,7 @@ $user = get_user_info();
                             $leerling = $user;
                             // toestemming $message
                             include_once '../mail/bevestiging_inschrijving.php';
-                            /** @var TYPE_NAME $message */
+                            /** @var $message */
                             sendMail($receiver, $subject, $message);
                             $inschrijving['aangemeld_op'] = 'X';
 
@@ -129,7 +129,7 @@ $user = get_user_info();
                             $leerling = $user;
                             // toestemming $message
                             include_once '../mail/bevestiging_uitschrijving.php';
-                            /** @var TYPE_NAME $message */
+                            /** @var $message */
                             sendMail($receiver, $subject, $message);
 
                         }

@@ -40,6 +40,11 @@ if (isset($_POST['submit'])) {
         $error['wachtwoord'] = ' Het filteren van wachtwoord ging verkeerd';
     }
 
+    // controleer voor speciale tekens in het wachtwoord
+    if(!preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $wachtwoord)) {
+        $error['wachtwoord'] = ' Er zitten geen speciale tekens in het wachtwoord';
+    }
+
 
     /** Herhaaling Wachtwoord */
     if (!isset($_POST['herhaal_wachtwoord']) || empty($_POST['herhaal_wachtwoord'])) {
