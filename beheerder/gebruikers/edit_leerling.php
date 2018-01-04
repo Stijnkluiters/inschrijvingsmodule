@@ -245,9 +245,10 @@ if (isset($_POST['account_wijzigen'])) {
                     <div class="form-group row">
                         <label class="col-md-3 form-control-label" for="text-input">Geslacht</label>
                         <div class="col-md-9">
-                            <select>
-                                <option value="man">man</option>
-                                <option value="vrouw">vrouw</option>
+                            <select name="geslacht" class="form-control">
+                                <option value="">Selecteer het geslacht</option>
+                                <option value="Man" <?=($leerling['geslacht'] == 'Man') ? 'selected' : '' ; ?>>Man</option>
+                                <option value="Vrouw" <?= ($leerling['geslacht'] == 'Vrouw') ? 'selected' : '' ; ?>>Vrouw</option>
                             </select>
                         </div>
                     </div>
@@ -400,3 +401,10 @@ if (isset($_POST['account_wijzigen'])) {
     <!--/.col-->
 
 </div>
+<?php if( isset($error) ) { ?>
+    <ul>
+        <?php foreach ($error as $key => $error) { ?>
+            <li><?= $key . ' : ' . $error; ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>
