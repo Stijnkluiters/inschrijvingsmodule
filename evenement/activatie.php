@@ -147,7 +147,7 @@ $row = $stmt->fetch()
             <!--Alleen als er al een reden tot deactivatie van dit evenement is laat het systeem de reden zien -->
             <?php if ($row['comment'] != '') { ?>
                 <tr>
-                    <td><span class="text-center bg-danger">Vorige deactivatie: </span></td>
+                    <td><span class="text-center bg-danger">Reden deactivatie: </span></td>
                     <td><?= $row['comment'] ?></td>
                 </tr>
             <?php } ?>
