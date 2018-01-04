@@ -35,14 +35,17 @@ if( isset($_POST[ 'submit' ]) )
         $error[ 'soortnaam' ] = ' soortnaam is verplicht.';
     }
     $soortnaam = filter_input(INPUT_POST, 'soortnaam', FILTER_SANITIZE_STRING);
-    if( empty($soortnaam) )
+    if( $soortnaam === false )
     {
         $error[ 'soortnaam' ] = ' het filteren van de soortnaam ging verkeerd';
     }
 
     /** benodigdheden */
     $benodigdheid = filter_input(INPUT_POST, 'omschrijving', FILTER_SANITIZE_STRING);
-
+    if( $benodigdheid === false )
+    {
+        $error[ 'benodigdheden' ] = 'het filteren van de benodigheden ging verkeerd';
+    }
 //if there are no errors, continue with the query
     if( count($error) === 0 )
     {
@@ -58,6 +61,7 @@ if( isset($_POST[ 'submit' ]) )
             $benodigdheid,
             $soortID
         ));
+        redirect('/index.php?soorten=overzicht');
     }
 }
 
@@ -85,15 +89,42 @@ $prevalue = $stmt2->fetch();
           action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
         <div class="col-sm-12">
             <div class="card-body">
+
+                <!-- soortnaam form -->
                 <div class="form-group">
-                    <label for="company">Soortnaam*</label>
-                    <input type="text" class="form-control" id="soortnaam" name="soortnaam" placeholder="Soortnaam"
-                           value="<?= $prevalue[ 'soort' ]; ?>"/>
+                    <label for="soortnaam">Soort naam *</label>
+                    <input type="text"
+                           class="form-control <?= (isset($error[ 'soortnaam' ])) ? 'is-invalid' : ''; ?>"
+                           id="soortnaam"
+                           name="soortnaam"
+                           required="required"
+                           placeholder="Soort naam"
+                           value="<?= (isset($_POST[ 'soortnaam' ])) ? $_POST[ 'soortnaam' ] : $prevalue['soort']; ?>"
+                    />
+                    <?php if( isset($error[ 'soortnaam' ]) ) { ?>
+                        <!-- soortnaam helper -->
+                        <div class="invalid-feedback">
+                            <?= $error[ 'soortnaam' ]; ?>
+                        </div>
+                    <?php } ?>
                 </div>
+
+                <!-- benodigdheden textarea form -->
                 <div class="form-group">
-                    <label for="omschrijving">Omschrijving</label>
-                    <textarea class="form-control" id="omschrijving" name="omschrijving"
-                              placeholder="Omschrijving voor het evenement"><?= $prevalue[ 'benodigdheid' ]; ?></textarea>
+                    <label for="benodigdheden">Benodigheden</label>
+                    <textarea class="form-control <?= (isset($error[ 'benodigdheden' ])) ? 'is-invalid' : ''; ?>"
+                              id="benodigdheden"
+                              name="benodigdheden"
+                              placeholder="Benodigheden"
+                              rows="3"
+                    ><?= (isset($_POST[ 'benodigdheden' ])) ? $_POST[ 'benodigdheden' ] : $prevalue['benodigdheid']; ?></textarea>
+
+                    <?php if( isset($error[ 'benodigdheden' ]) ) { ?>
+                        <!-- benodigdheden textarea helper -->
+                        <div class="invalid-feedback">
+                            <?= $error[ 'benodigdheden' ]; ?>
+                        </div>
+                    <?php } ?>
                 </div>
                 <button type="submit" name="submit" class="btn btn-sm btn-primary">Wijzigen
             </div>

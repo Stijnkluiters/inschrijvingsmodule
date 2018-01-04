@@ -15,9 +15,9 @@ function db () {
     try {
         $dbh = new PDO('mysql:host=localhost;dbname='.$db_name, $db_user, $db_pass,
             array(
-            PDO::ATTR_PERSISTENT => true,
-                PDO::ATTR_ERRMODE => true,
-                PDO::ERRMODE_WARNING => true
+            PDO::ATTR_PERSISTENT => false,
+                PDO::ATTR_ERRMODE => false,
+                PDO::ERRMODE_WARNING => false
         ));
         return $dbh;
     } catch (PDOException $e) {

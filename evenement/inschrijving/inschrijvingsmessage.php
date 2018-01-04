@@ -145,22 +145,22 @@ $message = '<!DOCTYPE html>
                                                 align="left">
                                                 <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
                                                     <p>Beste '.formatusername($leerling).',<br><br>Je aanvraag op '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
-                                                        het evenement&#xA0;is goedgekeurd, je mag nu bij het
-                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y H:i",strtotime($inschrijving['aangemeld_op'])).' ben je op
+                                                        het evenement&#xA0;is <b>goedgekeurd</b>, je mag nu bij het
+                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y",strtotime($inschrijving['aangemeld_op'])).' ben je op
                                                         <strong>ingeschreven voor</strong>:</p>
                                                     <table align="center" border="2" cellpadding="1" cellspacing="2"
                                                            style="width:100%;"
                                                            summary="Het ongedaan maken van je inschrijving kan op de website waar je je hebt ingeschreven voor het evenement">
                                                         <thead>
                                                         <tr>
-                                                            <th scope="col">Nummer voor het geplande activiteit</th>
+                                                            <th scope="col">Nummer voor de geplande activiteit</th>
                                                             <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         <tr>
                                                             <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['starttijd'])) . ' tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['begintijd'])) . ' <br>tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>Titel</strong></td>

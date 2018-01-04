@@ -252,11 +252,11 @@ if( isset($_POST[ 'invoeren' ]) )
                         $leerling[ 'Groepscode' ]
                     ));
                 }
-
+                linkStudentstoEvents(null,intval($leerling['Nummer']),0);
                 $i++;
             }
         }
-        redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
+        //redirect('/index.php?gebruiker=overzichtleerling',$i . ' Studenten geimporteerd.');
     }
 }
 ?>

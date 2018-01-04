@@ -1,6 +1,7 @@
 <?php
 
 $db = db();
+// contact_id moet is het id van de contactpersoon en moet nummeriek zijn
 $contact_id = intval(filter_input(INPUT_GET,'contactpersoon',FILTER_SANITIZE_STRING));
 
 // controlleer of het contact id wel een nummeriek getal is. anders doorverwijzen naar een andere pagina.
@@ -16,6 +17,7 @@ if( $stmt->rowCount() === 0 )
 {
     redirect('/index.php?contactpersoon=overzicht', 'contact persoon niet gevonden in de database');
 }
+// alle gegevens van het bedrijf ophalen van het desbetreffende contactpersoon.
 $stmt = $db->prepare('select * 
     from branche b
     join contactpersoon c ON c.branche_id = b.branche_id  
@@ -25,7 +27,6 @@ $stmt = $db->prepare('select *
 ');
 $stmt->execute(array( $contact_id ));
 $companyInfo = $stmt->fetch();
-// show branches.
 $error = [];
 if( isset($_POST[ 'inventarisatie_submit' ]) )
 {

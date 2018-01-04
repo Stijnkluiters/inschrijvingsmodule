@@ -34,9 +34,9 @@ function has_permission($compareRole)
 
 function handleUnauthenticatedRole($compareRol) {
     if(!has_permission($compareRol)) {
-        //logout();
-        //redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
-        dump('derp? uitgelogd');
+        logout();
+        redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+
         exit;
     }
 }
@@ -44,9 +44,9 @@ function handleUnauthenticatedRole($compareRol) {
 function viewEvent($event)
 {
     if($event['account_id'] != $_SESSION[authenticationSessionName]) {
-//        logout();
-//        redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
-        dump('derp? uitgelogd');
+        logout();
+        redirect('/login.php','Je hebt geen rechten om deze pagina te bekijken');
+
         exit;
     }
 }

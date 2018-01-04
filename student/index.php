@@ -131,7 +131,7 @@ $user = get_user_info();
                             include_once '../mail/bevestiging_uitschrijving.php';
                             /** @var TYPE_NAME $message */
                             sendMail($receiver, $subject, $message);
-                            $inschrijving['aangemeld_op'] = 'X';
+
                         }
                     }
                     ?>

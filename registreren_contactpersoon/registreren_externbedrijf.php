@@ -36,7 +36,6 @@ if (isset($_POST['submit'])) {
             $error['gebruikersnaam'] = ' gebruikersnaam moet langer dan 5 karakters zijn';
         }
         $gebruikersnaam = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
-        $gebruikersnaam = strtolower($gebruikersnaam);
         // controleren of de gebruikersnaam al bestaat.
         $db = db();
         $stmt = $db->prepare('select * from account where gebruikersnaam = :gebruikernaam');
@@ -268,7 +267,7 @@ if (isset($_POST['submit'])) {
                 // gather rol_id
 
 
-                $rolnaam = 'contactpersoon';
+                $rolnaam = 'externbedrijf';
 
                 $rol_id = check_if_role_exists($rolnaam);
 
@@ -438,7 +437,7 @@ if (isset($_POST['submit'])) {
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form method="post" action="<?= route('../registreren_contactpersoon/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
+            <form method="post" action="<?= route('/registreren_contactpersoon/registreren_externbedrijf.php'); ?>" class="container" id="register-form">
                 <div class="card">
                     <div class="container-fluid">
                         <h1>Registreer
@@ -794,6 +793,15 @@ if (isset($_POST['submit'])) {
                                   class="form-text bg-danger text-white"><?= $error['verwachting']; ?></span>
                         <?php } ?>
                         <hr/>
+                        <?php if( isset($error['error-codes']) ) { ?>
+                            <hr/>
+                            <div class="card-footer bg-danger">
+                                <small class="text-center"><?= ucfirst($error['error-codes']); ?></small>
+                            </div>
+                            <?php
+
+                        }
+                        ?>
                         <div class="g-recaptcha" data-sitekey="6LcffjsUAAAAAK_qsbG5FQm4UnceLL2O5ztC0Kp7"></div>
                         <button id="submit" name="submit" type="submit" class="btn btn-block btn-primary mb-3">Account
                             aanmaken

@@ -5,6 +5,6 @@
  * Date: 17-11-2017
  * Time: 11:27
  */
-include 'config.php';
+include 'authentication_functions.php';
 logout();
 redirect('/index.php','U bent uitgelogd!');
