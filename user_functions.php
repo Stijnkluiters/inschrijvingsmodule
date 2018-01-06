@@ -83,6 +83,7 @@ function get_user_info($account = null)
  */
 function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whitelisted = false, $update = false)
 {
+
     $db = db();
     if( $evenement_id === null )
     {
@@ -110,7 +111,7 @@ function linkStudentstoEvents($evenement_id = null, $leerlingnummer = null, $whi
         foreach ($evenement_id as $evenement)
         {
             $evenement_id = $evenement[ 'evenement_id' ];
-            chainEventWithLeerlingen($evenement_id, $leerlingnummer, intval($evenement['publiek']), $update);
+            chainEventWithLeerlingen($evenement_id, $leerlingnummer, intval($evenement[ 'publiek' ]), $update);
         }
     }
 }
@@ -189,8 +190,46 @@ function chainEventToLeerling($evenement_id, $leerlingnummer, $whitelisted, $upd
     {
         // insert user with whitelist status.
         $stmt = $db->prepare('INSERT INTO `inschrijving`(`leerlingnummer`, `evenement_id`, `gewhitelist`) VALUES (?,?,?)');
-        return $stmt->execute(array($leerlingnummer, $evenement_id, $whitelisted));
+
+        return $stmt->execute(array( $leerlingnummer, $evenement_id, $whitelisted ));
     }
 
 }
 
+function deactivateAccount($account_id)
+{
+
+
+    startsession();
+    $db = db();
+
+    $rolnaam = get_account_his_role($account_id);
+    if( $rolnaam !== null )
+    {
+        $rolnaam = $rolnaam[ 'rolnaam' ];
+        switch ($rolnaam)
+        {
+            case 'beheerder':
+            case "docent":
+                $sql = 'update medewerker set deleted = 1';
+                break;
+            case "leerling":
+                $sql = 'update leerling set deleted = 1';
+                break;
+            case "externbedrijf":
+                $sql = 'update contactpersoon set deleted = 1';
+                break;
+        }
+        $sql .= ' WHERE account_id = :account_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('account_id', $account_id);
+
+        return $stmt->execute();
+    }
+    else
+    {
+        throw new \Exception('Er zijn geen resultaten gevonden voor account zijn rol.');
+    }
+
+
+}
