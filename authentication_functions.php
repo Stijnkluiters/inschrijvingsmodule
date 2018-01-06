@@ -98,12 +98,11 @@ function login($username, $password)
         {
             // check if user isnt deleted.
             $user = get_user_info($result);
-            if($user['deleted'] == 1) {
+            if($user['deleted'] === 1) {
                 return 'USERDELETED';
             }
-
-
             startsession();
+            // delete old session: true
             session_regenerate_id(true);
             $_SESSION[ authenticationSessionName ] = $result[ 'account_id' ];
 
