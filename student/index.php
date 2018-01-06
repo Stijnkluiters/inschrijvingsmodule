@@ -4,14 +4,69 @@ include_once '../config.php';
 
 $db = db();
 $stmt = $db->prepare('SELECT * FROM evenement e WHERE  e.status = 1 AND e.eindtijd > ?');
-$stmt->execute(array(date("Y-m-d H:i:s")));
-$evenemten = $stmt->fetchAll();
+$stmt->execute(array( date("Y-m-d H:i:s") ));
+$evenementen = $stmt->fetchAll();
 
-if(count($evenemten)===0) {
+if( count($evenementen) === 0 )
+{
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
 
 $user = get_user_info();
+
+if( isset($_POST[ 'submit' ]) )
+{
+    if( empty($inschrijving[ 'aangemeld_op' ]) )
+    {
+        $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+        $stmt->execute(array( date("Y-m-d H:i:s"), $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+
+        $receiver = $user[ 'leerlingnummer' ] . '@edu.rocmn.nl';
+        $subject = 'Bevestiging inschrijving' . $evenement[ 'onderwerp' ];
+
+        //QUERY voor ophalen gegevens voor de mail
+        $db = db();
+        $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+        $stmt->bindParam('evenement_id', $evenement[ 'evenement_id' ], PDO::PARAM_INT);
+        $stmt->execute();
+        $evenement = $stmt->fetch();
+        $leerling = $user;
+        // toestemming $message
+        include_once '../mail/bevestiging_inschrijving.php';
+        /** @var $message */
+        sendMail($receiver, $subject, $message);
+        $inschrijving[ 'aangemeld_op' ] = 'X';
+
+        success('Je hebt je ingeschreven!');
+    }
+    else
+    {
+        success('Je hebt je uitgeschreven!');
+        $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
+        $stmt->execute(array( null, $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+        $inschrijving[ 'aangemeld_op' ] = null;
+
+        //test
+        $receiver = $user[ 'leerlingnummer' ] . '@edu.rocmn.nl';
+        $subject = 'Bevestiging inschrijving' . $evenement[ 'onderwerp' ];
+
+        //QUERY voor ophalen gegevens voor de mail
+        $db = db();
+        $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
+        $stmt->bindParam('evenement_id', $evenement[ 'evenement_id' ], PDO::PARAM_INT);
+        $stmt->execute();
+        $evenement = $stmt->fetch();
+        $leerling = $user;
+        // toestemming $message
+        include_once '../mail/bevestiging_uitschrijving.php';
+        /** @var $message */
+        sendMail($receiver, $subject, $message);
+
+    }
+}
+?>
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,104 +104,82 @@ $user = get_user_info();
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
         <?php
+
         $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
         $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
         $leerlingQuery->execute();
         $leerlingen = $leerlingQuery->fetch();
         ?>
-        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
+        <a class="dropdown-item"
+           href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen[ 'gebruikersnaam' ]) ?>"><i
+                    class="fa fa-lock"></i> Wachtwoord wijzigen</a>
     </div>
 </div>
-<section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
+<section class="jumbotron text-center img-responsive"
+         style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
     <div class="container">
         <h1 class="jumbotron-heading">ROC midden Nederland</h1>
-        <p class="lead text-muted">Evenementen overzicht van <?= $user['roepnaam'] ; ?></p>
+        <p class="lead text-muted">Evenementen overzicht van <?= $user[ 'roepnaam' ]; ?></p>
     </div>
 </section>
 <div class="album text-muted">
     <div class="container">
         <?php
-        if(isset($bericht)){
+
+        if( isset($bericht) )
+        {
             print($bericht);
         }
 
-        foreach ($evenemten as $evenemnt) { ?>
-        <div class="row">
-            <div class="card col-12">
-                <div class="card-body">
-                    <h4 class="card-title"><?= ucfirst($evenemnt[ 'titel' ]); ?></h4>
-                    <h5 class="text-muted"><?= ucfirst($evenemnt[ 'onderwerp' ]); ?></h5>
-                <p class="card-text"><?= ucfirst($evenemnt[ 'omschrijving' ]); ?></p>
-                <ul class="list-group">
-                    <li class="list-group-item">startdatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'begintijd' ])); ?></li>
-                    <li class="list-group-item">einddatum: <?= date('Y-M-d H:i', strtotime($evenemnt[ 'eindtijd' ])); ?></li>
-                </ul>
-            </div>
-                <form action="<?= route('/student/index.php') ?>" method="post">
+        foreach ($evenementen as $evenement)
+        {
+
+            $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
+            $stmt->execute(array( 1, $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+            $inschrijving = $stmt->fetch();
+            
+            ?>
+            <div class="row">
+                <div class="card col-12">
+                    <div class="card-body">
+                        <h4 class="card-title"><?= ucfirst($evenement[ 'titel' ]); ?></h4>
+                        <h5 class="text-muted"><?= ucfirst($evenement[ 'onderwerp' ]); ?></h5>
+                        <p class="card-text"><?= ucfirst($evenement[ 'omschrijving' ]); ?></p>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                startdatum: <?= date('Y-M-d H:i', strtotime($evenement[ 'begintijd' ])); ?></li>
+                            <li class="list-group-item">
+                                einddatum: <?= date('Y-M-d H:i', strtotime($evenement[ 'eindtijd' ])); ?></li>
+                        </ul>
+                    </div>
                     <?php
-                    $user = get_user_info();
-                    $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
-                    $stmt->execute(array(1, $evenemnt['evenement_id'],$user['leerlingnummer']));
-                    $inschrijving = $stmt->fetch();
-                    if(isset($_POST['submit'])){
-                        if(empty($inschrijving['aangemeld_op'])) {
-                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-                            $stmt->execute(array(date("Y-m-d H:i:s"), $evenemnt['evenement_id'], $user['leerlingnummer']));
 
-                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
-                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
-
-                            //QUERY voor ophalen gegevens voor de mail
-                            $db = db();
-                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
-                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
-                            $stmt->execute();
-                            $evenement = $stmt->fetch();
-                            $leerling = $user;
-                            // toestemming $message
-                            include_once '../mail/bevestiging_inschrijving.php';
-                            /** @var $message */
-                            sendMail($receiver, $subject, $message);
-                            $inschrijving['aangemeld_op'] = 'X';
-
-                            success('Je hebt je ingeschreven!');
-                        }else{
-                            success('Je hebt je uitgeschreven!');
-                            $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-                            $stmt->execute(array(NULL, $evenemnt['evenement_id'], $user['leerlingnummer']));
-                            $inschrijving['aangemeld_op'] = NULL;
-
-                            //test
-                            $receiver = $user['leerlingnummer'].'@edu.rocmn.nl';
-                            $subject =  'Bevestiging inschrijving' . $evenemnt['onderwerp'];
-
-                            //QUERY voor ophalen gegevens voor de mail
-                            $db = db();
-                            $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
-                            $stmt->bindParam('evenement_id', $evenemnt['evenement_id'] , PDO::PARAM_INT);
-                            $stmt->execute();
-                            $evenement = $stmt->fetch();
-                            $leerling = $user;
-                            // toestemming $message
-                            include_once '../mail/bevestiging_uitschrijving.php';
-                            /** @var $message */
-                            sendMail($receiver, $subject, $message);
-
-                        }
-                    }
+                    // controleren of een student zichzelf wel mag inschrijven, hij moet gewhitelist zijn.
+                    // dat doen we door te controleren of de query uberhaupt een resultaat geeft omdat we queryen op gewhitelist ja / nee
+                    if( count($inschrijving) > 0 )
+                    {
                     ?>
-                    <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">
-                        <?php
-                            if(!empty($inschrijving['aangemeld_op'])){
+                        <form action = "<?= route('/student/index.php') ?>" method = "post" >
+
+
+                        ?>
+                        <button id="submit" type="submit" name="submit" class="btn btn-block btn-primary mb-3">
+                            <?php
+
+                            if( !empty($inschrijving[ 'aangemeld_op' ]) )
+                            {
                                 print('Uitschrijven');
-                            }else{
+                            }
+                            else
+                            {
                                 print('Inschrijven');
                             }
-                        ?></button>
-                </form>
+                            ?></button>
+                        </form>
+                    <?php } ?>
+                </div>
             </div>
-            </div>
-            <?php } ?>
+        <?php } ?>
     </div>
 </div>
 <footer class="text-muted">
