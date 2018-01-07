@@ -11,7 +11,7 @@ if (!filter_var($evenement_id, FILTER_VALIDATE_INT)) {
     redirect('/index.php?evenement=overzicht', 'Er is wat misgegaan met de url? are you trying to hack this?');
 }
 $db = db();
-
+$rolename = get_account_his_role($_SESSION[authenticationSessionName]);
 if (isset($_POST["aanmelden"])) {
     $aanmelderror = [];
     $aanmeldUpdate = filter_input(INPUT_POST, 'aanmelden', FILTER_SANITIZE_NUMBER_INT);
@@ -31,6 +31,9 @@ if (isset($_POST["aanmelden"])) {
 }
 
 if (isset($_POST["whitelist"])) {
+    if($rolename['rolnaam'] !== 'beheerder') {
+        redirect('/index.php', 'Je hebt geen toestemming om dit te wijzigen');
+    }
     $leerlingnummer = filter_input(INPUT_POST, 'leerlingnummer', FILTER_SANITIZE_NUMBER_INT);
     $updatewhitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
     if ($updatewhitelist == '0' || $updatewhitelist == '1') {
@@ -42,6 +45,9 @@ if (isset($_POST["whitelist"])) {
 }
 
 if (isset($_POST["toestemming"])) {
+    if($rolename['rolnaam'] !== 'beheerder') {
+        redirect('/index.php', 'Je hebt geen toestemming om dit te wijzigen');
+    }
     $value = $_POST["toestemming"];
     $leerlingnummer = filter_input(INPUT_POST, 'leerlingnummer', FILTER_SANITIZE_NUMBER_INT);
     $toestemming = 0;

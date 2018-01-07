@@ -166,16 +166,16 @@ if( isset($_POST[ 'titel' ]) )
     /** Min_leerlingen & max_leerlingen*/
     $min_leerlingen = (int) filter_input(INPUT_POST, 'min_leerlingen', FILTER_SANITIZE_STRING);
     $max_leerlingen = (int) filter_input(INPUT_POST, 'max_leerlingen', FILTER_SANITIZE_STRING);
-    if( $min_leerlingen === false )
+    if( $min_leerlingen === '' )
     {
         $error[ 'min_leerlingen' ] = ' het filteren van Minimaal aantal leerlingen ging verkeerd';
     }
     elseif( $min_leerlingen < 0 || $min_leerlingen > $max_leerlingen )
     {
-        $error[ 'min_leerlingen' ] = 'minimaal aantal leerlingen moet tussen 0 en maximaal aantal leerlingen';
+        $error[ 'min_leerlingen' ] = 'minimaal aantal leerlingen moet minimaal 0 en uitertlijk het maximaal aantal leerlingen zijn';
     }
 
-    if( $max_leerlingen === false )
+    if( $max_leerlingen === '' )
     {
         $error[ 'max_leerlingen' ] = ' het filteren van Maximaal aantal leerlingen ging verkeerd';
     }
@@ -195,7 +195,7 @@ if( isset($_POST[ 'titel' ]) )
         $error[ 'contactnummer' ] = ' het filteren van contact ging verkeerd';
     }
 
-    if( !($_POST[ 'whitelist' ] == 1 || $_POST[ 'whitelist' ] == 0) )
+    if( !($_POST[ 'whitelist' ] == 1 || $_POST[ 'whitelist' ] == 2) )
     {
         $error[ 'whitelist' ] = ' Whitelist kan alleen maar publiek of privaat zijn';
     }
