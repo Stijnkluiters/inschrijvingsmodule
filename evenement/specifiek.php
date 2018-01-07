@@ -163,7 +163,7 @@ if ($current == 0) {
     <h4 class="card-header">Inschrijvingen
         <?php if ($rol === 'beheerder' || $rol === 'docent') { ?>
             <div class="pull-right">
-                <a href="<?= route('/index.php?inschrijving=overzicht&evenement_id=' . $id) ?>" class="btn btn-primary">inschrijvingen
+                <a href="<?= route('/index.php?inschrijving=overzicht&evenement_id=' . $id) ?>" class="btn btn-primary">Inschrijvingen
                     beheren</a>
             </div>
         <?php } ?>
