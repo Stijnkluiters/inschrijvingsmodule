@@ -26,7 +26,7 @@ if(isset($_POST['delete'])){
     redirect('/index.php?gebruiker=overzichtleerling', ' Leerling '.$leerling['roepnaam'].' gedeactiveert! ');
 }
 
-
+$geboortedatum = date('Y-m-d', strtotime($leerling['geboortedatum']));
 $begindatum = date('Y-m-d', strtotime($leerling['begindatum']));
 $einddatum = '';
 if(!empty($leerling['einddatum'])){
@@ -69,7 +69,7 @@ if(!empty($leerling['einddatum'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
+            <input type="date" value="<?= $geboortedatum ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">

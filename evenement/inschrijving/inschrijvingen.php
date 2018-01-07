@@ -211,7 +211,7 @@ $inschrijvingen = $stmt->fetchAll();
 
                                     <button type="submit" name="toestemming" value="nee"
                                             class="pull-right btn btn-danger">
-                                        Toestemming intrekken/weigeren
+                                        Toestemming intrekken
                                     </button><?php } ?><i class="text-success fa fa-check" aria-hidden="true"></i>
                                 <?php if ($rol === 'beheerder') { ?>
                                     <div class="form-group">
