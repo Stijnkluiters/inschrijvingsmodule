@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS `inschrijfmodule`.`account` (
   `gebruikersnaam` VARCHAR(255) NOT NULL COMMENT '',
   `wachtwoord` VARCHAR(255) NOT NULL COMMENT '',
   `rol_id` INT NOT NULL COMMENT '',
+  `timestried` INT NOT NULL COMMENT '',
+
   PRIMARY KEY (`account_id`)  COMMENT '',
   CONSTRAINT `fk_Account_rolnaam1`
   FOREIGN KEY (`rol_id`)

@@ -7,10 +7,11 @@
  * Time: 13:29
  */
 include 'config.php';
-if(isset($_SESSION['message'])) {
-    $message = $_SESSION['message'];
+if( isset($_SESSION[ 'message' ]) )
+{
+    $message = $_SESSION[ 'message' ];
     //Laat het bericht maar 1x zien per request!
-    unset($_SESSION['message']);
+    unset($_SESSION[ 'message' ]);
 }
 if( isset($_POST[ 'submit' ]) )
 {
@@ -21,10 +22,10 @@ if( isset($_POST[ 'submit' ]) )
         'secret'   => $secret_key,
         'response' => $_POST[ 'g-recaptcha-response' ]
     ]);
-    $response = json_decode($response,true);
+    $response = json_decode($response, true);
 
 
-    if( $response['success'] )
+    if( $response[ 'success' ] )
     {
         $username = $_POST[ 'gebruikersnaam' ];
         $password = $_POST[ 'wachtwoord' ];
@@ -48,31 +49,40 @@ if( isset($_POST[ 'submit' ]) )
         if( !isset($error) )
         {
             $output = login($username, $password);
-
             if( $output === 'NOUSER' || $output === 'INVALIDPASSWORD' )
             {
                 $error = 'incorrecte gegevens, probeer het opnieuw.';
-            } elseif( $output === 'USERDELETED')
+            }
+            elseif( $output === 'USERDELETED' )
             {
                 $error = 'Account is geblokkeerd';
             }
             else
             {
-                //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
-                $role = get_account_his_role($_SESSION[authenticationSessionName]);
-                if($role['rolnaam'] === 'leerling') {
-                    redirect('/student/index.php', 'Welkom!');
-                } else {
-                    redirect('/index.php','Welkom!');
+                if( !isset($error) )
+                {
+                    //alle inloggegevens kloppen, gebruiker is nu ingelogd. tijd om door te sturen naar het dashboard.
+                    $role = get_account_his_role($_SESSION[ authenticationSessionName ]);
+                    if( $role[ 'rolnaam' ] === 'leerling' )
+                    {
+                        redirect('/student/index.php', 'Welkom!');
+                    }
+                    else
+                    {
+                        redirect('/index.php', 'Welkom!');
+                    }
                 }
 
             }
 
         }
 
-    } else {
+    }
+    else
+    {
 
-        if(in_array('missing-input-response',$response['error-codes'])) {
+        if( in_array('missing-input-response', $response[ 'error-codes' ]) )
+        {
             $error = 'Recaptcha is verplicht';
         }
 
@@ -154,7 +164,8 @@ if( isset($_POST[ 'submit' ]) )
                         <div>
                             <h2>Het ROC midden Nederland</h2>
                             <p>Inschrijvingsmodule </p>
-<!--                            <a href="--><?//= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
+                            <!--                            <a href="-->
+                            <? //= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
                         </div>
                     </div>
                 </div>
@@ -193,7 +204,7 @@ if( isset($_POST[ 'submit' ]) )
     <?php
 
     if(isset($message)) { ?>
-    $.notify("<?= $message; ?>",{
+    $.notify("<?= $message; ?>", {
         className: 'info'
     });
     <?php } ?>
