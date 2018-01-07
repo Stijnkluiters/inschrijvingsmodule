@@ -472,6 +472,25 @@ if( isset($_POST[ 'titel' ]) )
                 </div>
 
 
+                <!-- locatie form -->
+                <div class="form-group">
+                    <label for="locatie">Locatie * </label>
+                    <input type="text"
+                           class="form-control <?= (isset($error[ 'locatie' ])) ? 'is-invalid' : ''; ?>"
+                           id="locatie"
+                           name="locatie"
+                           required="required"
+                           placeholder="locatie"
+                           value="<?= (isset($_POST[ 'locatie' ])) ? $_POST[ 'locatie' ] : ''; ?>"
+                    />
+                    <?php if( isset($error[ 'locatie' ]) ) { ?>
+                        <!-- locatie helper -->
+                        <div class="invalid-feedback">
+                            <?= $error[ 'locatie' ]; ?>
+                        </div>
+                    <?php } ?>
+                </div>
+
                 <p>
                     <strong>Niet verplichte velden</strong>
                 </p>
@@ -491,24 +510,6 @@ if( isset($_POST[ 'titel' ]) )
                         <!-- vervoer helper -->
                         <div class="invalid-feedback">
                             <?= $error[ 'vervoer' ]; ?>
-                        </div>
-                    <?php } ?>
-                </div>
-
-                <!-- locatie form -->
-                <div class="form-group">
-                    <label for="locatie">Locatie </label>
-                    <input type="text"
-                           class="form-control <?= (isset($error[ 'locatie' ])) ? 'is-invalid' : ''; ?>"
-                           id="locatie"
-                           name="locatie"
-                           placeholder="locatie"
-                           value="<?= (isset($_POST[ 'locatie' ])) ? $_POST[ 'locatie' ] : ''; ?>"
-                    />
-                    <?php if( isset($error[ 'locatie' ]) ) { ?>
-                        <!-- locatie helper -->
-                        <div class="invalid-feedback">
-                            <?= $error[ 'locatie' ]; ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -540,7 +541,6 @@ if( isset($_POST[ 'titel' ]) )
                             class="form-control <?= (isset($error[ 'contractnr' ])) ? 'is-invalid' : ''; ?>"
                             id="contractnr"
                             name="contractnr"
-                            required="required"
                             placeholder="Telefoonisch contact nummer"
                             value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contractnr' ] : ''; ?>"
                      />

@@ -16,6 +16,12 @@ $leerlingQuery->execute();
 $leerling = $leerlingQuery->fetch();
 
 
+$begindatum = date('Y-m-d', strtotime($leerling['begindatum']));
+$einddatum = '';
+if(!empty($leerling['einddatum'])){
+    $einddatum = date('Y-m-d', strtotime($leerling['einddatum']));
+}
+
 if(isset($_POST['activeer'])){
     $stmt = $db->prepare('
             UPDATE leerling SET
@@ -87,13 +93,13 @@ if(isset($_POST['activeer'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" disabled placeholder="<?= $leerling[ 'begindatum' ] ?>">
+            <input type="date" value="<?= $begindatum ?>" id="text-input" name="begindatum" class="form-control" disabled placeholder="<?= $leerling[ 'begindatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Eind van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'einddatum' ] ?>" id="text-input" name="einddatum" class="form-control" disabled placeholder="<?= $leerling[ 'einddatum' ] ?>">
+            <input type="date" value="<?= $einddatum ?>" id="text-input" name="einddatum" class="form-control" disabled placeholder="<?= $leerling[ 'einddatum' ] ?>">
         </div>
     </div>
     <?php if(isset($error)) { ?>
