@@ -8,14 +8,26 @@
 
 if( isset($_POST[ 'invoeren' ]) )
 {
+
     if( !is_csv($_FILES[ 'csv' ]) )
     {
         $error = 'Het bestandstype moet verplicht: .csv zijn.';
     }
     elseif( $_FILES[ 'csv' ][ 'error' ] !== UPLOAD_ERR_OK )
     {
+        $phpFileUploadErrors = array(
+            0 => 'There is no error, the file uploaded with success',
+            1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+            2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            3 => 'The uploaded file was only partially uploaded',
+            4 => 'No file was uploaded',
+            6 => 'Missing a temporary folder',
+            7 => 'Failed to write file to disk.',
+            8 => 'A PHP extension stopped the file upload.',
+        );
 
-        $error = sprintf('er is iets fout gegaan tijdens het uploaden: %s' . $_FILES[ 'csv' ][ 'error' ]);
+
+        $error = sprintf('er is iets fout gegaan tijdens het uploaden: %s' , $phpFileUploadErrors[$_FILES['csv']['error']]);
 
     } elseif($_FILES['csv']['size'] > 10000000) {
 

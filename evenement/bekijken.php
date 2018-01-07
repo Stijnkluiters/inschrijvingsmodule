@@ -1,5 +1,5 @@
 <?php
-//load database
+//laad database
 $db = db();
 
 $sql = "
@@ -12,7 +12,7 @@ if ($rol === 'externbedrijf') {
     $sql .= ' AND e.account_id = :account_id';
 }
 
-//take info from database/evenement
+//voer de query uit
 $stmt = $db->prepare($sql);
 /** $rol Rol wordt gedefineerd in de index, onder de Evenementen $_GET. */
 if ($rol === 'externbedrijf') {
@@ -20,18 +20,31 @@ if ($rol === 'externbedrijf') {
 }
 $stmt->execute();
 
-//get results from query
+//zet resultaten van query in $rows
 $rows = $stmt->fetchAll();
 
 //check for content in results
-if (count($rows) > 0) {
 
-//set up base for table
+//basis voor tabel
 ?>
 <div class="card">
-    <h4 class="card-header">Evenementen</h4>
+    <h4 class="card-header">Evenementen
+        <span class="pull-right">
+        <?php
+        //beheerder en extern bedrijf mogen een evenement toevoegen
+        if (in_array($rol, array('beheerder', 'externbedrijf'))) {
+            print('<a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a>&nbsp');
+        }
+        //alleen de beheerder mag de soorten beheren
+        if ($rol === 'beheerder') {
+            print('<a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a>');
+        }
+        ?>
+        </span>
+    </h4>
     <div class="card-body">
         <div class="card-text">
+            <?php if (count($rows) > 0) { ?>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -47,9 +60,9 @@ if (count($rows) > 0) {
                 </thead>
                 <?php
 
-                //create a loop to get the needed info per part
+                //een loop waarin per rij alle informatie in de tabel wordt gezet
                 foreach ($rows as $row) {
-                    //put all data in variables
+                    //alle informatie in variabelen stoppen
                     $id = filter_var($row["evenement_id"], FILTER_SANITIZE_STRING);
                     $titel = filter_var($row["titel"], FILTER_SANITIZE_STRING);
                     $onderwerp = ucfirst(filter_var($row["onderwerp"], FILTER_SANITIZE_STRING));
@@ -67,20 +80,33 @@ if (count($rows) > 0) {
 
                     $soort = ucfirst(filter_var($row["soort"], FILTER_SANITIZE_STRING));
 
-
-                    if ($row['status'] == false) {
-                        $actief = "<td class='bg-danger'><span>Nee</span></td>";
-                    } elseif ($row['status'] == true) {
-                        $actief = "<td class='bg-success'><span>Ja</span></td>";
+                    //als het evenement nog moet beginnen: actief of niet,
+                    if ($row['begintijd'] > date("Y-m-d H:i:s")) {
+                        if ($row['status'] == false) {
+                            $actief = "<td class='bg-danger'>Nee</td>";
+                        } elseif ($row['status'] == true) {
+                            $actief = "<td class='bg-success'>Ja</td>";
+                        }
+                    } //als het evenement al bezig is: bezig
+                    elseif ($row['eindtijd'] > date("Y-m-d H:i:s") && $row['status'] == 1) {
+                        $actief = "<td class='bg-warning text-dark'>Bezig</td>";
+                    }
+                    elseif ($row['eindtijd'] > date("Y-m-d H:i:s") && $row['status'] == 0){
+                        $actief = "<td class='bg-warning text-dark'>Zou bezig zijn</td>";
+                    }
+                    //als het evenement al afgelopen is: verlopen
+                    elseif ($row['eindtijd'] < date("Y-m-d H:i:s")) {
+                        $actief = "<td class='bg-secondary'>Verlopen</td>";
                     }
 
+                    //publiek of privaat
                     if ($row['publiek'] == 1) {
                         $publiek = '<td class="bg-success">Publiek</td>';
                     } else {
                         $publiek = '<td class="bg-danger">Privaat</td>';
                     }
 
-                    //print all VISIBLE variables in the table
+                    //Zet de informatie die zichtbaar moet zijn in de tabel
                     ?>
                     <tr>
                         <td>
@@ -103,16 +129,5 @@ if (count($rows) > 0) {
                 ?>
             </table>
         </div>
-
-                <?php
-                if (in_array($rol, array('beheerder', 'externbedrijf'))) {
-                    print('<p><a href = "' . route('/index.php?evenementen=toevoegen') . '" class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true" ></i> evenement toevoegen</a></p>');
-                }
-                if ($rol === 'beheerder') {
-                    print('<p><a href = "' . route('/index.php?soorten=overzicht') . '" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i> soorten beheren</a></p>');
-                }
-                ?>
-
-
     </div>
 </div>

@@ -1,94 +1,98 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Jonas
- * Date: 12/20/2017
- * Time: 21:05
+ * User: stijn
+ * Date: 21-12-2017
+ * Time: 09:23
  */
+$message = '
+ <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <title></title>  <!--[if !mso]><!-- -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!--<![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        #outlook a {
+            padding: 0;
+        }
 
-$message = '<!DOCTYPE html>
-        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
-              xmlns:o="urn:schemas-microsoft-com:office:office">
-        <head><title></title>  <!--[if !mso]><!-- -->
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!--<![endif]-->
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style type="text/css">  #outlook a {
-                padding: 0;
-            }
+        .ReadMsgBody {
+            width: 100%;
+        }
 
-            .ReadMsgBody {
-                width: 100%;
-            }
+        .ExternalClass {
+            width: 100%;
+        }
 
-            .ExternalClass {
-                width: 100%;
-            }
+        .ExternalClass * {
+            line-height: 100%;
+        }
 
-            .ExternalClass * {
-                line-height: 100%;
-            }
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
 
-            body {
-                margin: 0;
-                padding: 0;
-                -webkit-text-size-adjust: 100%;
-                -ms-text-size-adjust: 100%;
-            }
+        table, td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
 
-            table, td {
-                border-collapse: collapse;
-                mso-table-lspace: 0pt;
-                mso-table-rspace: 0pt;
-            }
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
 
-            img {
-                border: 0;
-                height: auto;
-                line-height: 100%;
-                outline: none;
-                text-decoration: none;
-                -ms-interpolation-mode: bicubic;
-            }
+        p {
+            display: block;
+            margin: 13px 0;
+        }</style><!--[if !mso]><!-->
+    <style type="text/css">  @media only screen and (max-width: 480px) {
+        @-ms-viewport {
+            width: 320px;
+        }    @viewport {
+            width: 320px;
+        }
+    }
+    </style>
+    <!--<![endif]-->
+    <!--[if mso]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml><![endif]--><!--[if lte mso 11]>
+    <style type="text/css">  .outlook-group-fix {
+        width: 100% !important;
+    }</style><![endif]--><!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet" type="text/css">
+    <style type="text/css">        @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);    </style>
+    <!--<![endif]-->
+    <style type="text/css">  @media only screen and (min-width: 480px) {
+        .mj-column-per-40 {
+            width: 40% !important;
+        }
 
-            p {
-                display: block;
-                margin: 13px 0;
-            }</style><!--[if !mso]><!-->
-            <style type="text/css">  @media only screen and (max-width: 480px) {
-                @-ms-viewport {
-                    width: 320px;
-                }    @viewport {
-                    width: 320px;
-                }
-            }</style><!--<![endif]--><!--[if mso]>
-            <xml>
-                <o:OfficeDocumentSettings>
-                    <o:AllowPNG/>
-                    <o:PixelsPerInch>96</o:PixelsPerInch>
-                </o:OfficeDocumentSettings>
-            </xml><![endif]--><!--[if lte mso 11]>
-            <style type="text/css">  .outlook-group-fix {
-                width: 100% !important;
-            }</style><![endif]--><!--[if !mso]><!-->
-            <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet"
-                  type="text/css">
-            <style type="text/css">        @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);    </style>
-            <!--<![endif]-->
-            <style type="text/css">  @media only screen and (min-width: 480px) {
-                .mj-column-per-40 {
-                    width: 40% !important;
-                }
+        .mj-column-per-60 {
+            width: 60% !important;
+        }
 
-                .mj-column-per-60 {
-                    width: 60% !important;
-                }
-
-                .mj-column-per-100 {
-                    width: 100% !important;
-                }
-            }</style>
-        </head>
+        .mj-column-per-100 {
+            width: 100% !important;
+        }
+    }</style>
+</head>
 <body style="background: #FFFFFF;">
 <div class="mj-container" style="background-color:#FFFFFF;"><!--[if mso | IE]>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" align="center"
@@ -144,37 +148,23 @@ $message = '<!DOCTYPE html>
                                             <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;"
                                                 align="left">
                                                 <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;">
-                                                    <p>Beste '.formatusername($leerling).',<br><br>Je aanvraag op '.date("d-M-y H:i",strtotime($inschrijving['created_at'])).' voor
-                                                        het evenement&#xA0;is <b>goedgekeurd</b>, je mag nu bij het
-                                                        evenement aanwezig zijn.<br>&#xA0;<br>Op '.date("d-M-y",strtotime($inschrijving['aangemeld_op'])).' ben je op
-                                                        <strong>ingeschreven voor</strong>:</p>
-                                                    <table align="center" border="2" cellpadding="1" cellspacing="2"
-                                                           style="width:100%;"
-                                                           summary="Het ongedaan maken van je inschrijving kan op de website waar je je hebt ingeschreven voor het evenement">
-                                                        <thead>
-                                                        <tr>
-                                                            <th scope="col">Nummer voor de geplande activiteit</th>
-                                                            <th scope="col">'.md5($leerlingnummer.$evenement_id).'</th>
-                                                        </tr>
-                                                        </thead>
+                                                    <p>Beste medewerker,<br><br>Hierbij de uitnodiging voor de
+                                                        inschrijfmodule voor evenementen.<br><br>jouw gebruikersnaam en
+                                                        wachtwoord:<br>&#xA0;</p>
+                                                    <table border="1" cellpadding="1" cellspacing="1"
+                                                           style="width:100%;">
                                                         <tbody>
                                                         <tr>
-                                                            <td><strong>Uitvoerperiode</strong></td>                                                            
-                                                            <td>Van: '. date('d-M-Y H:i',strtotime($evenement['begintijd'])) . ' <br>tot: ' . date("d-M-Y H:i",strtotime($evenement['eindtijd'])) . '</td>
+                                                            <td>Gebruikersnaam:</td>
+                                                            <td>'.$username.'</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><strong>Titel</strong></td>
-                                                            <td>'.ucfirst($evenement['titel']).'</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><b>Omschrijving</b></td>
-                                                            <td>'.ucfirst($evenement['omschrijving']).'</td>
+                                                            <td>Wachtwoord</td>
+                                                            <td>'.$password.'</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <p></p>
-                                                    <p>Met vriendelijke groet,</p>
-                                                    <p><br>ROC midden Nederland</p></div>
+                                                    <p>Met vriendelijke groet,<br><br>ROC midden Nederland</p></div>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -217,4 +207,6 @@ $message = '<!DOCTYPE html>
     </div>
     <!--[if mso | IE]>      </td></tr></table>      <![endif]--></div>
 </body>
-</html>';
+</html>
+
+';

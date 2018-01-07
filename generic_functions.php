@@ -11,18 +11,24 @@
 
 function redirect($url, $message = null)
 {
-    if (isset($message)) {
+
+    if( isset($message) )
+    {
 
         startsession();
-        $_SESSION['message'] = $message;
+        $_SESSION[ 'message' ] = $message;
 
     }
-    if (!is_string($url)) {
+    if( !is_string($url) )
+    {
         throw new Exception($url . ' is not an String you silly');
     }
-    if (headers_sent()) {
+    if( headers_sent() )
+    {
         echo '<script> location.replace("' . Projectroot . $url . '"); </script>';
-    } else {
+    }
+    else
+    {
         return header(sprintf('Location: %s', Projectroot . $url));
     }
 }
@@ -37,7 +43,8 @@ function filter_url($url)
      *  $url[0] is the first character of a string (if $url is a string).
      *
      */
-    if ($url[0] !== '/') {
+    if( $url[ 0 ] !== '/' )
+    {
         $url .= '/';
     }
 
@@ -62,9 +69,10 @@ function randomString($length = 6)
     $str = "";
     $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
     $max = count($characters) - 1;
-    for ($i = 0; $i < $length; $i++) {
+    for ($i = 0; $i < $length; $i++)
+    {
         $rand = mt_rand(0, $max);
-        $str .= $characters[$rand];
+        $str .= $characters[ $rand ];
     }
 
     return $str;
@@ -95,11 +103,23 @@ function generateRandomAccountForRole($username, $rolename)
         $randompassword,
         $rol_id
     ));
+
     $subject = 'Het ROC midden Nederland inschrijvingsmodule';
     // message variable.
-    $message = include_once 'mail/leerling_account.php';
 
-    sendMail($username . '@edu.rocmn.nl', $subject, $message);
+    if( $rolename === 'leerling' )
+    {
+
+        include 'mail/leerling_account.php';
+
+        sendMail($username . '@edu.rocmn.nl', $subject, $message);
+    }
+    elseif( $rolename === 'docent' )
+    {
+        include 'mail/docent_account.php';
+
+        sendMail($username . '@rocmn.nl', $subject, $message);
+    }
 
     return $db->lastInsertId();
 
@@ -109,16 +129,19 @@ function generateRandomAccountForRole($username, $rolename)
 function startsession()
 {
 
-    if (!isset($_SESSION)) {
+    if( !isset($_SESSION) )
+    {
         session_start();
     }
 }
 
 function dump()
 {
+
     $arr = func_get_args();
     echo "<pre>";
-    foreach ($arr as $value) {
+    foreach ($arr as $value)
+    {
         var_dump($value);
     }
     echo "</pre>";
@@ -126,6 +149,7 @@ function dump()
 
 function success($msg)
 {
+
     return print(
         '<div class="alert alert-success" role="alert">
           <strong>Success!</strong> ' . $msg . '
@@ -135,6 +159,7 @@ function success($msg)
 
 function error($msg)
 {
+
     return print('<div class="alert alert-danger" role="alert">
   <strong>Error!</strong> ' . $msg . '
 </div>');
