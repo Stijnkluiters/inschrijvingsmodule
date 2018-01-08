@@ -1,5 +1,6 @@
 <?php
 // created by AUTHORNAME 26-10-2017
+// database instellingen
 $db_name = '';
 $db_user = '';
 $db_pass = '';
@@ -8,6 +9,7 @@ $db_pass = '';
 /**
  * https://github.com/PHPMailer/PHPMailer
  */
+// Mail instellingen
 $mailhost = 'localhost';
 $mailSMTP = false;
 $mailSMTPSecure = '';                            // Enable TLS encryption, `ssl` also accepted
@@ -47,6 +49,7 @@ if(!defined('mailFromUser')) {
 
 
 // TODO: FIX WITH $_SERVER variable;
+// project root, instellen voor de correcte weergave
 if(!defined('Projectroot')) {
     define('Projectroot','/kbs');
 }

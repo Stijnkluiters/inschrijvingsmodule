@@ -7,6 +7,7 @@
  * Time: 13:29
  */
 include 'config.php';
+// laat een bericht onderaan in de javascript zien.
 if(isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     //Laat het bericht maar 1x zien per request!
@@ -23,7 +24,7 @@ if( isset($_POST[ 'submit' ]) )
     ]);
     $response = json_decode($response,true);
 
-
+    // controleren of google een status: success geeft.
     if( $response['success'] )
     {
         $username = $_POST[ 'gebruikersnaam' ];

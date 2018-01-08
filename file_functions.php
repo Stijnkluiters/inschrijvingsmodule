@@ -5,7 +5,7 @@
  * Date: 21-11-2017
  * Time: 16:25
  */
-
+// controleren of het een csv bestand is
 function is_csv($file)
 {
 
@@ -23,7 +23,7 @@ function is_csv($file)
     $fileExtension = $file->getExtension();
     return in_array($fileExtension, $allowedExtensions);
 }
-
+// Het uitlezen van een csv bestand
 function read_csv($file)
 {
 

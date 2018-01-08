@@ -3,10 +3,11 @@
 include_once '../config.php';
 
 $db = db();
+// haal alle evenementen op die niet verwijderd zijn en de eindtijd nog niet verlopen is
 $stmt = $db->prepare('SELECT * FROM evenement e WHERE  e.status = 1 AND e.eindtijd > ?');
 $stmt->execute(array(date("Y-m-d H:i:s")));
 $evenemten = $stmt->fetchAll();
-
+// controleren of er uberhaupt evenementen beschikbaar zijn
 if(count($evenemten)===0) {
     $bericht = "Er zijn geen evenementen beschikbaar op dit moment!";
 }
@@ -48,13 +49,7 @@ $user = get_user_info();
     </div>
     <div>
         <a class="dropdown-item" href="<?= route('/logout.php') ?>"><i class="fa fa-lock"></i> Logout</a>
-        <?php
-        $leerlingQuery = $db->prepare('SELECT * FROM account WHERE gebruikersnaam = :gebruikersnaam');
-        $leerlingQuery->bindParam('gebruikersnaam', $gebruikersnaam);
-        $leerlingQuery->execute();
-        $leerlingen = $leerlingQuery->fetch();
-        ?>
-        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php' . $leerlingen['gebruikersnaam']) ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
+        <a class="dropdown-item" href="<?= route('/student/wijzigen_wachtwoord.php') ?>"><i class="fa fa-lock"></i> Wachtwoord wijzigen</a>
     </div>
 </div>
 <section class="jumbotron text-center img-responsive" style="background-image: url('<?= route("/public/img/logo.png"); ?>'); background-repeat: no-repeat; background-size: cover">
@@ -149,16 +144,6 @@ $user = get_user_info();
             <?php } ?>
     </div>
 </div>
-<footer class="text-muted">
-    <div class="container">
-        <p class="float-right">
-            <a href="#">Back to top</a>
-        </p>
-        <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting
-                started guide</a>.</p>
-    </div>
-</footer>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
