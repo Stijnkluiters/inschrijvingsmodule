@@ -413,3 +413,80 @@ CREATE INDEX `fk_foto_evenement1_idx` ON `inschrijfmodule`.`foto` (`evenement_id
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `inschrijfmodule`
+--
+
+--
+-- Gegevens worden geëxporteerd voor tabel `account`
+--
+
+INSERT INTO `rolnaam` (`rolid`, `rolnaam`) VALUES
+(1, 'leerling'),
+(2, 'beheerder'),
+(3, 'docent'),
+(4, 'externbedrijf');
+
+INSERT INTO `account` (`account_id`, `gebruikersnaam`, `wachtwoord`, `rol_id`, `timestried`) VALUES
+(1, 'Administrator', '$2y$11$0SKR2h5JXKAxQ3H/T1ZjbelnLCU7RhjQn5CHLOEOm6bdJv3dihxzK', 2, NULL),
+(2, 'Externcontactpersoon', '$2y$11$mXvJwX9.7KuTB91gD2LFJ.bjQ7c4ku3wMiiABd3w1pJa3YRemByGC', 4, NULL),
+(3, 'medewerker', '$2y$11$1rE2Ls8.IaxocR9kh2azjOdlRNYDmRkxKL2hBBF3yWT0ev3b/LJ1u', 3, NULL),
+(4, '9999999', '$2y$11$Zj2Nefp6tYwsdDnaxqYlWeDhEFbazsF5TdP5uq21.8.MSGa2dGyrm', 1, 0);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `bedrijf`
+--
+
+INSERT INTO `bedrijf` (`bedrijf_id`, `bedrijfsnaam`) VALUES
+(2, 'nulla nisi distinctio delectus eligendi animi enim architecto proident quis ad velit velit ea veniam fugit');
+
+--
+-- Gegevens worden geëxporteerd voor tabel `branche`
+--
+
+--
+-- Gegevens worden geëxporteerd voor tabel `contactpersoon`
+--
+
+
+-- Gegevens worden geëxporteerd voor tabel `inventarisatie`
+--
+
+INSERT INTO `inventarisatie` (`invertarisatie_id`, `vakgebied`, `onderwerp`, `aantal_gastcolleges`, `voorkeur_dag`, `voorkeur_dagdeel`, `hulpmiddel`, `doelstelling`, `verwachting`) VALUES
+(2, 'velit labore odit et consectetur totam neque eligendi nobis deleniti sed', 'ut dolorem sed laborum voluptatem sunt officiis est', 'dolorum ad ut aut recusandae accusamus vitae ratione minus facilis ea reiciendis esse', 'aliquip quia fugiat sint quidem aliquip adipisci nihil qui ex cupidatat qui ullamco aspernatur quaerat sed nulla quas beatae nostrud', 'totam ut quis vitae voluptas officia', 'vitae eos praesentium quos sint rerum aut fugiat', 'exercitationem totam labore nam harum labore ipsam ducimus', 'Velit eiusmod ipsum laborum et repellendus Earum velit est sit fugit ex sit voluptatem');
+
+INSERT INTO `branche` (`branche_id`, `bedrijf_id`, `inventarisatie_id`, `branche`, `webadres`, `adres`, `postcode`, `plaatsnaam`, `contactnr`, `deleted`) VALUES
+(2, 2, 2, 'soluta repudiandae distinctio dignissimos mollitia quia amet corrupti', 'culpa consequatur ad voluptatum iste corrupti sed commodi et sunt voluptate porro quisquam quia tenetur rem provident enim laboriosam', 'molestiae voluptatem quibusdam necessitatibus laborum et quaerat perferendis', 'quaerat sunt sed non commodi molestiae soluta', 'elit sit ea nam expedita quis eu sed et quia et ea nulla laborum quibusdam nulla quisquam', 0, NULL);
+INSERT INTO `contactpersoon` (`contact_id`, `account_id`, `branche_id`, `roepnaam`, `tussenvoegsel`, `achternaam`, `functie`, `telefoonnummer`, `email`, `deleted`) VALUES
+(2, 2, 2, 'John', 'van', 'Heuvelen', 'Directeur', 'Geen', '1234@example.com', 0);
+
+--
+--
+-- Gegevens worden geëxporteerd voor tabel `leerling`
+--
+
+INSERT INTO `leerling` (`leerlingnummer`, `account_id`, `geslacht`, `roepnaam`, `tussenvoegsel`, `achternaam`, `opleiding`, `geboortedatum`, `postcode`, `plaats`, `begindatum`, `einddatum`, `plaatsing`, `LWOO`, `LGF`, `groepscode`, `deleted`) VALUES
+(9999999, 4, 'Man', 'John', NULL, 'Wolfe', 'ICT', '1998-06-23 00:00:00', '3831 TD', 'Amsterdam', '2014-08-01 00:00:00', '2017-04-01 00:00:00', 0, 0, 0, 'ICTM8K', 0);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `medewerker`
+--
+
+INSERT INTO `medewerker` (`afkorting`, `account_id`, `roepnaam`, `tussenvoegsel`, `achternaam`, `functie`, `geslacht`, `geboortedatum`, `locatie`, `telefoon`, `deleted`) VALUES
+('mede123', 3, 'Jeroen', 'van', 'Hezik', 'Docent', 'Man', '1967-08-01 00:00:00', 'Amersfoort', 634657962, 0),
+('Beheerder', 1, 'Beheerder', 'van', 'Administrator', 'Beheerder', 'Man', '2000-08-01 00:00:00', 'Amersfoort', 634657962, 0);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `rolnaam`
+--
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
