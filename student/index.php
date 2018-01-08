@@ -13,8 +13,10 @@ $user = get_user_info();
 
 if( isset($_POST[ 'submit' ]) )
 {
+    $evenement_id = filter_input(INPUT_POST,'evenement_id',FILTER_SANITIZE_STRING);
+
     $stmt = $db->prepare('SELECT * FROM inschrijving WHERE gewhitelist = ? and evenement_id = ? and leerlingnummer = ?');
-    $stmt->execute(array( 1, $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+    $stmt->execute(array( 1, $evenement_id, $user[ 'leerlingnummer' ] ));
     $inschrijving = $stmt->fetch();
 
     if( $inschrijving !== false )
@@ -22,15 +24,15 @@ if( isset($_POST[ 'submit' ]) )
         if( empty($inschrijving[ 'aangemeld_op' ]) )
         {
             $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-            $stmt->execute(array( date("Y-m-d H:i:s"), $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+            $stmt->execute(array( date("Y-m-d H:i:s"), $evenement_id, $user[ 'leerlingnummer' ] ));
 
             $receiver = $user[ 'leerlingnummer' ] . '@edu.rocmn.nl';
-            $subject = 'Bevestiging inschrijving' . $evenement[ 'onderwerp' ];
+            $subject = 'Bevestiging inschrijving';
 
             //QUERY voor ophalen gegevens voor de mail
             $db = db();
             $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
-            $stmt->bindParam('evenement_id', $evenement[ 'evenement_id' ], PDO::PARAM_INT);
+            $stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
             $stmt->execute();
             $evenement = $stmt->fetch();
             $leerling = $user;
@@ -46,17 +48,17 @@ if( isset($_POST[ 'submit' ]) )
         {
             success('Je hebt je uitgeschreven!');
             $stmt = $db->prepare('UPDATE inschrijving SET aangemeld_op = ? WHERE evenement_id = ? and leerlingnummer = ?');
-            $stmt->execute(array( null, $evenement[ 'evenement_id' ], $user[ 'leerlingnummer' ] ));
+            $stmt->execute(array( null, $evenement_id, $user[ 'leerlingnummer' ] ));
             $inschrijving[ 'aangemeld_op' ] = null;
 
             //test
             $receiver = $user[ 'leerlingnummer' ] . '@edu.rocmn.nl';
-            $subject = 'Bevestiging inschrijving' . $evenement[ 'onderwerp' ];
+            $subject = 'Bevestiging inschrijving';
 
             //QUERY voor ophalen gegevens voor de mail
             $db = db();
             $stmt = $db->prepare('select * from evenement WHERE evenement_id = :evenement_id');
-            $stmt->bindParam('evenement_id', $evenement[ 'evenement_id' ], PDO::PARAM_INT);
+            $stmt->bindParam('evenement_id', $evenement_id, PDO::PARAM_INT);
             $stmt->execute();
             $evenement = $stmt->fetch();
             $leerling = $user;
