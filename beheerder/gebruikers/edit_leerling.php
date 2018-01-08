@@ -148,9 +148,19 @@ if (isset($_POST['account_wijzigen'])) {
         if (strlen($wachtwoord) < 7) {
             $error['wachtwoord'] = 'Wachtwoord moet langer dan 7 karakters zijn';
         }
+
+        // controleer voor speciale tekens in het wachtwoord
+        if(!preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $wachtwoord)) {
+            $error['wachtwoord'] = ' Er zitten geen speciale tekens in het wachtwoord';
+        }
+
+
     } else {
         $error['wachtwoord'] = 'Wachtwoord is verplicht';
     }
+
+
+
 
 
     if (isset($_POST['account_id']) && !empty($_POST['account_id'])) {
@@ -197,8 +207,8 @@ if (isset($_POST['account_wijzigen'])) {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <strong>Credit Card</strong>
-                <small>Form</small>
+                <strong>Leerling</strong>
+                <small>wijzigen</small>
             </div>
             <div class="card-body">
                 <form action="<?= route('/index.php?gebruiker=editleerling&leerlingnummer=' . $leerlingnummer) ?>"
@@ -235,8 +245,11 @@ if (isset($_POST['account_wijzigen'])) {
                     <div class="form-group row">
                         <label class="col-md-3 form-control-label" for="text-input">Geslacht</label>
                         <div class="col-md-9">
-                            <input type="text" value="<?= $leerling['geslacht'] ?>" id="text-input" name="geslacht"
-                                   class="form-control" placeholder="<?= $leerling['geslacht'] ?>">
+                            <select name="geslacht" class="form-control">
+                                <option value="">Selecteer het geslacht</option>
+                                <option value="Man" <?=($leerling['geslacht'] == 'Man') ? 'selected' : '' ; ?>>Man</option>
+                                <option value="Vrouw" <?= ($leerling['geslacht'] == 'Vrouw') ? 'selected' : '' ; ?>>Vrouw</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -388,6 +401,10 @@ if (isset($_POST['account_wijzigen'])) {
     <!--/.col-->
 
 </div>
-
-
-</form>
+<?php if( isset($error) ) { ?>
+    <ul>
+        <?php foreach ($error as $key => $error) { ?>
+            <li><?= $key . ' : ' . $error; ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>

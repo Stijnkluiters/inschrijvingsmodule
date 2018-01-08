@@ -21,6 +21,8 @@ $leerlingen = $leerlingQuery->fetchAll();
 
 
 ?>
+
+<?php if($rol == 'beheerder') { ?>
 <div class="card" >
     <div class="card-header">
         <strong>Leerlingen importeren</strong>
@@ -29,10 +31,12 @@ $leerlingen = $leerlingQuery->fetchAll();
         <p>
             Hier kan je leerlingen importeren d.m.v. csv bestand
         </p>
+
         <a href="<?= route('/index.php?gebruiker=invoerenleerling'); ?>" type="button" class="btn btn-outline-primary btn-lg btn-block">Leerlingen importeren</a>
     </div>
 </div>
 <?php
+}
 
 
 if (count($leerlingen)) { ?>

@@ -17,15 +17,21 @@ $leerling = $leerlingQuery->fetch();
 
 if(isset($_POST['delete'])){
     $stmt = $db->prepare('
-            UPDATE leerling SET
-            deleted = true
+            UPDATE leerling 
+            SET deleted = true
             WHERE leerlingnummer = :leerlingnummer');
 
     $stmt->bindParam('leerlingnummer', $leerlingnummer, PDO::PARAM_STR);
     $stmt->execute();
-    redirect('/index.php?gebruiker=overzichtleerling', ' Leerling '.$leerling['roepnaam'].' verwijderd! ');
+    redirect('/index.php?gebruiker=overzichtleerling', ' Leerling '.$leerling['roepnaam'].' gedeactiveert! ');
 }
 
+$geboortedatum = date('Y-m-d', strtotime($leerling['geboortedatum']));
+$begindatum = date('Y-m-d', strtotime($leerling['begindatum']));
+$einddatum = '';
+if(!empty($leerling['einddatum'])){
+    $einddatum = date('Y-m-d', strtotime($leerling['einddatum']));
+}
 ?>
 
 
@@ -63,7 +69,7 @@ if(isset($_POST['delete'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="email-input">Geboortedatum</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'geboortedatum' ] ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
+            <input type="date" value="<?= $geboortedatum ?>" id="email-input" name="geboortedatum" class="form-control" disabled placeholder="<?= $leerling[ 'geboortedatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
@@ -87,13 +93,13 @@ if(isset($_POST['delete'])){
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Begin van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'begindatum' ] ?>" id="text-input" name="begindatum" class="form-control" disabled placeholder="<?= $leerling[ 'begindatum' ] ?>">
+            <input type="date" value="<?= $begindatum ?>" id="text-input" name="begindatum" class="form-control" disabled placeholder="<?= $leerling[ 'begindatum' ] ?>">
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Eind van de opleiding</label>
         <div class="col-md-9">
-            <input type="date" value="<?= $leerling[ 'einddatum' ] ?>" id="text-input" name="einddatum" class="form-control" disabled placeholder="<?= $leerling[ 'einddatum' ] ?>">
+            <input type="date" value="<?= $einddatum ?>" id="text-input" name="einddatum" class="form-control" disabled placeholder="<?= $leerling[ 'einddatum' ] ?>">
         </div>
     </div>
     <?php if(isset($error)) { ?>
@@ -103,7 +109,7 @@ if(isset($_POST['delete'])){
             <?php } ?>
         </ul>
     <?php } ?>
-    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account verwijderen
+    <button id="delete" name="delete" type="submit" class="btn btn-block btn-primary mb-3">Account Deactiveren
     </button>
 </form>
 </html>
