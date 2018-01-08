@@ -31,7 +31,7 @@ if (isset($_POST["aanmelden"])) {
 }
 
 if (isset($_POST["whitelist"])) {
-    if($rolename['rolnaam'] !== 'beheerder') {
+    if($rolename['rolnaam'] != 'beheerder') {
         redirect('/index.php', 'Je hebt geen toestemming om dit te wijzigen');
     }
     $leerlingnummer = filter_input(INPUT_POST, 'leerlingnummer', FILTER_SANITIZE_NUMBER_INT);

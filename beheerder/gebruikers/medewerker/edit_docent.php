@@ -167,7 +167,7 @@ if (isset($_POST['account_wijzigen'])) {
 
 
     if (isset($_POST['wachtwoord']) && !empty($_POST['wachtwoord'])) {
-        $wachtwoord = strtolower(filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING));
+        $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_STRING);
         if (strlen($wachtwoord) < 7) {
             $error['wachtwoord'] = 'Wachtwoord moet langer dan 7 karakters zijn';
         }
