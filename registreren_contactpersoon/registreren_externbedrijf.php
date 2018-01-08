@@ -403,7 +403,7 @@ if (isset($_POST['submit'])) {
                 $stmt->execute();
 
                 $db->commit();
-                redirect('/index.php');
+                redirect('/registreren_contactpersoon/bedankt.html');
 
 
 
