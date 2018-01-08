@@ -6,7 +6,7 @@
  * Time: 23:14
  */
 
-
+// verstuurt een post requets naar de url die wordt meegegeven met optioneel de data.
 function post_request($url, $data = null)
 {
     // create curl resource

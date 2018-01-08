@@ -5,7 +5,6 @@
  * Date: 2-12-2017
  * Time: 11:13
  */
-
 //
 //function delete_medewerker($afkorting)
 //{
@@ -18,11 +17,7 @@
 
 
 // haalt alle gegevens op op basis van je rol, medewerker, leerling of contact persoon.
-
-
-function get_user_info($account = null)
-{
-
+function get_user_info($account = null) {
     startsession();
     $db = db();
     if( $account === null )
@@ -230,6 +225,5 @@ function deactivateAccount($account_id)
     {
         throw new \Exception('Er zijn geen resultaten gevonden voor account zijn rol.');
     }
-
 
 }

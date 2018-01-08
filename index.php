@@ -26,10 +26,10 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 session_regenerate_id();
+// als je niet beheerder, externbedrijf, docent bent wordt het script gestopt
 handleUnauthenticatedRole(array('beheerder', 'externbedrijf', 'docent'));
+// gebruiker gegevens
 $user = get_user_info();
-
-
 $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
 //9bcratj86fvn52ov5lsrvtlv2u
 //
@@ -149,7 +149,9 @@ $rol = get_account_his_role($_SESSION[authenticationSessionName])['rolnaam'];
         <div class="container-fluid">
             <?php
 
-
+            /**
+             * Afhankelijk van de url wordt een ander bestand ingeladen.
+             */
             if (count($_GET) === 0) {
                 //include 'dashboard.php';
             } else {

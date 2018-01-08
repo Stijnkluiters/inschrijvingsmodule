@@ -13,7 +13,7 @@ const passwordAlgo = PASSWORD_BCRYPT;
 const options = [ 'cost' => 11 ];
 
 const authenticationSessionName = 'account';
-
+// controleren of een ingelogde gebruiker ingelogd is.
 function check_logged_in_user()
 {
 
@@ -51,7 +51,7 @@ function check_logged_in_user()
     }
 
 }
-
+// controleren of het wachtwoord correct is.
 function checkPassword($hashedOriginalPassword, $input, $originalID)
 {
 
@@ -80,7 +80,7 @@ function checkPassword($hashedOriginalPassword, $input, $originalID)
     return false;
 
 }
-
+// genereren van een hashed wachtwoord
 function generatePassword($input)
 {
 
@@ -88,6 +88,7 @@ function generatePassword($input)
 }
 
 // This function does not check for wrong user input, so it can be used anywhere.
+// Inlog functie zodat je op meerdere plekken kunt inloggen.
 function login($username, $password)
 {
 
@@ -149,7 +150,8 @@ function login($username, $password)
 
 }
 
-function logout()
+// uitlog functie
+function logout ()
 {
 
     startsession();
@@ -159,6 +161,7 @@ function logout()
     return true;
 }
 
+// controleren of een rol bestaat, zo niet. wordt hij toegevoegd
 function check_if_role_exists($rolnaam)
 {
 
@@ -178,7 +181,7 @@ function check_if_role_exists($rolnaam)
     return $id;
 }
 
-
+// pak afhankelijk van account_id de rol
 function get_account_his_role($account_id)
 {
 
@@ -193,9 +196,8 @@ function get_account_his_role($account_id)
     return $stmt->fetch();
 }
 
-
-function formatusername($account = null)
-{
+// Maak de gebruikersnaam netjes en geef het terug
+function formatusername($account = null) {
 
     if( $account === null )
     {

@@ -7,11 +7,11 @@
  * Time: 13:29
  */
 include 'config.php';
-if( isset($_SESSION[ 'message' ]) )
-{
-    $message = $_SESSION[ 'message' ];
+// laat een bericht onderaan in de javascript zien.
+if(isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
     //Laat het bericht maar 1x zien per request!
-    unset($_SESSION[ 'message' ]);
+    unset($_SESSION['message']);
 }
 if( isset($_POST[ 'submit' ]) )
 {
@@ -24,8 +24,8 @@ if( isset($_POST[ 'submit' ]) )
     ]);
     $response = json_decode($response, true);
 
-
-    if( $response[ 'success' ] )
+    // controleren of google een status: success geeft.
+    if( $response['success'] )
     {
         $username = $_POST[ 'gebruikersnaam' ];
         $password = $_POST[ 'wachtwoord' ];
@@ -164,8 +164,7 @@ if( isset($_POST[ 'submit' ]) )
                         <div>
                             <h2>Het ROC midden Nederland</h2>
                             <p>Inschrijvingsmodule </p>
-                            <!--                            <a href="-->
-                            <? //= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
+<!--                            <a href="--><?//= route('/register.php'); ?><!--" type="button" class="btn btn-primary px-4">Registreren</a>-->
                         </div>
                     </div>
                 </div>
