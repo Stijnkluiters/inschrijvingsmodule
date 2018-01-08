@@ -79,6 +79,10 @@ function randomString($length = 6)
 }
 
 /**
+ *
+ * Genereert een account afhankelijk van de rol.
+ * Verstuurd het wachtwoord via de mail.
+ *
  * @param $rolename
  *
  * @return integer account_id from table account
@@ -125,7 +129,7 @@ function generateRandomAccountForRole($username, $rolename)
 
 
 }
-
+// start een sessie als die nog niet gestart is.
 function startsession()
 {
 
@@ -134,7 +138,7 @@ function startsession()
         session_start();
     }
 }
-
+// een debug functie
 function dump()
 {
 
@@ -146,7 +150,7 @@ function dump()
     }
     echo "</pre>";
 }
-
+// template voor bootstrap
 function success($msg)
 {
 
@@ -157,6 +161,7 @@ function success($msg)
     );
 }
 
+// template voor bootstrap
 function error($msg)
 {
 

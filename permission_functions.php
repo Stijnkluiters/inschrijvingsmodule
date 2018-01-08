@@ -6,19 +6,7 @@
  * Time: 23:11
  */
 
-function PermissionBaseQuery()
-{
-
-    $sql = 'SELECT p.name,u.id FROM user u 
-          JOIN user_role ur ON u.id = ur.user_id 
-          JOIN role r ON r.id = ur.role_id
-          JOIN role_permission rp ON rp.role_id = r.id
-          JOIN permission p ON p.id = rp.permission_id 
-          WHERE u.id = :user_id AND p.name = :name';
-
-    return $sql;
-}
-
+// heeft recht
 function has_permission($compareRole)
 {
 
@@ -45,19 +33,16 @@ function has_permission($compareRole)
         exit;
     }
 }
-
-function handleUnauthenticatedRole($compareRol)
-{
-
-    if( !has_permission($compareRol) )
-    {
+// controleert of de rol recht heeft om de handeling uit te voeren
+function handleUnauthenticatedRole($compareRol) {
+    if(!has_permission($compareRol)) {
         logout();
         redirect('/login.php', 'Je hebt geen rechten om deze pagina te bekijken');
 
         exit;
     }
 }
-
+// bekijken of hij het evenement mag bekijken.
 function viewEvent($event)
 {
 
