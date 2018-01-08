@@ -164,7 +164,7 @@ if (isset($_POST['account_wijzigen'])) {
 
 
     if (isset($_POST['account_id']) && !empty($_POST['account_id'])) {
-        $account_id = intval(strtolower(filter_input(INPUT_POST, 'account_id', FILTER_SANITIZE_STRING)));
+        $account_id = intval(filter_input(INPUT_POST, 'account_id', FILTER_SANITIZE_STRING));
         if (!filter_var($account_id, FILTER_VALIDATE_INT)) {
             $error['account_id'] = 'Account id moet een nummeriek getal zijn.';
         }
