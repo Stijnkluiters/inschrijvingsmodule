@@ -270,7 +270,8 @@ SELECT e.titel as titel,
  e.locatie, e.lokaalnummer, e.begintijd, e.eindtijd, e.vervoer, e.min_leerlingen, e.max_leerlingen, s.soort, e.soort_id, contactnr, publiek
 FROM evenement e 
 JOIN soort s ON s.soort_id = e.soort_id
-WHERE evenement_id = $id");
+WHERE evenement_id = :evenement_id");
+$stmt->bindParam('evenement_id',$id);
 $stmt->execute();
 
 //put the results in $row

@@ -38,6 +38,7 @@ if( isset($_POST[ 'submit' ]) )
         {
             $error = 'gebruikersnaam moet minimaal 5 karakters zijn';
         }
+        // <script></script>
         $username = filter_input(INPUT_POST, 'gebruikersnaam', FILTER_SANITIZE_STRING);
 
         if( strlen($password) < 8 )
