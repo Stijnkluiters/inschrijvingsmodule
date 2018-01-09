@@ -24,7 +24,7 @@ if (isset($_POST['activeren']) && ($_POST['activeren'] === '1' || $_POST['active
         }
         //filter de reden, als er niks (meer) instaat, geef een filtererror
         $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_STRING);
-        if (empty($_POST['comment'])) {
+        if (empty($comment)) {
             $error['comment'] = ' het filteren van de reden ging verkeerd';
         }
     } else{
