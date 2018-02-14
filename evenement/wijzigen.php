@@ -280,6 +280,7 @@ $row = $stmt->fetch();
 $soorten = $db->query('select * from soort WHERE soort.soort_id IS NOT NULL AND actief = 1');
 $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
+
 ?>
 <form name="evenementToevoegen" method="post"
       action="<?php echo filter_var($_SERVER[ 'REQUEST_URI' ], FILTER_SANITIZE_STRING); ?>">
@@ -549,12 +550,11 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- contractnr form -->
                 <div class="form-group">
-                    <label for="contractnr">Telefoonisch contact nummer</label>
+                    <label for="contactnr">Telefoonisch contact nummer</label>
                     <input type="text"
                            class="form-control <?= (isset($error[ 'contractnr' ])) ? 'is-invalid' : ''; ?>"
-                           id="contractnr"
-                           name="contractnr"
-                           placeholder="Telefoonisch contact nummer"
+                           id="contactnr"
+                           name="contactnr"
                            value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contractnr' ] : $row[ 'contactnr' ]; ?>"
                     />
                     <?php if( isset($error[ 'contractnr' ]) ) { ?>
@@ -573,4 +573,14 @@ $soorten = $soorten->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
 </form>
+<!--/.col-->
+
+<?php if( isset($error) ) { ?>
+    <ul>
+        <?php foreach ($error as $key => $error) { ?>
+            <li><?= $key . ' : ' . $error; ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>
+
 

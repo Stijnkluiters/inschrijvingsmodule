@@ -72,13 +72,13 @@ if( isset($_POST[ 'submit' ]) )
 
                 <!-- soortnaam form -->
                 <div class="form-group">
-                    <label for="soortnaam">Soort naam *</label>
+                    <label for="soortnaam">Soortnaam *</label>
                     <input type="text"
                            class="form-control <?= (isset($error[ 'soortnaam' ])) ? 'is-invalid' : ''; ?>"
                            id="soortnaam"
                            name="soortnaam"
                            required="required"
-                           placeholder="Soort naam"
+                           placeholder="Soortnaam"
                            value="<?= (isset($_POST[ 'soortnaam' ])) ? $_POST[ 'soortnaam' ] : ''; ?>"
                     />
                     <?php if( isset($error[ 'soortnaam' ]) ) { ?>
@@ -91,11 +91,11 @@ if( isset($_POST[ 'submit' ]) )
 
                 <!-- benodigdheden textarea form -->
                 <div class="form-group">
-                    <label for="benodigdheden">Benodigheden</label>
+                    <label for="benodigdheden">Benodigdheden</label>
                     <textarea class="form-control <?= (isset($error[ 'benodigdheden' ])) ? 'is-invalid' : ''; ?>"
                               id="benodigdheden"
                               name="benodigdheden"
-                              placeholder="Benodigheden"
+                              placeholder="Benodigdheden"
                               rows="3"
                     ><?= (isset($_POST[ 'benodigdheden' ])) ? $_POST[ 'benodigdheden' ] : ''; ?></textarea>
 

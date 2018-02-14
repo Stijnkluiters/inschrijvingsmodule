@@ -86,7 +86,9 @@ if (isset($_POST["toestemming"])) {
 
     }
 
-    $r = chainEventToLeerling(intval($evenement_id), intval($leerlingnummer), $toestemming);
+    $stmt = $db->prepare('update inschrijving set toestemming = ? where leerlingnummer = ? and evenement_id = ?');
+    $r = $stmt->execute(array($toestemming,$leerlingnummer,$evenement_id));
+
 
     if ($r) {
         sendMail($leerlingnummer . '@edu.rocmn.nl', $subject, $message);

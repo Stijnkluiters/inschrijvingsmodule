@@ -41,7 +41,7 @@ if( isset($_POST[ 'submit' ]) )
     }
 
     /** benodigdheden */
-    $benodigdheid = filter_input(INPUT_POST, 'omschrijving', FILTER_SANITIZE_STRING);
+    $benodigdheid = filter_input(INPUT_POST, 'benodigdheden', FILTER_SANITIZE_STRING);
     if( $benodigdheid === false )
     {
         $error[ 'benodigdheden' ] = 'het filteren van de benodigheden ging verkeerd';
@@ -92,13 +92,13 @@ $prevalue = $stmt2->fetch();
 
                 <!-- soortnaam form -->
                 <div class="form-group">
-                    <label for="soortnaam">Soort naam *</label>
+                    <label for="soortnaam">Soortnaam *</label>
                     <input type="text"
                            class="form-control <?= (isset($error[ 'soortnaam' ])) ? 'is-invalid' : ''; ?>"
                            id="soortnaam"
                            name="soortnaam"
                            required="required"
-                           placeholder="Soort naam"
+                           placeholder="Soortnaam"
                            value="<?= (isset($_POST[ 'soortnaam' ])) ? $_POST[ 'soortnaam' ] : $prevalue['soort']; ?>"
                     />
                     <?php if( isset($error[ 'soortnaam' ]) ) { ?>

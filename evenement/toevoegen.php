@@ -151,7 +151,7 @@ if( isset($_POST[ 'titel' ]) )
     }
     $whitelist = filter_input(INPUT_POST, 'whitelist', FILTER_SANITIZE_NUMBER_INT);
     if ($whitelist !== '1' && $whitelist !== '0'){
-        $error['soort'] = ' whitelist kan alleen maar publiek of privaat zijn';
+        $error['whitelist'] = ' whitelist kan alleen maar publiek of privaat zijn';
     }
 
 
@@ -189,18 +189,12 @@ if( isset($_POST[ 'titel' ]) )
     }
     /** Contactnummer */
 
-    $contactnummer = filter_input(INPUT_POST, 'contactnummer', FILTER_SANITIZE_STRING);
-    if( $contactnummer === false )
-    {
-        $error[ 'contactnummer' ] = ' het filteren van contact ging verkeerd';
+    $contactnummer = filter_input(INPUT_POST, 'contactnr', FILTER_SANITIZE_NUMBER_INT);
+    if( $contactnummer === false ) {
+        $error['contactnr'] = ' het filteren van contact ging verkeerd';
     }
 
-    if( !($_POST[ 'whitelist' ] == 1 || $_POST[ 'whitelist' ] == 2) )
-    {
-        $error[ 'whitelist' ] = ' Whitelist kan alleen maar publiek of privaat zijn';
-    }
-
-    if( count($error) === 0 )
+    if( count($error) === 0  )
     {
         $stmt = $db->prepare('
         INSERT INTO `evenement`( 
@@ -536,18 +530,18 @@ if( isset($_POST[ 'titel' ]) )
 
                  <!-- contractnr form -->
                  <div class="form-group">
-                     <label for="contractnr">Telefoonisch contact nummer</label>
+                     <label for="contactnr">Telefoonisch contactnummer</label>
                      <input type="text"
-                            class="form-control <?= (isset($error[ 'contractnr' ])) ? 'is-invalid' : ''; ?>"
-                            id="contractnr"
-                            name="contractnr"
-                            placeholder="Telefoonisch contact nummer"
-                            value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contractnr' ] : ''; ?>"
+                            class="form-control <?= (isset($error[ 'contactnr' ])) ? 'is-invalid' : ''; ?>"
+                            id="contactnr"
+                            name="contactnr"
+                            placeholder="Telefoonisch contactnummer"
+                            value="<?= (isset($_POST[ 'contractnr' ])) ? $_POST[ 'contactnr' ] : ''; ?>"
                      />
                      <?php if( isset($error[ 'contractnr' ]) ) { ?>
                          <!-- contractnr helper -->
                          <div class="invalid-feedback">
-                             <?= $error[ 'contractnr' ]; ?>
+                             <?= $error[ 'contactnr' ]; ?>
                          </div>
                      <?php } ?>
                  </div>
@@ -560,3 +554,14 @@ if( isset($_POST[ 'titel' ]) )
 
     </div>
 </form>
+
+
+<?php if( isset($error) ) { ?>
+    <ul>
+        <?php foreach ($error as $key => $error) { ?>
+            <li><?= $key . ' : ' . $error; ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>
+
+

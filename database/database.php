@@ -21,7 +21,7 @@ function db () {
         ));
         return $dbh;
     } catch (PDOException $e) {
-        //print "Error!: " . $e->getMessage() . "<br/>";
-        //die();
+        print "Error!: " . $e->getMessage() . "<br/>";
+        die();
     }
 }
